@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "335263260944",
+    "project_id": "hatgeback",
+    "storage_bucket": "hatgeback.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:335263260944:android:a62ded53d7bfbae0640595",
+        "android_client_info": {
+          "package_name": "com.example.hatgeback"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrdLj6UT-uy-yfQWIHnxGdC5cVe5hKOmw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
