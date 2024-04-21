@@ -17,11 +17,13 @@ class loginscreen extends StatelessWidget {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Form(
+        child:  Form(
           key: formkey,
           child: ListView(
             children: <Widget>[
               Container(
+                child:Image(image: AssetImage('assets/asd.jpg')),
+
                 height: MediaQuery.of(context).size.height * 0.5,
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -29,6 +31,7 @@ class loginscreen extends StatelessWidget {
                     bottomRight: Radius.circular(50),
                     bottomLeft: Radius.circular(50),
                   ),
+
                 ),
               ),
               Text(
@@ -85,7 +88,7 @@ class loginscreen extends StatelessWidget {
                                 email: email.text, password: password.text);
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text("sign in success."),
-                          backgroundColor: Colors.green,
+                          backgroundColor: Colors.grey,
                         ));
                         Navigator.pushNamed(context, homepage.id);
                       } on FirebaseAuthException catch (e) {

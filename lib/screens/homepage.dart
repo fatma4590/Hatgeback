@@ -55,19 +55,32 @@ class _homepageState extends State<homepage> {
               .toList()
         ],
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.green,
-        height: 70,
-        child: Row(
-          children: [
-            IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, addpoint.id);
-                },
-                icon: Icon(Icons.add))
-          ],
-        ),
-      ),
+    bottomNavigationBar: BottomAppBar(
+    color: Colors.green,
+    height: 70,
+    child: Container(
+    child: Row(
+    children: [
+    IconButton(
+    icon: Icon(Icons.add),
+    onPressed: () {
+    Navigator.pushNamed(context, addpoint.id);
+    // Add button action
+    },
+    ),
+    SizedBox(
+    width: 50,
+    ),
+    IconButton(
+    icon: Icon(Icons.account_circle),
+    onPressed: () {
+    Navigator.pushNamed(context, addpoint.id);
+    },
+    ),
+    ],
+    ),
+    ),
+    ),
     );
   }
 }
