@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:hatgeback/screens/addpoint.dart';
 
 import 'package:hatgeback/screens/homepage.dart';
 import 'package:hatgeback/screens/loginscreen.dart';
+import 'package:hatgeback/screens/registerpage.dart';
 
 import 'firebase_options.dart';
 
@@ -25,6 +27,8 @@ class MyApp extends StatelessWidget {
 
         loginscreen.id:(context)=>loginscreen(),
         homepage.id: (context) => homepage(),
+        registerpage.id: (context)=>registerpage(),
+        addpoint.id:(context)=>addpoint(),
 
       },
       initialRoute: loginscreen.id,
