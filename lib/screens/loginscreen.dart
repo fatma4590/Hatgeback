@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:hatgeback/screens/homepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hatgeback/screens/registerpage.dart';
 
 class loginscreen extends StatelessWidget {
   static String id = 'loginpage';
@@ -10,7 +10,7 @@ class loginscreen extends StatelessWidget {
   TextEditingController password = TextEditingController();
   GlobalKey<FormState> formkey = GlobalKey();
   bool _passwordVisible = true;
-   loginscreen({Key? key}) : super(key: key);
+  loginscreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,6 @@ class loginscreen extends StatelessWidget {
               Container(
                 height: MediaQuery.of(context).size.height * 0.5,
                 decoration: BoxDecoration(
-
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(50),
@@ -77,13 +76,13 @@ class loginscreen extends StatelessWidget {
               ),
               ElevatedButton(
                   style:
-                  ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                      ElevatedButton.styleFrom(backgroundColor: Colors.green),
                   onPressed: () async {
                     if (formkey.currentState!.validate()) {
                       try {
                         final credential = await FirebaseAuth.instance
                             .signInWithEmailAndPassword(
-                            email: email.text, password: password.text);
+                                email: email.text, password: password.text);
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text("sign in success."),
                           backgroundColor: Colors.green,
@@ -97,7 +96,7 @@ class loginscreen extends StatelessWidget {
                         } else if (e.code == 'wrong-password') {
                           ScaffoldMessenger.of(context).showSnackBar((SnackBar(
                             content:
-                            Text('Wrong password provided for that user.'),
+                                Text('Wrong password provided for that user.'),
                           )));
                         }
                       } catch (e) {
@@ -128,7 +127,7 @@ class loginscreen extends StatelessWidget {
                   //register
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, homepage.id);
+                      Navigator.pushNamed(context, registerpage.id);
                     },
                     child: Text(
                       " Register",

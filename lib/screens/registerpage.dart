@@ -5,7 +5,8 @@ import 'package:hatgeback/screens/loginscreen.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class registerpage extends StatelessWidget {
-  static String id='registerpage';
+  static String id = 'registerpage';
+
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController phone = TextEditingController();
@@ -14,7 +15,7 @@ class registerpage extends StatelessWidget {
   bool _passwordVisible = true;
   bool isloading = false;
   GlobalKey<FormState> formkey = GlobalKey();
-   registerpage({super.key});
+  registerpage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +32,6 @@ class registerpage extends StatelessWidget {
                 Container(
                   height: 200,
                   decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/IMG________________.jpg')),
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
                       bottomRight: Radius.circular(50),
@@ -53,7 +52,7 @@ class registerpage extends StatelessWidget {
                       if (data!.isEmpty) {
                         return "Required";
                       } else if (!RegExp(
-                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                           .hasMatch(data)) {
                         return 'Enter valid email';
                       }
@@ -152,13 +151,13 @@ class registerpage extends StatelessWidget {
                 ),
                 ElevatedButton(
                     style:
-                    ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                        ElevatedButton.styleFrom(backgroundColor: Colors.green),
                     onPressed: () async {
                       if (formkey.currentState!.validate()) {
                         try {
                           final Credential = await FirebaseAuth.instance
                               .createUserWithEmailAndPassword(
-                              email: email.text, password: password.text);
+                                  email: email.text, password: password.text);
                           FirebaseFirestore.instance
                               .collection('users')
                               .doc(Credential.user!.email)
@@ -173,7 +172,7 @@ class registerpage extends StatelessWidget {
                             content: Text("Sign up success ."),
                             backgroundColor: Colors.green,
                           ));
-                          Navigator.pushNamed(context, loginpage.id);
+                          Navigator.pushNamed(context, loginscreen.id);
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'weak-password') {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
