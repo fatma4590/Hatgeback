@@ -1,20 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hatgeback/screens/addpoint.dart';
-import 'package:hatgeback/screens/myparkingareas.dart';
 import 'package:hatgeback/widgets/parkingwidget.dart';
 
-class homepage extends StatefulWidget {
-  static String id = 'homepage';
-  homepage({super.key});
+class myparkingareas extends StatefulWidget {
+  static String id = 'myparking areas';
+  const myparkingareas({super.key});
 
   @override
-  State<homepage> createState() => _homepageState();
+  State<myparkingareas> createState() => _myparkingareasState();
 }
 
-class _homepageState extends State<homepage> {
+class _myparkingareasState extends State<myparkingareas> {
   List<Map<String, dynamic>> parkingareas = [];
-
   getParking() {
     List<Map<String, dynamic>> list = [];
     var db = FirebaseFirestore.instance;
@@ -42,8 +39,10 @@ class _homepageState extends State<homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home Page"),
-        automaticallyImplyLeading: false,
+        backgroundColor: Colors.green,
+        title: Text('My Parking Areas'),
+        titleTextStyle: TextStyle(
+            color: Colors.black, fontWeight: FontWeight.bold, fontSize: 25),
         centerTitle: true,
       ),
       body: Column(
@@ -56,24 +55,6 @@ class _homepageState extends State<homepage> {
                   time: parking['time']))
               .toList()
         ],
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.green,
-        height: 70,
-        child: Row(
-          children: [
-            IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, addpoint.id);
-                },
-                icon: Icon(Icons.add)),
-            IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, myparkingareas.id);
-                },
-                icon: Icon(Icons.paste_rounded))
-          ],
-        ),
       ),
     );
   }

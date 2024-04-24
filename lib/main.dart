@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:hatgeback/screens/accountuser.dart';
 import 'package:hatgeback/screens/addpoint.dart';
-
 import 'package:hatgeback/screens/homepage.dart';
 import 'package:hatgeback/screens/loginscreen.dart';
+import 'package:hatgeback/screens/myparkingareas.dart';
 import 'package:hatgeback/screens/registerpage.dart';
 
 import 'firebase_options.dart';
@@ -23,14 +24,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,
       routes: {
-
-        loginscreen.id:(context)=>loginscreen(),
+        loginscreen.id: (context) => loginscreen(),
         homepage.id: (context) => homepage(),
-        registerpage.id: (context)=>registerpage(),
-        addpoint.id:(context)=>addpoint(),
-
+        registerpage.id: (context) => registerpage(),
+        addpoint.id: (context) => addpoint(),
+        accountuser.id: (context) => accountuser(),
+        myparkingareas.id: (context) => myparkingareas(),
       },
       initialRoute: loginscreen.id,
     );
