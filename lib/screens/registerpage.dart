@@ -6,7 +6,6 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class registerpage extends StatelessWidget {
   static String id = 'registerpage';
-  TextEditingController userid = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController phone = TextEditingController();
@@ -38,23 +37,6 @@ class registerpage extends StatelessWidget {
                       bottomLeft: Radius.circular(50),
                     ),
                   ),
-                ),
-                TextFormField(
-                    controller: userid,
-                    validator: (data) {
-                      if (data!.isEmpty) {
-                        return "Required";
-                      }
-                    },
-                    cursorColor: Colors.black,
-                    showCursor: true,
-                    style: TextStyle(color: Colors.black),
-                    decoration: InputDecoration(
-                      hintText: "User ID",
-                      hintStyle: TextStyle(color: Colors.black, fontSize: 18),
-                    )),
-                SizedBox(
-                  height: 15.0,
                 ),
                 Text(
                   "Register",
@@ -184,7 +166,6 @@ class registerpage extends StatelessWidget {
                             'username': username.text,
                             'phone': int.parse(phone.text),
                             'address': address.text,
-                            'userid': int.parse(userid.text),
                           });
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text("Sign up success ."),
