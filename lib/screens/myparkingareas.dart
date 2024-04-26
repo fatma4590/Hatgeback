@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hatgeback/widgets/parkingwidget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class myparkingareas extends StatefulWidget {
   static String id = 'myparking areas';
@@ -11,6 +14,7 @@ class myparkingareas extends StatefulWidget {
 }
 
 class _myparkingareasState extends State<myparkingareas> {
+
   List<Map<String, dynamic>> parkingareas = [];
   getParking() {
     List<Map<String, dynamic>> list = [];
