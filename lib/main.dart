@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hatgeback/screens/accountuser.dart';
 import 'package:hatgeback/screens/addpoint.dart';
+import 'package:hatgeback/screens/fatma.dart';
 import 'package:hatgeback/screens/homepage.dart';
 import 'package:hatgeback/screens/loginscreen.dart';
 import 'package:hatgeback/screens/myparkingareas.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
         addpoint.id: (context) => addpoint(),
         accountuser.id: (context) => accountuser(),
         myparkingareas.id: (context) => myparkingareas(),
+        fatma.id: (context) => fatma(),
       },
       initialRoute: loginscreen.id,
     );
