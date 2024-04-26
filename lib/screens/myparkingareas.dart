@@ -1,21 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hatgeback/widgets/parkingwidget.dart';
 
 class myparkingareas extends StatefulWidget {
   static String id = 'myparking areas';
-  const myparkingareas({super.key});
+
+  myparkingareas({super.key});
 
   @override
   State<myparkingareas> createState() => _myparkingareasState();
 }
 
 class _myparkingareasState extends State<myparkingareas> {
+  var dbb = FirebaseAuth.instance.tenantId;
+
   List<Map<String, dynamic>> parkingareas = [];
   getParking() {
     List<Map<String, dynamic>> list = [];
     var db = FirebaseFirestore.instance;
-    db.collection('parkingareas').get().then(
+    final user = FirebaseAuth.instance.currentUser;
+
+    var uid = user!.uid.toString();
+
+    db.collection('parkingareas').where('userid', isEqualTo: uid).get().then(
       (QuerySnapshot) {
         print("Succefully Completed");
         for (var docSnapshot in QuerySnapshot.docs) {
