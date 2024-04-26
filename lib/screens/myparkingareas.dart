@@ -13,17 +13,17 @@ class myparkingareas extends StatefulWidget {
 }
 
 class _myparkingareasState extends State<myparkingareas> {
-  var dbb = FirebaseAuth.instance.tenantId;
-
   List<Map<String, dynamic>> parkingareas = [];
   getParking() {
     List<Map<String, dynamic>> list = [];
     var db = FirebaseFirestore.instance;
-    final user = FirebaseAuth.instance.currentUser;
+    final FirebaseAuth _auth = FirebaseAuth.instance;
 
-    var uid = user!.uid.toString();
-
-    db.collection('parkingareas').where('userid', isEqualTo: uid).get().then(
+    db
+        .collection('parkingareas')
+        .where('userid', isEqualTo: _auth.currentUser!.email)
+        .get()
+        .then(
       (QuerySnapshot) {
         print("Succefully Completed");
         for (var docSnapshot in QuerySnapshot.docs) {

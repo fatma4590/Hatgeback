@@ -1,11 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hatgeback/screens/homepage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class addpoint extends StatelessWidget {
   static String id = 'addpointpage';
   addpoint({super.key});
-
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  TextEditingController userid = TextEditingController();
   TextEditingController Location = TextEditingController();
   TextEditingController Name = TextEditingController();
   TextEditingController Price = TextEditingController();
@@ -111,7 +113,11 @@ class addpoint extends StatelessWidget {
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
               onPressed: () {
-                FirebaseFirestore.instance.collection('parkingareas').add({
+                FirebaseFirestore.instance
+                    .collection('parkingareas')
+                    .doc(Name!.text)
+                    .set({
+                  'userid': _auth.currentUser!.email,
                   'Location': Location.text,
                   'Name': Name.text,
                   'price': Price.text,

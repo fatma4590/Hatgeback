@@ -7,8 +7,7 @@ import 'package:hatgeback/widgets/parkingwidget.dart';
 
 class homepage extends StatefulWidget {
   static String id = 'homepage';
-  TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
+
   homepage({super.key});
 
   @override
