@@ -165,7 +165,7 @@ class registerpage extends StatelessWidget {
                             'email': email.text,
                             'password': password.text,
                             'username': username.text,
-                            'phone': int.parse(phone.text),
+                            'phone': phone.text,
                             'address': address.text
                           });
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -199,11 +199,8 @@ class registerpage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    //dont have account
-                    Text(
-                      "already have account ",
-                      style: TextStyle(color: Colors.black),
-                    ),
+
+
                     //register
                     GestureDetector(
                       onTap: () {
