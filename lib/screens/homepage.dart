@@ -55,8 +55,8 @@ class _homepageState extends State<homepage> {
               .map((parking) => parkingwidget(
                   Location: parking['Location'],
                   Name: parking['Name'],
-                  Price: parking['price'],
-                  time: parking['time']))
+                  Price: parking['price'].toString(),
+                  time: parking['time'].toString()))
               .toList()
         ],
       ),
