@@ -99,7 +99,7 @@ class registerpage extends StatelessWidget {
                     validator: (data) {
                       if (data!.isEmpty) {
                         return "Required";
-                      }
+                      }return null;
                     },
                     cursorColor: Colors.black,
                     showCursor: true,
@@ -116,10 +116,10 @@ class registerpage extends StatelessWidget {
                     validator: (data) {
                       if (data!.isEmpty) {
                         return "Required";
-                      } else if (data!.isEmpty ||
+                      } else if (!data.isEmpty ||
                           RegExp(r"^\+?0[0-9]{10}$").hasMatch(data)) {
                         return null;
-                      }
+                      }return null;
                     },
                     cursorColor: Colors.black,
                     showCursor: true,
@@ -136,7 +136,7 @@ class registerpage extends StatelessWidget {
                     validator: (data) {
                       if (data!.isEmpty) {
                         return "Required";
-                      }
+                      }return null;
                     },
                     cursorColor: Colors.black,
                     showCursor: true,
@@ -164,7 +164,7 @@ class registerpage extends StatelessWidget {
                             'email': email.text,
                             'password': password.text,
                             'username': username.text,
-                            'phone': int.parse(phone.text),
+                            'phone': phone.text,
                             'address': address.text,
                           });
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(

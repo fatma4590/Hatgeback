@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hatgeback/screens/addpoint.dart';
 import 'package:hatgeback/screens/myparking.dart';
+import 'package:hatgeback/screens/userprofile.dart';
 import 'package:hatgeback/widgets/parkingwidget.dart';
 
 class homepage extends StatefulWidget {
@@ -65,6 +66,12 @@ class _homepageState extends State<homepage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            IconButton(onPressed: (){
+              Navigator.pushNamed(context, UserProfile.id);
+            }, icon: Icon(Icons.account_circle_sharp)),
+
+
+            SizedBox(width: 20),
             IconButton(
                 onPressed: () {
                   Navigator.pushNamed(context, addpoint.id);
