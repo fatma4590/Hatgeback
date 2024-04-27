@@ -1,12 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:hatgeback/screens/loginscreen.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class registerpage extends StatelessWidget {
   static String id = 'registerpage';
-
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController phone = TextEditingController();
@@ -165,8 +164,8 @@ class registerpage extends StatelessWidget {
                             'email': email.text,
                             'password': password.text,
                             'username': username.text,
-                            'phone': phone.text,
-                            'address': address.text
+                            'phone': int.parse(phone.text),
+                            'address': address.text,
                           });
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text("Sign up success ."),
@@ -199,8 +198,11 @@ class registerpage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-
-
+                    //dont have account
+                    Text(
+                      "already have account ",
+                      style: TextStyle(color: Colors.black),
+                    ),
                     //register
                     GestureDetector(
                       onTap: () {

@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hatgeback/screens/addpoint.dart';
-import 'package:hatgeback/screens/userprofile.dart';
+import 'package:hatgeback/screens/fatma.dart';
+import 'package:hatgeback/screens/myparkingareas.dart';
 import 'package:hatgeback/widgets/parkingwidget.dart';
 
 class homepage extends StatefulWidget {
@@ -19,6 +20,7 @@ class _homepageState extends State<homepage> {
   getParking() {
     List<Map<String, dynamic>> list = [];
     var db = FirebaseFirestore.instance;
+
     db.collection('parkingareas').get().then(
       (QuerySnapshot) {
         print("Succefully Completed");
@@ -44,6 +46,7 @@ class _homepageState extends State<homepage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Home Page"),
+        automaticallyImplyLeading: false,
         centerTitle: true,
       ),
       body: Column(
@@ -60,31 +63,24 @@ class _homepageState extends State<homepage> {
       bottomNavigationBar: BottomAppBar(
         color: Colors.green,
         height: 70,
-        child: Container(
-          child: Row(children: [
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                Navigator.pushNamed(context, addpoint.id);
-                // Add button action
-              },
-            ),
-            SizedBox(
-              width: 50,
-            ),
-            IconButton(
-              icon: Icon(Icons.account_circle),
-              onPressed: () {
-                Navigator.pushNamed(context, addpoint.id);
-              },
-            ),
-            SizedBox(width: 50),
+        child: Row(
+          children: [
             IconButton(
                 onPressed: () {
-                  Navigator.pushNamed(context,UserProfile.id);
+                  Navigator.pushNamed(context, addpoint.id);
                 },
-                icon: Icon(Icons.account_circle_sharp)),
-          ]),
+                icon: Icon(Icons.add)),
+            IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, myparkingareas.id);
+                },
+                icon: Icon(Icons.paste_rounded)),
+            IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, fatma.id);
+                },
+                icon: Icon(Icons.home)),
+          ],
         ),
       ),
     );

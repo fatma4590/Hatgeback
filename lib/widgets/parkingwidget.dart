@@ -8,10 +8,10 @@ class parkingwidget extends StatelessWidget {
 
   const parkingwidget(
       {super.key,
-        required this.Location,
-        required this.Name,
-        required this.Price,
-        required this.time});
+      required this.Location,
+      required this.Name,
+      required this.Price,
+      required this.time});
 
   @override
   Widget build(BuildContext context) {
@@ -32,22 +32,22 @@ class parkingwidget extends StatelessWidget {
               Text(
                 Location,
                 style:
-                TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               ),
               Text(
                 Name,
                 style:
-                TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+                    TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
               ),
               Text(
                 Price,
                 style:
-                TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+                    TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
               ),
               Text(
                 time,
                 style:
-                TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+                    TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
               ),
             ],
           ),
