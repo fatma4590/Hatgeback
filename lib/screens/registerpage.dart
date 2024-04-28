@@ -51,7 +51,7 @@ class registerpage extends StatelessWidget {
                       if (data!.isEmpty) {
                         return "Required";
                       } else if (!RegExp(
-                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                           .hasMatch(data)) {
                         return 'Enter valid email';
                       }
@@ -150,13 +150,13 @@ class registerpage extends StatelessWidget {
                 ),
                 ElevatedButton(
                     style:
-                        ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                    ElevatedButton.styleFrom(backgroundColor: Colors.green),
                     onPressed: () async {
                       if (formkey.currentState!.validate()) {
                         try {
                           final Credential = await FirebaseAuth.instance
                               .createUserWithEmailAndPassword(
-                                  email: email.text, password: password.text);
+                              email: email.text, password: password.text);
                           FirebaseFirestore.instance
                               .collection('users')
                               .doc(Credential.user!.email)

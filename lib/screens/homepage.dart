@@ -27,7 +27,7 @@ class _homepageState extends State<homepage> {
         .where('userid', isNotEqualTo: _auth.currentUser!.email)
         .get()
         .then(
-      (QuerySnapshot) {
+          (QuerySnapshot) {
         print("Succefully Completed");
         for (var docSnapshot in QuerySnapshot.docs) {
           list.add(docSnapshot.data());
@@ -58,10 +58,10 @@ class _homepageState extends State<homepage> {
         children: [
           ...parkingareas
               .map((parking) => parkingwidget(
-                  Location: parking['Location'],
-                  Name: parking['Name'],
-                  Price: parking['price'].toString(),
-                  time: parking['time'].toString()))
+              Location: parking['Location'],
+              Name: parking['Name'],
+              Price: parking['price'].toString(),
+              time: parking['time'].toString()))
               .toList()
         ],
       ),

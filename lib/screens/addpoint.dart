@@ -106,7 +106,7 @@ class _AddpointState extends State<addpoint> {
             DateTimeField(
                 format: format,
                 decoration:
-                    InputDecoration(hintText: 'Choose Start Date & Time'),
+                InputDecoration(hintText: 'Choose Start Date & Time'),
                 onShowPicker: (context, currentValue) async {
                   final date = await showDatePicker(
                       context: context,

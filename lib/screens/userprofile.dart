@@ -35,7 +35,7 @@ class _UserProfileState extends State<UserProfile> {
         builder: (context, snapshot) {
           //get user data
           if (snapshot.hasData) {
-            final userData = snapshot.data!.data() as Map<String, dynamic>;
+            final userData = snapshot.data!.data() as Map<String, dynamic?>;
             return ListView(
               children: [
                 const SizedBox(height: 50),

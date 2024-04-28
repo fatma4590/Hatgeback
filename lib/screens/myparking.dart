@@ -25,7 +25,7 @@ class _myparkingareasState extends State<myparking> {
         .where('userid', isEqualTo: _auth.currentUser!.email)
         .get()
         .then(
-      (QuerySnapshot) {
+          (QuerySnapshot) {
         print("Successfully Completed");
         List<Map<String, dynamic>> list = [];
         for (var docSnapshot in QuerySnapshot.docs) {
@@ -60,6 +60,39 @@ class _myparkingareasState extends State<myparking> {
         ),
         centerTitle: true,
       ),
+//       body: ListView.builder(
+//         itemCount: parkingareas.length,
+//         itemBuilder: (context, index) {
+//           var parking = parkingareas[index];
+//           return ListTile(
+//             title: Text(parking['Name']),
+//             subtitle: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Text('Location: ${parking['Location']}'),
+//                 Text('Price: ${parking['price'].toString()}'),
+//                 Text('startDate: ${parking['startDate'].toString()}'),
+//                 Text('endDate: ${parking['endDate'].toString()}'),
+//               ],
+//             ),
+//             trailing: IconButton(
+//               icon: Icon(Icons.edit),
+//               onPressed: () {
+//                 // Navigate to the EditParkingScreen with selected parking details
+//                 Navigator.push(
+//                   context,
+//                   MaterialPageRoute(
+//                     builder: (context) => EditParkingScreen(parking: parking),
+//                   ),
+//                 );
+//               },
+//             ),
+//           );
+//         },
+//       ),
+//     );
+//   }
+// }
       body: ListView.builder(
         itemCount: parkingareas.length,
         itemBuilder: (context, index) {
@@ -70,26 +103,77 @@ class _myparkingareasState extends State<myparking> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Location: ${parking['Location']}'),
-                Text('Price: ${parking['price'].toString()}'),
-                Text('startDate: ${parking['startDate'].toString()}'),
+                Text('Price: ${parking['price']}'),
+                Text('StartDate: ${parking['startDate'].toString()}'),
                 Text('endDate: ${parking['endDate'].toString()}'),
               ],
             ),
-            trailing: IconButton(
-              icon: Icon(Icons.edit),
-              onPressed: () {
-                // Navigate to the EditParkingScreen with selected parking details
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditParkingScreen(parking: parking),
-                  ),
-                );
-              },
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    // Navigate to the EditParkingScreen with selected parking details
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditParkingScreen(parking: parking),
+                      ),
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    // Show confirmation dialog and delete parking area
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text('Confirm Deletion'),
+                        content: Text('Are you sure you want to delete this parking area?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context); // Close the dialog
+                            },
+                            child: Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              var db = FirebaseFirestore.instance;
+                              // Delete the Firestore document corresponding to the parking area
+                              try {
+                                await db.collection('parkingareas').doc(parking['docId']).delete();
+                                Navigator.pop(context); // Close the dialog
+                                // Optionally, update the UI to reflect the deletion
+                                setState(() {
+                                  parkingareas.removeAt(index);
+                                });
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text('Parking area deleted successfully'),
+                                ));
+                              } catch (e) {
+                                print('Error deleting parking area: $e');
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text('Failed to delete parking area. Please try again.'),
+                                ));
+                              }
+                            },
+                            child: Text('Delete'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
           );
         },
       ),
+
     );
+
   }
 }

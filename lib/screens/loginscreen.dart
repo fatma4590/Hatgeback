@@ -79,13 +79,13 @@ class loginscreen extends StatelessWidget {
               ),
               ElevatedButton(
                   style:
-                      ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                  ElevatedButton.styleFrom(backgroundColor: Colors.green),
                   onPressed: () async {
                     if (formkey.currentState!.validate()) {
                       try {
                         final credential = await FirebaseAuth.instance
                             .signInWithEmailAndPassword(
-                                email: email.text, password: password.text);
+                            email: email.text, password: password.text);
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text("sign in success."),
                           backgroundColor: Colors.grey,
@@ -99,7 +99,7 @@ class loginscreen extends StatelessWidget {
                         } else if (e.code == 'wrong-password') {
                           ScaffoldMessenger.of(context).showSnackBar((SnackBar(
                             content:
-                                Text('Wrong password provided for that user.'),
+                            Text('Wrong password provided for that user.'),
                           )));
                         }
                       } catch (e) {
