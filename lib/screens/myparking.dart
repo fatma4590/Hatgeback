@@ -60,39 +60,6 @@ class _myparkingareasState extends State<myparking> {
         ),
         centerTitle: true,
       ),
-//       body: ListView.builder(
-//         itemCount: parkingareas.length,
-//         itemBuilder: (context, index) {
-//           var parking = parkingareas[index];
-//           return ListTile(
-//             title: Text(parking['Name']),
-//             subtitle: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Text('Location: ${parking['Location']}'),
-//                 Text('Price: ${parking['price'].toString()}'),
-//                 Text('startDate: ${parking['startDate'].toString()}'),
-//                 Text('endDate: ${parking['endDate'].toString()}'),
-//               ],
-//             ),
-//             trailing: IconButton(
-//               icon: Icon(Icons.edit),
-//               onPressed: () {
-//                 // Navigate to the EditParkingScreen with selected parking details
-//                 Navigator.push(
-//                   context,
-//                   MaterialPageRoute(
-//                     builder: (context) => EditParkingScreen(parking: parking),
-//                   ),
-//                 );
-//               },
-//             ),
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }
       body: ListView.builder(
         itemCount: parkingareas.length,
         itemBuilder: (context, index) {
