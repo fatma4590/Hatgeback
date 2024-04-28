@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'EditParkingScreen.dart';
 
 class myparking extends StatefulWidget {
-  static String id = 'fatma';
+  static String id = 'myparking';
 
   myparking({Key? key}) : super(key: key);
 

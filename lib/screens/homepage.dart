@@ -54,19 +54,34 @@ class _homepageState extends State<homepage> {
         automaticallyImplyLeading: false,
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          ...parkingareas
-              .map((parking) => parkingwidget(
-              Location: parking['Location'],
-              Name: parking['Name'],
-              Price: parking['price'].toString(),
-             startDate: parking['startDate'].toDate(),
-             endDate: parking['endtDate'].toDate(),)
-          )
-              .toList()
-        ],
-      ),
+    body: ListView.builder(
+    itemCount: parkingareas.length,
+    itemBuilder: (context, index) {
+    var parking = parkingareas[index];
+    return ListTile(
+    title: Text(parking['Name']),
+    subtitle: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+    Text('Location: ${parking['Location']}'),
+    Text('Price: ${parking['price']}'),
+    Text('StartDate: ${parking['startDate'].toDate()}'),
+    Text('endDate: ${parking['endDate'].toDate()}'),
+    ],
+    ));}),
+      // body: Column(
+      //   children: [
+      //     ...parkingareas
+      //         .map((parking) => parkingwidget(
+      //         Location: parking['Location'],
+      //         Name: parking['Name'],
+      //         Price: parking['price'].toString(),
+      //        startDate: parking['startDate'].toDate(),
+      //        endDate: parking['endtDate'].toDate(),)
+      //     )
+      //         .toList()
+      //   ],
+      // ),
       bottomNavigationBar: BottomAppBar(
         color: Colors.green,
         height: 70,
