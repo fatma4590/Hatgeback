@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hatgeback/screens/addpoint.dart';
 import 'package:hatgeback/screens/myparking.dart';
@@ -20,8 +21,12 @@ class _homepageState extends State<homepage> {
   getParking() {
     List<Map<String, dynamic>> list = [];
     var db = FirebaseFirestore.instance;
-
-    db.collection('parkingareas').get().then(
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    db
+        .collection('parkingareas')
+        .where('userid', isNotEqualTo: _auth.currentUser!.email)
+        .get()
+        .then(
       (QuerySnapshot) {
         print("Succefully Completed");
         for (var docSnapshot in QuerySnapshot.docs) {
@@ -66,11 +71,11 @@ class _homepageState extends State<homepage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            IconButton(onPressed: (){
-              Navigator.pushNamed(context, UserProfile.id);
-            }, icon: Icon(Icons.account_circle_sharp)),
-
-
+            IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, UserProfile.id);
+                },
+                icon: Icon(Icons.account_circle_sharp)),
             SizedBox(width: 20),
             IconButton(
                 onPressed: () {

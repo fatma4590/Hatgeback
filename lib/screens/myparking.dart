@@ -71,7 +71,8 @@ class _myparkingareasState extends State<myparking> {
               children: [
                 Text('Location: ${parking['Location']}'),
                 Text('Price: ${parking['price'].toString()}'),
-                Text('Time: ${parking['time'].toString()}'),
+                Text('startDate: ${parking['startDate'].toString()}'),
+                Text('endDate: ${parking['endDate'].toString()}'),
               ],
             ),
             trailing: IconButton(

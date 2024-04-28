@@ -1,5 +1,3 @@
-import 'dart:js_interop';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 //import 'package:hatgeback/screens/accountuser.dart';
@@ -29,9 +27,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-
-        UserProfile.id:(context)=>UserProfile(),
-
+        UserProfile.id: (context) => UserProfile(),
         loginscreen.id: (context) => loginscreen(),
         homepage.id: (context) => homepage(),
         registerpage.id: (context) => registerpage(),

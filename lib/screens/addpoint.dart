@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hatgeback/screens/homepage.dart';
-import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 
 class addpoint extends StatefulWidget {
@@ -23,7 +23,7 @@ class _AddpointState extends State<addpoint> {
 
   @override
   Widget build(BuildContext context) {
-    final format = DateFormat ('yyyy-MM-dd HH:mm a');
+    final format = DateFormat('yyyy-MM-dd HH:mm a');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
@@ -89,7 +89,7 @@ class _AddpointState extends State<addpoint> {
                     return 'Required';
                   } else if (!RegExp(r"^[1-9]\d{0,7}(?:\.\d{1,4})?$")
                       .hasMatch(data)) {
-                   return "Enter valid price";
+                    return "Enter valid price";
                   }
                   return null;
                 },
@@ -104,50 +104,57 @@ class _AddpointState extends State<addpoint> {
               height: 12.0,
             ),
             DateTimeField(
-              format: format,
-              decoration: InputDecoration(
-                  hintText: 'Choose Start Date & Time'
-              ),
-              onShowPicker: (context, currentValue) async {
-                final date = await showDatePicker (context: context, initialDate: currentValue ?? DateTime.now(),
-                  firstDate: DateTime(1900), lastDate: DateTime(2100));
+                format: format,
+                decoration:
+                    InputDecoration(hintText: 'Choose Start Date & Time'),
+                onShowPicker: (context, currentValue) async {
+                  final date = await showDatePicker(
+                      context: context,
+                      initialDate: currentValue ?? DateTime.now(),
+                      firstDate: DateTime(1900),
+                      lastDate: DateTime(2100));
 
-                if (date != null) {
-                  final time = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()));
-                  return DateTimeField.combine(date, time);
-                } else {
-                  return currentValue;
-                }
-              },
-              onChanged: (value) {
-                setState(() {
-                  startDate = value ?? DateTime.now();
-                });
-              }
-            ),
+                  if (date != null) {
+                    final time = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.fromDateTime(
+                            currentValue ?? DateTime.now()));
+                    return DateTimeField.combine(date, time);
+                  } else {
+                    return currentValue;
+                  }
+                },
+                onChanged: (value) {
+                  setState(() {
+                    startDate = value ?? DateTime.now();
+                  });
+                }),
             SizedBox(height: 16.0),
             DateTimeField(
-              format: format,
-              decoration: InputDecoration(
-                  hintText: 'Choose End Date & Time'
-              ),
-              onShowPicker: (context, currentValue) async {
-                final date = await showDatePicker (context: context, initialDate: currentValue ?? DateTime.now(),
-                    firstDate: DateTime(1900), lastDate: DateTime(2100));
+                format: format,
+                decoration: InputDecoration(hintText: 'Choose End Date & Time'),
+                onShowPicker: (context, currentValue) async {
+                  final date = await showDatePicker(
+                      context: context,
+                      initialDate: currentValue ?? DateTime.now(),
+                      firstDate: DateTime(1900),
+                      lastDate: DateTime(2100));
 
-                if (date != null) {
-                  final time = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()));
-                  return DateTimeField.combine(date, time);
-                } else {
-                  return currentValue;
-                }
-              },
-              onChanged: (value) {
-                setState(() {
-                  endDate = value ?? DateTime.now();
-                });
-              }
-            ),
+                  if (date != null) {
+                    final time = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.fromDateTime(
+                            currentValue ?? DateTime.now()));
+                    return DateTimeField.combine(date, time);
+                  } else {
+                    return currentValue;
+                  }
+                },
+                onChanged: (value) {
+                  setState(() {
+                    endDate = value ?? DateTime.now();
+                  });
+                }),
             SizedBox(
               height: 12.0,
             ),
@@ -155,16 +162,16 @@ class _AddpointState extends State<addpoint> {
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
               onPressed: () {
                 FirebaseFirestore.instance
-                  .collection('parkingareas')
-                  .doc(Name!.text)
-                  .set({
-                    'userid': _auth.currentUser!.email,
-                    'Location': Location.text,
-                    'Name': Name.text,
-                    'price': Price.text,
-                    'startDate': Timestamp.fromDate(startDate!),
-                    'endDate': Timestamp.fromDate(endDate!),
-                  });
+                    .collection('parkingareas')
+                    .doc(Name!.text)
+                    .set({
+                  'userid': _auth.currentUser!.email,
+                  'Location': Location.text,
+                  'Name': Name.text,
+                  'price': Price.text,
+                  'startDate': Timestamp.fromDate(startDate!),
+                  'endDate': Timestamp.fromDate(endDate!),
+                });
 
                 Navigator.pushNamed(context, homepage.id);
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
