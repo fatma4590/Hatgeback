@@ -4,14 +4,17 @@ class parkingwidget extends StatelessWidget {
   final String Location;
   final String Name;
   final String Price;
-  final String time;
+  final String startDate;
+  final String endDate;
+
 
   const parkingwidget(
       {super.key,
         required this.Location,
         required this.Name,
         required this.Price,
-        required this.time});
+        required this.startDate,
+        required this.endDate});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +48,12 @@ class parkingwidget extends StatelessWidget {
                 TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
               ),
               Text(
-                time,
+                startDate,
+                style:
+                TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                startDate,
                 style:
                 TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
               ),

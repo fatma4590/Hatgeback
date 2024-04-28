@@ -61,7 +61,9 @@ class _homepageState extends State<homepage> {
               Location: parking['Location'],
               Name: parking['Name'],
               Price: parking['price'].toString(),
-              time: parking['time'].toString()))
+             startDate: parking['startDate'].toDate(),
+             endDate: parking['endtDate'].toDate(),)
+          )
               .toList()
         ],
       ),

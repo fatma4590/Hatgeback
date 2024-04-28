@@ -104,8 +104,8 @@ class _myparkingareasState extends State<myparking> {
               children: [
                 Text('Location: ${parking['Location']}'),
                 Text('Price: ${parking['price']}'),
-                Text('StartDate: ${parking['startDate'].toString()}'),
-                Text('endDate: ${parking['endDate'].toString()}'),
+                Text('StartDate: ${parking['startDate'].toDate()}'),
+                Text('endDate: ${parking['endDate'].toDate()}'),
               ],
             ),
             trailing: Row(
