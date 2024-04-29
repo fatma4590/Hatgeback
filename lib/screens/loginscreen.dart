@@ -186,7 +186,7 @@ class _LoginPageState extends State<loginscreen> {
                   Container(
                     height: 200,
                     width: 200,
-                    child: Image.asset('assets/asd.jpg'), // replace with the path to your logo image
+                    child: Image.asset('assets/CompleteLogo   (1).png'), // replace with the path to your logo image
                   ),
                   SizedBox(height: 30.0),
 
