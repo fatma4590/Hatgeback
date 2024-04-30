@@ -24,7 +24,6 @@ class _homepageState extends State<homepage> {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     db
         .collection('parkingareas')
-        .where('userid', isNotEqualTo: _auth.currentUser!.email)
         .get()
         .then(
           (QuerySnapshot) {
