@@ -63,7 +63,7 @@ class _homepageState extends State<homepage> {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
     Text('Location: ${parking['Location']}'),
-    Text('Price: ${parking['price']}'),
+    Text('Price per hour: ${parking['price']}'),
     Text('StartDate: ${parking['startDate'].toDate()}'),
     Text('endDate: ${parking['endDate'].toDate()}'),
     ],

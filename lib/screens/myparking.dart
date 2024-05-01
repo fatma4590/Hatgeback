@@ -70,7 +70,7 @@ class _myparkingareasState extends State<myparking> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Location: ${parking['Location']}'),
-                Text('Price: ${parking['price']}'),
+                Text('Price per hour: ${parking['price']}'),
                 Text('StartDate: ${parking['startDate'].toDate()}'),
                 Text('endDate: ${parking['endDate'].toDate()}'),
               ],
