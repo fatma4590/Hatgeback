@@ -51,7 +51,7 @@ class registerpage extends StatelessWidget {
                       if (data!.isEmpty) {
                         return "Required";
                       } else if (!RegExp(
-                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                           .hasMatch(data)) {
                         return 'Enter valid email';
                       }
@@ -99,7 +99,8 @@ class registerpage extends StatelessWidget {
                     validator: (data) {
                       if (data!.isEmpty) {
                         return "Required";
-                      }return null;
+                      }
+                      return null;
                     },
                     cursorColor: Colors.black,
                     showCursor: true,
@@ -119,7 +120,8 @@ class registerpage extends StatelessWidget {
                       } else if (!data.isEmpty ||
                           RegExp(r"^\+?0[0-9]{10}$").hasMatch(data)) {
                         return null;
-                      }return null;
+                      }
+                      return null;
                     },
                     cursorColor: Colors.black,
                     showCursor: true,
@@ -136,7 +138,8 @@ class registerpage extends StatelessWidget {
                     validator: (data) {
                       if (data!.isEmpty) {
                         return "Required";
-                      }return null;
+                      }
+                      return null;
                     },
                     cursorColor: Colors.black,
                     showCursor: true,
@@ -150,13 +153,13 @@ class registerpage extends StatelessWidget {
                 ),
                 ElevatedButton(
                     style:
-                    ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                        ElevatedButton.styleFrom(backgroundColor: Colors.green),
                     onPressed: () async {
                       if (formkey.currentState!.validate()) {
                         try {
                           final Credential = await FirebaseAuth.instance
                               .createUserWithEmailAndPassword(
-                              email: email.text, password: password.text);
+                                  email: email.text, password: password.text);
                           FirebaseFirestore.instance
                               .collection('users')
                               .doc(Credential.user!.email)
@@ -167,10 +170,13 @@ class registerpage extends StatelessWidget {
                             'phone': phone.text,
                             'address': address.text,
                           });
+
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text("Sign up success ."),
                             backgroundColor: Colors.green,
                           ));
+                          FirebaseAuth.instance.currentUser!
+                              .sendEmailVerification();
                           Navigator.pushNamed(context, loginscreen.id);
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'weak-password') {
