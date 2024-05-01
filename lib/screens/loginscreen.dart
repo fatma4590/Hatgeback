@@ -147,10 +147,10 @@
 //     );
 //   }
 // }
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:hatgeback/screens/registerpage.dart';
+import 'package:flutter/material.dart';
 import 'package:hatgeback/screens/homepage.dart';
+import 'package:hatgeback/screens/registerpage.dart';
 
 class loginscreen extends StatefulWidget {
   static String id = 'loginpage';
@@ -186,10 +186,10 @@ class _LoginPageState extends State<loginscreen> {
                   Container(
                     height: 200,
                     width: 200,
-                    child: Image.asset('assets/CompleteLogo   (1).png'), // replace with the path to your logo image
+                    child: Image.asset(
+                        'assets/CompleteLogo   (1).png'), // replace with the path to your logo image
                   ),
                   SizedBox(height: 30.0),
-
                   SizedBox(height: 30.0),
                   TextFormField(
                     controller: emailController,
@@ -242,24 +242,31 @@ class _LoginPageState extends State<loginscreen> {
                       enabledBorder: InputBorder.none,
                     ),
                   ),
-                  SizedBox(height:20.0),
+                  SizedBox(height: 20.0),
                   ElevatedButton(
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
-                        try{
-                          final UserCredential userCredential =
-                          await FirebaseAuth.instance
+                        try {
+                          final Credential = await FirebaseAuth.instance
                               .signInWithEmailAndPassword(
                             email: emailController.text,
                             password: passwordController.text,
                           );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Sign in successful.'),
-                              backgroundColor: Color(0xFFE3F3E9),
-                            ),
-                          );
-                          Navigator.pushNamed(context, homepage.id);
+                          if (Credential.user!.emailVerified) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Sign in successful.'),
+                                backgroundColor: Color(0xFFE3F3E9),
+                              ),
+                            );
+
+                            Navigator.pushNamed(context, homepage.id);
+                          } else {
+                            FirebaseAuth.instance.currentUser!
+                                .sendEmailVerification();
+                            _showErrorDialog(
+                                'Open your e-mail and verify your account ');
+                          }
                         } on FirebaseAuthException catch (e) {
                           _showErrorDialog('Error signing in.');
                         } catch (e) {
@@ -320,7 +327,8 @@ class _LoginPageState extends State<loginscreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Error'),
-          content: Text(errorMessage, style: TextStyle(color: Color(0xFF33AD60))),
+          content:
+              Text(errorMessage, style: TextStyle(color: Color(0xFF33AD60))),
           actions: <Widget>[
             TextButton(
               child: Text('OK'),
