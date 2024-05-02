@@ -1,3 +1,4 @@
+//shery old code
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:flutter/material.dart';
@@ -68,24 +69,24 @@
 //                   MyTextBox(
 //                     text: userData['username'],
 //                     SectionName: 'User Name',
-//                     onPressed: () => editField('username'),
+//                     onPressed: () => editField('username'), sectionName: '',
 //                   ),
 //                   // phone
 //                   MyTextBox(
 //                       text: userData['phone'],
 //                       SectionName: 'phone',
-//                       onPressed: () => editField('phone')),
+//                       onPressed: () => editField('phone'), sectionName: '',),
 //                   //password
 //                   MyTextBox(
 //                     text: userData['password'],
 //                     SectionName: 'Password',
-//                     onPressed: () => editField('password '),
+//                     onPressed: () => editField('password '), sectionName: '',
 //                   ),
 //
 //                   MyTextBox(
 //                     text: userData['address'],
 //                     SectionName: 'Address',
-//                     onPressed: () => editField('address'),
+//                     onPressed: () => editField('address'), sectionName: '',
 //                   ),
 //                 ],
 //               );
@@ -103,9 +104,288 @@
 //     );
 //   }
 // }
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:flutter/material.dart';
+//
+// class UserProfile extends StatefulWidget {
+//   static String id = 'userprofile';
+//
+//   const UserProfile({Key? key}) : super(key: key);
+//
+//   @override
+//   State<UserProfile> createState() => _UserProfileState();
+// }
+//
+// class _UserProfileState extends State<UserProfile> {
+//   final currentUser = FirebaseAuth.instance.currentUser!;
+//
+//   Future<void> editField(String field, String value) async {
+//     try {
+//       await FirebaseFirestore.instance
+//           .collection("users")
+//           .doc(currentUser.email)
+//           .update({field: value});
+//
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(
+//           content: Text('$field updated successfully.'),
+//           backgroundColor: Colors.green,
+//         ),
+//       );
+//     } catch (e) {
+//       print("Error updating $field: $e");
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(
+//           content: Text('Failed to update $field. Please try again.'),
+//           backgroundColor: Colors.red,
+//         ),
+//       );
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: Colors.white,
+//       appBar: AppBar(
+//         title: Text("Profile Page"),
+//         backgroundColor: Colors.black26,
+//       ),
+//       body: StreamBuilder<DocumentSnapshot>(
+//         stream: FirebaseFirestore.instance
+//             .collection("users")
+//             .doc(currentUser.email)
+//             .snapshots(),
+//         builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+//           if (snapshot.hasData) {
+//             final userData =
+//             snapshot.data!.data() as Map<String, dynamic>;
+//             return ListView(
+//               children: [
+//                 const SizedBox(height: 50),
+//                 const Icon(
+//                   Icons.person,
+//                   color: Colors.green,
+//                   size: 72,
+//                 ),
+//                 const SizedBox(height: 10),
+//                 Text(
+//                   currentUser.email!,
+//                   textAlign: TextAlign.center,
+//                   style: TextStyle(color: Colors.green),
+//                 ),
+//                 const SizedBox(height: 50),
+//                 _buildProfileField('username', userData['username'] ?? ''),
+//                 _buildProfileField('phone', userData['phone'] ?? ''),
+//                 _buildChangePasswordButton(),
+//                 _buildProfileField('address', userData['address'] ?? ''),
+//               ],
+//             );
+//           } else if (snapshot.hasError) {
+//             return Center(
+//               child: Text('Error: ${snapshot.error.toString()}'),
+//             );
+//           }
+//           return Center(
+//             child: CircularProgressIndicator(),
+//           );
+//         },
+//       ),
+//     );
+//   }
+//
+//   Widget _buildProfileField(String field, String value) {
+//     return ListTile(
+//       title: Text(
+//         value.isEmpty ? '[Hidden]' : value,
+//         style: TextStyle(
+//           fontSize: 16,
+//           color: Colors.black87,
+//         ),
+//       ),
+//       trailing: IconButton(
+//         icon: Icon(Icons.edit, color: Colors.green),
+//         onPressed: () {
+//           _editFieldDialog(field, value);
+//         },
+//       ),
+//     );
+//   }
+//
+//   Future<void> _editFieldDialog(String field, String initialValue) async {
+//     TextEditingController controller = TextEditingController(
+//         text: initialValue);
+//
+//     await showDialog(
+//       context: context,
+//       builder: (context) {
+//         return AlertDialog(
+//           title: Text('Edit $field'),
+//           content: TextField(
+//             controller: controller,
+//             decoration: InputDecoration(labelText: field),
+//           ),
+//           actions: [
+//             TextButton(
+//               onPressed: () {
+//                 Navigator.pop(context);
+//               },
+//               child: Text('Cancel'),
+//             ),
+//             ElevatedButton(
+//               onPressed: () {
+//                 String newValue = controller.text.trim();
+//                 if (newValue.isNotEmpty && newValue != initialValue) {
+//                   editField(field, newValue);
+//                 }
+//                 Navigator.pop(context);
+//               },
+//               child: Text('Save'),
+//               style: ElevatedButton.styleFrom(
+//                 foregroundColor: Colors.white, backgroundColor: Colors.green,
+//               ),
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//   }
+//
+//   Widget _buildChangePasswordButton() {
+//     return ListTile(
+//       title: Text(
+//         'Change Password',
+//         style: TextStyle(
+//           fontSize: 16,
+//           color: Colors.black87,
+//         ),
+//       ),
+//       trailing: IconButton(
+//         icon: Icon(Icons.edit, color: Colors.green),
+//         onPressed: () {
+//           _showChangePasswordDialog();
+//         },
+//       ),
+//     );
+//   }
+//
+//   Future<void> _showChangePasswordDialog() async {
+//     TextEditingController newPasswordController = TextEditingController();
+//     TextEditingController currentPasswordController = TextEditingController();
+//
+//     await showDialog(
+//       context: context,
+//       builder: (context) {
+//         return AlertDialog(
+//           title: Text('Change Password'),
+//           content: Column(
+//             mainAxisSize: MainAxisSize.min,
+//             children: [
+//               TextField(
+//                 controller: currentPasswordController,
+//                 decoration: InputDecoration(labelText: 'Current Password'),
+//                 obscureText: true,
+//               ),
+//               TextField(
+//                 controller: newPasswordController,
+//                 decoration: InputDecoration(labelText: 'New Password'),
+//                 obscureText: true,
+//               ),
+//             ],
+//           ),
+//           actions: [
+//             TextButton(
+//               onPressed: () {
+//                 Navigator.pop(context);
+//               },
+//               child: Text('Cancel'),
+//             ),
+//             ElevatedButton(
+//               onPressed: () {
+//                 String currentPassword = currentPasswordController.text.trim();
+//                 String newPassword = newPasswordController.text.trim();
+//                 if (newPassword.isNotEmpty) {
+//                   _validatePassword(newPassword);
+//                   _updatePassword(newPassword, currentPassword);
+//                 }
+//                 Navigator.pop(context);
+//               },
+//               child: Text('Change'),
+//               style: ElevatedButton.styleFrom(
+//                 foregroundColor: Colors.white, backgroundColor: Colors.green,
+//               ),
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//   }
+//
+//   Future<void> _updatePassword(String newPassword,
+//       String currentPassword) async {
+//     try {
+//       // Re-authenticate user with current password before updating password
+//       await _reauthenticateUser(currentPassword);
+//
+//       // Validate new password
+//       _validatePassword(newPassword);
+//
+//       // Update password in Firebase Authentication
+//       await FirebaseAuth.instance.currentUser!.updatePassword(newPassword);
+//
+//       // Update password in Firestore user document
+//       await FirebaseFirestore.instance
+//           .collection("users")
+//           .doc(currentUser.email)
+//           .update({'password': newPassword});
+//
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(
+//           content: Text('Password updated successfully.'),
+//           backgroundColor: Colors.green,
+//         ),
+//       );
+//     } catch (e) {
+//       print("Error updating password: $e");
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(
+//           content: Text('Failed to update password. Please try again.'),
+//           backgroundColor: Colors.red,
+//         ),
+//       );
+//     }
+//   }
+//
+//
+//   Future<void> _reauthenticateUser(String currentPassword) async {
+//     try {
+//       AuthCredential credential = EmailAuthProvider.credential(
+//         email: currentUser.email!,
+//         password: currentPassword,
+//       );
+//       await FirebaseAuth.instance.currentUser!.reauthenticateWithCredential(
+//           credential);
+//     } catch (e) {
+//       throw FirebaseAuthException(
+//           code: 'wrong-password', message: 'Incorrect current password.');
+//     }
+//   }
+//
+//   void _validatePassword(String newPassword) {
+//     if (newPassword.length < 6 ||
+//         !newPassword.contains(RegExp(r'[A-Z]')) ||
+//         !newPassword.contains(RegExp(r'[a-z]')) ||
+//         !newPassword.contains(RegExp(r'[0-9]'))) {
+//       throw Exception(
+//           'Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, and one digit.');
+//     }
+//   }
+// }
+//
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class UserProfile extends StatefulWidget {
   static String id = 'userprofile';
@@ -119,102 +399,27 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
   final currentUser = FirebaseAuth.instance.currentUser!;
 
-  void _editEmailDialog(String initialValue) {
-    TextEditingController controller = TextEditingController(text: initialValue);
-    TextEditingController passwordController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Edit Email'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: controller,
-                decoration: InputDecoration(labelText: 'New Email'),
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: passwordController,
-                decoration: InputDecoration(labelText: 'Password'),
-                obscureText: true,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                String newEmail = controller.text.trim();
-                String currentPassword = passwordController.text.trim();
-
-                try {
-                  // Re-authenticate user before updating email
-                  await _reauthenticateUser(currentPassword);
-
-                  // Check if the new email is different from the current email
-                  if (newEmail != FirebaseAuth.instance.currentUser!.email) {
-                    // Update email in Firebase Authentication
-                    await FirebaseAuth.instance.currentUser!.updateEmail(newEmail);
-
-                    // Update email in Firestore user document
-                    await FirebaseFirestore.instance.collection("users").doc(currentUser.email).update({'email': newEmail});
-
-                    // Show success message
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Email updated successfully.'),
-                        backgroundColor: Colors.green,
-                      ),
-                    );
-
-                    Navigator.pop(context); // Close dialog
-                  } else {
-                    // New email is the same as the current email
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('New email must be different from the current email.'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  }
-                } catch (e) {
-                  print('Failed to update email: $e');
-                  // Show error message
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Failed to update email: $e'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
-              },
-              child: Text('Save'),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.green,
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> _reauthenticateUser(String currentPassword) async {
+  Future<void> editField(String field, String value) async {
     try {
-      AuthCredential credential = EmailAuthProvider.credential(
-        email: currentUser.email!,
-        password: currentPassword,
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(currentUser.email)
+          .update({field: value});
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('$field updated successfully.'),
+          backgroundColor: Colors.green,
+        ),
       );
-      await FirebaseAuth.instance.currentUser!.reauthenticateWithCredential(credential);
     } catch (e) {
-      throw FirebaseAuthException(code: 'wrong-password', message: 'Incorrect current password.');
+      print("Error updating $field: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to update $field. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -226,96 +431,274 @@ class _UserProfileState extends State<UserProfile> {
         title: Text("Profile Page"),
         backgroundColor: Colors.black26,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: StreamBuilder<DocumentSnapshot>(
-          stream: FirebaseFirestore.instance.collection("users").doc(currentUser.email).snapshots(),
-          builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-            if (snapshot.hasData) {
-              final userData = snapshot.data!.data() as Map<String, dynamic>;
-              return ListView(
-                children: [
-                  SizedBox(height: 20),
-                  CircleAvatar(
-                    radius: 60,
-                    backgroundColor: Colors.green,
-                    child: Icon(
-                      Icons.person,
-                      size: 72,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  ListTile(
-                    title: Text(
-                      'Email',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    subtitle: Text(currentUser.email!),
-                    trailing: IconButton(
-                      icon: Icon(Icons.edit, color: Colors.green),
-                      onPressed: () {
-                        _editEmailDialog(currentUser.email!);
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 30),
-                  ListTile(
-                    title: Text(
-                      'My Details',
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  ListTile(
-                    title: Text('Username'),
-                    subtitle: Text(userData['username'] ?? ''),
-                    trailing: IconButton(
-                      icon: Icon(Icons.edit, color: Colors.green),
-                      onPressed: () {
-                        // Implement edit username functionality
-                      },
-                    ),
-                  ),
-                  ListTile(
-                    title: Text('Phone'),
-                    subtitle: Text(userData['phone'] ?? ''),
-                    trailing: IconButton(
-                      icon: Icon(Icons.edit, color: Colors.green),
-                      onPressed: () {
-                        // Implement edit phone functionality
-                      },
-                    ),
-                  ),
-                  ListTile(
-                    title: Text('Address'),
-                    subtitle: Text(userData['address'] ?? ''),
-                    trailing: IconButton(
-                      icon: Icon(Icons.edit, color: Colors.green),
-                      onPressed: () {
-                        // Implement edit address functionality
-                      },
-                    ),
-                  ),
-                ],
-              );
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text('Error: ${snapshot.error.toString()}'),
-              );
-            }
-            return Center(
-              child: CircularProgressIndicator(),
+      body: StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection("users")
+            .doc(currentUser.email)
+            .snapshots(),
+        builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasData) {
+            final userData =
+            snapshot.data!.data() as Map<String, dynamic>;
+            return ListView(
+              children: [
+                const SizedBox(height: 50),
+                const Icon(
+                  Icons.person,
+                  color: Colors.green,
+                  size: 72,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  currentUser.email!,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.green),
+                ),
+                const SizedBox(height: 50),
+                _buildProfileField('username', userData['username']?? ''),
+                _buildProfileField('phone', userData['phone']?? ''),
+                _buildChangePasswordButton(),
+                _buildProfileField('address', userData['address']?? ''),
+              ],
             );
-          },
-        ),
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error.toString()}'),
+            );
+          }
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
     );
+  }
+
+  Widget _buildProfileField(String field, String value) {
+    return ListTile(
+      title: Text(
+        value.isEmpty? '[Hidden]' : value,
+        style: TextStyle(
+          fontSize: 16,
+          color: Colors.black87,
+        ),
+      ),
+      trailing: IconButton(
+        icon: Icon(Icons.edit, color: Colors.green),
+        onPressed: () {
+          _editFieldDialog(field, value);
+        },
+      ),
+    );
+  }
+
+  Future<void> _editFieldDialog(String field, String initialValue) async {
+    TextEditingController controller = TextEditingController(
+        text: initialValue);
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Edit $field'),
+          content: TextField(
+            controller: controller,
+            decoration: InputDecoration(labelText: field),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                String newValue = controller.text.trim();
+                if (newValue.isNotEmpty && newValue!= initialValue) {
+                  if (field == 'phone') {
+                    if (_validatePhoneNumber(newValue)) {
+                      editField(field, newValue);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Phone number must be 11 digits numeric.'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  } else {
+                    editField(field, newValue);
+                  }
+                }
+                Navigator.pop(context);
+              },
+              child: Text('Save'),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white, backgroundColor: Colors.green,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  bool _validatePhoneNumber(String phoneNumber) {
+    return phoneNumber.length == 11 && phoneNumber.replaceAll(RegExp(r'[^\d]'), '') == phoneNumber;
+  }
+
+  Widget _buildChangePasswordButton() {
+    return ListTile(
+      title: Text(
+        'Change Password',
+        style: TextStyle(
+          fontSize: 16,
+          color: Colors.black87,
+        ),
+      ),
+      trailing: IconButton(
+        icon: Icon(Icons.edit, color: Colors.green),
+        onPressed: () {
+          _showChangePasswordDialog();
+        },
+      ),
+    );
+  }
+
+  Future<void> _showChangePasswordDialog() async {
+    TextEditingController newPasswordController = TextEditingController();
+    TextEditingController currentPasswordController = TextEditingController();
+
+    await showDialog(
+    context: context,
+    builder: (context) {
+    return AlertDialog(
+    title: Text('Change Password'),
+    content: Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+    TextField(
+    controller: currentPasswordController,
+    decoration: InputDecoration(labelText: 'Current Password'),
+    obscureText: true,
+    ),
+    TextField(
+    controller: newPasswordController,
+    decoration: InputDecoration(labelText: 'New Password'),
+    obscureText: true,
+    ),
+    ],
+    ),
+    actions: [
+    TextButton(
+    onPressed: () {
+    Navigator.pop(context);
+    },
+    child: Text('Cancel'),
+    ),
+    ElevatedButton(
+    onPressed: () {
+    String currentPassword = currentPasswordController.text.trim();
+    String newPassword = newPasswordController.text.trim();
+    if (newPassword.isNotEmpty) {
+    if (newPassword == currentPassword) {
+    ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+    content: Text('New password cannot be the same as the current password.'),
+    backgroundColor: Colors.red,
+    ),
+    );
+    } else if (newPassword.length < 6) {
+    ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+    content: Text('New password must be at least 6 characters long.'),
+    backgroundColor: Colors.red,
+    ),
+    );
+    }else if (!newPassword.contains(RegExp(r'[A-Z]')) ||
+      !newPassword.contains(RegExp(r'[a-z]')) ||
+      !newPassword.contains(RegExp(r'[0-9]'))) {
+      ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+      content: Text('New password must be at least one capital , one small and one number.'),
+      backgroundColor: Colors.red,
+      ),
+      );
+      }
+     else {
+    _updatePassword(newPassword, currentPassword);
+    }
+         };
+    Navigator.pop(context);
+    },
+    child: Text('Change'),
+    style: ElevatedButton.styleFrom(
+    foregroundColor: Colors.white, backgroundColor: Colors.green,
+    ),
+    ),
+    ],
+    );
+    },
+    );
+  }
+
+  Future<void> _updatePassword(String newPassword,
+      String currentPassword) async {
+    try {
+      // Re-authenticate user with current password before updating password
+      await _reauthenticateUser(currentPassword);
+
+      // Validate new password
+      _validatePassword(newPassword);
+
+      // Update password in Firebase Authentication
+      await FirebaseAuth.instance.currentUser!.updatePassword(newPassword);
+
+      // Update password in Firestore user document
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(currentUser.email)
+          .update({'password': newPassword});
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Password updated successfully.'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      print("Error updating password: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to update password. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> _reauthenticateUser(String currentPassword) async {
+    try {
+      AuthCredential credential = EmailAuthProvider.credential(
+        email: currentUser.email!,
+        password: currentPassword,
+      );
+      await FirebaseAuth.instance.currentUser!.reauthenticateWithCredential(
+          credential);
+    } catch (e) {
+      throw FirebaseAuthException(
+          code: 'wrong-password', message: 'Incorrect current password.');
+    }
+  }
+
+  void _validatePassword(String newPassword) {
+    if (newPassword.length < 6 ||
+        !newPassword.contains(RegExp(r'[A-Z]')) ||
+        !newPassword.contains(RegExp(r'[a-z]')) ||
+        !newPassword.contains(RegExp(r'[0-9]'))) {
+      throw Exception(
+          'Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, and one digit.');
+    }
   }
 }

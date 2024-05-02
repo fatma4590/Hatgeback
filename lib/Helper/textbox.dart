@@ -7,7 +7,7 @@ class MyTextBox extends StatelessWidget {
   const MyTextBox({super.key,
   required this.text,
   required this.SectionName,
-  required this.onPressed
+  required this.onPressed, required String sectionName
   });
 
   @override

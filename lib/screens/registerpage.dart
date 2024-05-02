@@ -73,7 +73,7 @@ class registerpage extends StatelessWidget {
                       if (data!.isEmpty) {
                         return "Required";
                       } else if (data.length < 6) {
-                        return 'Password must be longer than 6 characters.';
+                        return 'Password must be at least 6 characters.';
                       } else if (!data.contains(RegExp(r'[A-Z]'))) {
                         return '• Uppercase letter is missing.';
                       } else if (!data.contains(RegExp(r'[a-z]'))) {
