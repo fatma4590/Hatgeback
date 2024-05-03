@@ -304,7 +304,7 @@ class _homepageState extends State<homepage> {
                 },
                 icon: Icon(
                   Icons.account_circle_sharp,
-                  color: Color(0xFF33AD60),
+                  color: Colors.black,
                 )),
             IconButton(
                 onPressed: () {
@@ -312,7 +312,7 @@ class _homepageState extends State<homepage> {
                 },
                 icon: Icon(
                   Icons.add,
-                  color: Color(0xFF33AD60),
+                  color: Colors.black,
                 )),
             IconButton(
                 onPressed: () {
@@ -320,7 +320,7 @@ class _homepageState extends State<homepage> {
                 },
                 icon: Icon(
                   Icons.paste_rounded,
-                  color: Color(0xFF33AD60),
+                  color: Colors.black,
                 )),
           ],
         ),
