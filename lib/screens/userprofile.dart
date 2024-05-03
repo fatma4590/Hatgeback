@@ -1,4 +1,4 @@
-//shery old code
+// shery old code
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:flutter/material.dart';
@@ -119,237 +119,259 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   final currentUser = FirebaseAuth.instance.currentUser!;
+  late TextEditingController _usernameController;
+  late TextEditingController _phoneController;
+  late TextEditingController _passwordController;
+  late TextEditingController _addressController;
 
-  Future<void> editField(String field, String value) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection("users")
-          .doc(currentUser.email)
-          .update({field: value});
+  @override
+  void initState() {
+    super.initState();
+    _usernameController = TextEditingController();
+    _phoneController = TextEditingController();
+    _passwordController = TextEditingController();
+    _addressController = TextEditingController();
+  }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('$field updated successfully.'),
-          backgroundColor: Colors.green,
-        ),
-      );
-    } catch (e) {
-      print("Error updating $field: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to update $field. Please try again.'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _phoneController.dispose();
+    _passwordController.dispose();
+    _addressController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text("Profile Page"),
-        backgroundColor: Colors.black26,
-      ),
-      body: StreamBuilder<DocumentSnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection("users")
-            .doc(currentUser.email)
-            .snapshots(),
-        builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (snapshot.hasData) {
-            final userData =
-            snapshot.data!.data() as Map<String, dynamic>;
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text("Profile Page"),
+          backgroundColor: Colors.black26,
+        ),
+        body: StreamBuilder<DocumentSnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection("users")
+              .doc(currentUser.email)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            if (!snapshot.hasData || snapshot.data == null) {
+              return Center(
+                child: Text('No user data found.'),
+              );
+            }
+
+            final userData = snapshot.data!.data() as Map<String, dynamic>?;
+
+            if (userData == null) {
+              return Center(
+                child: Text('No user data found.'),
+              );
+            }
+
+            // Set initial values from Firestore
+            _usernameController.text = userData['username'] ?? '';
+            _phoneController.text = userData['phone'] ?? '';
+            _passwordController.text = ''; // Clear password field
+            _addressController.text = userData['address'] ?? '';
+
             return ListView(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
               children: [
-                const SizedBox(height: 50),
-                const Icon(
+                SizedBox(height: 50),
+                // Profile pic (you can use a real profile picture here)
+                Icon(
                   Icons.person,
                   color: Colors.green,
                   size: 72,
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
+                // User email
                 Text(
                   currentUser.email!,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.green),
                 ),
-                const SizedBox(height: 50),
-                _buildProfileField('Username', 'Username:', userData['username']?? ''),
-                _buildProfileField('Phone Number', 'Phone Number:', userData['phone']?? ''),
-                _buildChangePasswordButton(),
-                _buildProfileField('Address', 'Address:', userData['address']?? ''),
+                SizedBox(height: 50),
+                // Editable fields
+                buildEditableField(
+                  'username',
+                  'User Name',
+                  _usernameController,
+                ),
+                buildEditableField(
+                  'phone',
+                  'Phone',
+                  _phoneController,
+                ),
+                buildPasswordChangeField(),
+                buildEditableField(
+                  'address',
+                  'Address',
+                  _addressController,
+                ),
               ],
             );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error.toString()}'),
-            );
-          }
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+          },
+        ),
       ),
     );
   }
 
-  Widget _buildProfileField(String fieldName, String label, String value) {
-    return ListTile(
-      title: Text(
-        label,
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.black87,
-        ),
-      ),
-      subtitle: Text(
-        value.isEmpty? '[Hidden]' : value,
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.black87,
-        ),
-      ),
-      trailing: IconButton(
-        icon: Icon(Icons.edit, color: Colors.green),
-        onPressed: () {
-          _editFieldDialog(fieldName, value);
-        },
-      ),
-    );
-  }
-
-  Future<void> _editFieldDialog(String field, String initialValue) async {
-    TextEditingController controller = TextEditingController(
-        text: initialValue);
-
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Edit $field'),
-          content: TextField(
-            controller: controller,
-            decoration: InputDecoration(labelText: field),
+  Widget buildEditableField(
+      String fieldKey, String label, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              '$label: ${controller.text}',
+              style: TextStyle(
+                color: Colors.green,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                String newValue = controller.text.trim();
-                if (newValue.isNotEmpty && newValue!= initialValue) {
-                  if (field == 'Phone Number') {
-                    if (_validatePhoneNumber(newValue)) {
-                      editField(field, newValue);
-                    } else if (RegExp(r"^\+?0[0-9]{10}$").hasMatch(newValue)) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Phone number must be 11 digits numeric.'),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
-                  } else {
-                    editField(field, newValue);
-                  }
-                }
-                Navigator.pop(context);
-              },
-              child: Text('Save'),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor: Colors.green,
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('Edit $label'),
+                  content: TextFormField(
+                    controller: controller,
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        // Save changes to Firestore
+                        await FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(currentUser.email)
+                            .update({fieldKey: controller.text});
 
-  bool _validatePhoneNumber(String phoneNumber) {
-    return phoneNumber.length == 11 && phoneNumber.replaceAll(RegExp(r"^\+?0[0-9]{10}$"), '') == phoneNumber;
-  }
-
-  Widget _buildChangePasswordButton() {
-    return ListTile(
-      title: Text(
-        'Password :\n*******',
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.black87,
-        ),
-      ),
-      trailing: IconButton(
-        icon: Icon(Icons.edit, color: Colors.green),
-        onPressed: () {
-          _changePasswordDialog();
-        },
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Save'),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
 
-  Future<void> _changePasswordDialog() async {
-    String newPassword = '';
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Change Password'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                obscureText: true,
-                onChanged: (value) {
-                  newPassword = value;
-                },
-                decoration: InputDecoration(labelText: 'New Password'),
+  Widget buildPasswordChangeField() {
+    TextEditingController oldPasswordController = TextEditingController();
+    TextEditingController newPasswordController = TextEditingController();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              'Password: ********', // Display masked password
+              style: TextStyle(
+                color: Colors.green,
+                fontWeight: FontWeight.bold,
               ),
-              SizedBox(height: 10),
-              TextField(
-                obscureText: true,
-                onChanged: (value) {
-                  if (value != newPassword) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Passwords do not match.'),
-                        backgroundColor: Colors.red,
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('Change Password'),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextFormField(
+                        controller: oldPasswordController,
+                        decoration: InputDecoration(labelText: 'Current Password'),
+                        obscureText: true,
                       ),
-                    );
-                  }
-                },
-                decoration: InputDecoration(labelText: 'Confirm New Password'),
-              ),
-            ],
+                      TextFormField(
+                        controller: newPasswordController,
+                        decoration: InputDecoration(labelText: 'New Password'),
+                        obscureText: true,
+                      ),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        String oldPassword = oldPasswordController.text;
+                        String newPassword = newPasswordController.text;
+
+                        try {
+                          // Re-authenticate user to verify old password
+                          AuthCredential credential = EmailAuthProvider.credential(
+                            email: currentUser.email!,
+                            password: oldPassword,
+                          );
+
+                          await currentUser.reauthenticateWithCredential(credential);
+
+                          // Update password in Firebase Authentication
+                          await currentUser.updatePassword(newPassword);
+
+                          // Update password in Firestore (optional)
+                          await FirebaseFirestore.instance
+                              .collection("users")
+                              .doc(currentUser.email)
+                              .update({'password': newPassword});
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Password updated successfully')),
+                          );
+
+                          Navigator.of(context).pop(); // Close dialog
+                        } catch (error) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Failed to update password')),
+                          );
+                        }
+                      },
+                      child: Text('Save'),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (newPassword.isNotEmpty) {
-                  editField('Password', newPassword);
-                }
-                Navigator.pop(context);
-              },
-              child: Text('Save'),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor: Colors.green,
-              ),
-            ),
-          ],
-        );
-      },
+        ],
+      ),
     );
   }
+
 }
