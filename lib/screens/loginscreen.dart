@@ -160,11 +160,6 @@ class loginscreen extends StatefulWidget {
 }
 
 class _LoginPageState extends State<loginscreen> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  bool _passwordVisible = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -279,12 +274,12 @@ class _LoginPageState extends State<loginscreen> {
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF33AD60),
+                        color: Colors.white,
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(vertical: 15.0),
-                      backgroundColor: Color(0xFFE3F3E9),
+                      backgroundColor: Color(0xFF33AD60),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
@@ -320,6 +315,11 @@ class _LoginPageState extends State<loginscreen> {
       ),
     );
   }
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  bool _passwordVisible = false;
 
   void _showErrorDialog(String errorMessage) {
     showDialog(
