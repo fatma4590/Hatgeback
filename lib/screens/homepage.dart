@@ -138,11 +138,8 @@ class _homepageState extends State<homepage> {
     List<Map<String, dynamic>> list = [];
     var db = FirebaseFirestore.instance;
     final FirebaseAuth _auth = FirebaseAuth.instance;
-    db
-        .collection('parkingareas')
-        .get()
-        .then(
-          (QuerySnapshot) {
+    db.collection('parkingareas').get().then(
+      (QuerySnapshot) {
         print("Succefully Completed");
         for (var docSnapshot in QuerySnapshot.docs) {
           list.add(docSnapshot.data());
@@ -237,7 +234,9 @@ class _homepageState extends State<homepage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    parking['Name']!= null? parking['Name'] : '',
+                                    parking['Name'] != null
+                                        ? parking['Name']
+                                        : '',
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -246,7 +245,9 @@ class _homepageState extends State<homepage> {
                                   ),
                                   SizedBox(height: 10),
                                   Text(
-                                    parking['Location']!= null? "Location: ${parking['Location']}" : '',
+                                    parking['Location'] != null
+                                        ? "Location: ${parking['Location']}"
+                                        : '',
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.grey,
@@ -254,7 +255,9 @@ class _homepageState extends State<homepage> {
                                   ),
                                   SizedBox(height: 10),
                                   Text(
-                                    parking['price']!= null? "Price: ${parking['price']}" : '',
+                                    parking['price'] != null
+                                        ? "Price: ${parking['price']}"
+                                        : '',
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.grey,
@@ -262,8 +265,9 @@ class _homepageState extends State<homepage> {
                                   ),
                                   SizedBox(height: 10),
                                   Text(
-                                    parking['startDate']!= null? "Start Date: ${DateFormat('MM/dd/yyyy HH:mm')
-                                        .format(parking['startDate'].toDate())}" : '',
+                                    parking['startDate'] != null
+                                        ? "Start Date: ${DateFormat('MM/dd/yyyy HH:mm').format(parking['startDate'].toDate())}"
+                                        : '',
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.grey,
@@ -271,12 +275,36 @@ class _homepageState extends State<homepage> {
                                   ),
                                   SizedBox(height: 10),
                                   Text(
-                                    parking['endDate']!= null? "End Date: ${DateFormat('MM/dd/yyyy HH:mm')
-                                        .format(parking['endDate'].toDate())}" : '',
+                                    parking['endDate'] != null
+                                        ? "End Date: ${DateFormat('MM/dd/yyyy HH:mm').format(parking['endDate'].toDate())}"
+                                        : '',
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.grey,
                                     ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return Dialog(
+                                            child: Column(
+                                              children: [// here fatam ],
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: Text(
+                                      "Reserve",
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.green),
                                   ),
                                 ],
                               ),
