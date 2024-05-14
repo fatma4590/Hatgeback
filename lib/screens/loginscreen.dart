@@ -151,6 +151,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hatgeback/screens/homepage.dart';
 import 'package:hatgeback/screens/registerpage.dart';
+import 'package:hatgeback/screens/forgot_password_page.dart';
 
 class loginscreen extends StatefulWidget {
   static String id = 'loginpage';
@@ -285,6 +286,16 @@ class _LoginPageState extends State<loginscreen> {
                       ),
                     ),
                   ),
+                  SizedBox(height: 20),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
+                      );
+                    },
+                    child: Text('Forgot Password?'),
+                  ),
                   SizedBox(height: 20.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -307,6 +318,7 @@ class _LoginPageState extends State<loginscreen> {
                       ),
                     ],
                   ),
+
                 ],
               ),
             ),
