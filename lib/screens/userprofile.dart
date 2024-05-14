@@ -303,68 +303,94 @@ class _UserProfileState extends State<UserProfile> {
             onPressed: () {
               showDialog(
                 context: context,
-                builder: (context) => AlertDialog(
-                  title: Text('Change Password'),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextFormField(
-                        controller: oldPasswordController,
-                        decoration: InputDecoration(labelText: 'Current Password'),
-                        obscureText: true,
+                builder: (context) => StatefulBuilder(
+                  builder: (context, setState) {
+                    return AlertDialog(
+                      title: Text('Change Password'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextFormField(
+                            controller: oldPasswordController,
+                            decoration: InputDecoration(labelText: 'Current Password'),
+                            obscureText: true,
+                          ),
+                          TextFormField(
+                            controller: newPasswordController,
+                            decoration: InputDecoration(labelText: 'New Password'),
+                            obscureText: true,
+                          ),
+                        ],
                       ),
-                      TextFormField(
-                        controller: newPasswordController,
-                        decoration: InputDecoration(labelText: 'New Password'),
-                        obscureText: true,
-                      ),
-                    ],
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        String oldPassword = oldPasswordController.text;
-                        String newPassword = newPasswordController.text;
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            String oldPassword = oldPasswordController.text;
+                            String newPassword = newPasswordController.text;
 
-                        try {
-                          // Re-authenticate user to verify old password
-                          AuthCredential credential = EmailAuthProvider.credential(
-                            email: currentUser.email!,
-                            password: oldPassword,
-                          );
+                            // Validate the new password
+                            if (newPassword.length < 6) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Password must be at least 6 characters')),
+                              );
+                              return;
+                            }
+                            if (!newPassword.contains(RegExp(r'[A-Z]')) ||
+                                !newPassword.contains(RegExp(r'[a-z]')) ||
+                                !newPassword.contains(RegExp(r'[0-9]'))) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Password must include at least one uppercase letter, one lowercase letter, and one digit')),
+                              );
+                              return;
+                            }
+                            if (newPassword == oldPassword) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('New password must be different from old password')),
+                              );
+                              return;
+                            }
 
-                          await currentUser.reauthenticateWithCredential(credential);
+                            try {
+                              // Re-authenticate user to verify old password
+                              AuthCredential credential = EmailAuthProvider.credential(
+                                email: currentUser.email!,
+                                password: oldPassword,
+                              );
 
-                          // Update password in Firebase Authentication
-                          await currentUser.updatePassword(newPassword);
+                              await currentUser.reauthenticateWithCredential(credential);
 
-                          // Update password in Firestore (optional)
-                          await FirebaseFirestore.instance
-                              .collection("users")
-                              .doc(currentUser.email)
-                              .update({'password': newPassword});
+                              // Update password in Firebase Authentication
+                              await currentUser.updatePassword(newPassword);
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Password updated successfully')),
-                          );
+                              // Update password in Firestore (optional)
+                              await FirebaseFirestore.instance
+                                  .collection("users")
+                                  .doc(currentUser.email)
+                                  .update({'password': newPassword});
 
-                          Navigator.of(context).pop(); // Close dialog
-                        } catch (error) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Failed to update password')),
-                          );
-                        }
-                      },
-                      child: Text('Save'),
-                    ),
-                  ],
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Password updated successfully')),
+                              );
+
+                              Navigator.of(context).pop(); // Close dialog
+                            } catch (error) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Failed to update password')),
+                              );
+                            }
+                          },
+                          child: Text('Save'),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               );
             },

@@ -120,42 +120,37 @@ import 'package:flutter/material.dart';
 import 'package:hatgeback/screens/addpoint.dart';
 import 'package:hatgeback/screens/myparking.dart';
 import 'package:hatgeback/screens/userprofile.dart';
+import 'package:hatgeback/screens/ReservationScreen.dart';
 import 'package:intl/intl.dart';
 
 class homepage extends StatefulWidget {
   static String id = 'homepage';
 
-  homepage({super.key});
+  homepage({Key? key}) : super(key: key);
 
   @override
-  State<homepage> createState() => _homepageState();
+  _homepageState createState() => _homepageState();
 }
 
 class _homepageState extends State<homepage> {
-  List<Map<String, dynamic>> parkingareas = [];
+  List<Map<String, dynamic>> _parkingAreas = [];
 
-  getParking() {
-    List<Map<String, dynamic>> list = [];
-    var db = FirebaseFirestore.instance;
+  Future<void> _fetchParkingAreas() async {
+    final db = FirebaseFirestore.instance;
     final FirebaseAuth _auth = FirebaseAuth.instance;
-    db.collection('parkingareas').get().then(
-      (QuerySnapshot) {
-        print("Succefully Completed");
-        for (var docSnapshot in QuerySnapshot.docs) {
-          list.add(docSnapshot.data());
-        }
-        setState(() {
-          parkingareas = list;
-        });
-      },
-      onError: (e) => print("Error completing : $e"),
-    );
+    final QuerySnapshot snapshot = await db
+        .collection('parkingareas')
+        .get();
+    final List<Map<String, dynamic>> list = snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+    setState(() {
+      _parkingAreas = list;
+    });
   }
 
   @override
   void initState() {
-    getParking();
     super.initState();
+    _fetchParkingAreas();
   }
 
   @override
@@ -199,9 +194,9 @@ class _homepageState extends State<homepage> {
                     mainAxisSpacing: 20,
                     crossAxisSpacing: 20,
                   ),
-                  itemCount: parkingareas.length,
+                  itemCount: _parkingAreas.length,
                   itemBuilder: (context, index) {
-                    var parking = parkingareas[index];
+                    var parking = _parkingAreas[index];
                     return Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -286,20 +281,43 @@ class _homepageState extends State<homepage> {
                                   SizedBox(
                                     height: 10,
                                   ),
+                                  parking['isAvailable'] == true
+                                      ? Container()
+                                      : Container(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    child: Center(
+                                      child: Text(
+                                        'Unavailable',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                   ElevatedButton(
                                     onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ReservationScreen(parkingArea: {},
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    /* onPressed: () {
                                       showDialog(
                                         context: context,
                                         builder: (context) {
                                           return Dialog(
                                             child: Column(
-                                              children: [// here fatam
-                                              ],
+                                              children: [/* here fatam*/ ],
                                             ),
                                           );
                                         },
                                       );
-                                    },
+                                    },*/
                                     child: Text(
                                       "Reserve",
                                       style: TextStyle(color: Colors.black),
@@ -310,6 +328,7 @@ class _homepageState extends State<homepage> {
                                 ],
                               ),
                             ),
+
                           ],
                         ),
                       ),
@@ -357,3 +376,5 @@ class _homepageState extends State<homepage> {
     );
   }
 }
+
+
