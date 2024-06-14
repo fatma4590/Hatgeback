@@ -51,11 +51,11 @@ class _myparkingareasState extends State<myparking> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.black26,
         title: Text('My Parking Areas'),
         titleTextStyle: TextStyle(
           color: Colors.black,
-          fontWeight: FontWeight.bold,
+
           fontSize: 25,
         ),
         centerTitle: true,

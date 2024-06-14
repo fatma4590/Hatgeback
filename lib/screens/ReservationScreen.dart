@@ -143,8 +143,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    _calculateFee();
+
                     _showConfirmationDialog();
+                    _calculateFee();
                   }
                 },
                 child: Text('Confirm Reservation'),

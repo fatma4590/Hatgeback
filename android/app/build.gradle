@@ -49,6 +49,8 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        resConfigs "mipmap"
+        resConfigs "en", "auto"
         multiDexEnabled true
     }
 
@@ -65,4 +67,6 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    classpath 'com.android.application:gradle:7.0.4'
+}

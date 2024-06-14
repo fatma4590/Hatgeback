@@ -26,7 +26,7 @@ class _AddpointState extends State<addpoint> {
     final format = DateFormat('yyyy-MM-dd HH:mm a');
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.black26,
         actions: [],
         title: Text('My parking Space'),
       ),

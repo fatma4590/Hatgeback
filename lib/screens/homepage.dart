@@ -382,10 +382,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hatgeback/screens/ReservationScreen.dart';
 import 'package:hatgeback/screens/addpoint.dart';
+import 'package:hatgeback/screens/loginscreen.dart';
 import 'package:hatgeback/screens/myparking.dart';
 import 'package:hatgeback/screens/userprofile.dart';
-import 'package:hatgeback/screens/ReservationScreen.dart';
 import 'package:intl/intl.dart';
 
 class homepage extends StatefulWidget {
@@ -404,7 +405,8 @@ class _homepageState extends State<homepage> {
     final db = FirebaseFirestore.instance;
     final FirebaseAuth _auth = FirebaseAuth.instance;
     final QuerySnapshot snapshot = await db.collection('parkingareas').get();
-    final List<Map<String, dynamic>> list = snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+    final List<Map<String, dynamic>> list =
+        snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
     setState(() {
       _parkingAreas = list;
     });
@@ -486,7 +488,9 @@ class _homepageState extends State<homepage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  parking['Name'] != null ? parking['Name'] : '',
+                                  parking['Name'] != null
+                                      ? parking['Name']
+                                      : '',
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
@@ -505,7 +509,9 @@ class _homepageState extends State<homepage> {
                                 ),
                                 SizedBox(height: 10),
                                 Text(
-                                  parking['price'] != null ? "Price: ${parking['price']}" : '',
+                                  parking['price'] != null
+                                      ? "Price: ${parking['price']}"
+                                      : '',
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey,
@@ -535,30 +541,31 @@ class _homepageState extends State<homepage> {
                                 parking['isAvailable'] == true
                                     ? Container()
                                     : Container(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  child: Center(
-                                    child: Text(
-                                      'Unavailable',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
+                                        color: Colors.grey.withOpacity(0.5),
+                                        child: Center(
+                                          child: Text(
+                                            'Unavailable',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ),
                                 ElevatedButton(
                                   onPressed: parking['isAvailable'] == true
                                       ? () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ReservationScreen(
-                                          parkingArea: parking,
-                                        ),
-                                      ),
-                                    );
-                                  }
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ReservationScreen(
+                                                parkingArea: parking,
+                                              ),
+                                            ),
+                                          );
+                                        }
                                       : null,
                                   child: Text(
                                     "Reserve",
@@ -566,7 +573,7 @@ class _homepageState extends State<homepage> {
                                   ),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.green,
-                                   // onSurface: Colors.grey, // Color when the button is disabled
+                                    // onSurface: Colors.grey, // Color when the button is disabled
                                   ),
                                 ),
                               ],
@@ -610,6 +617,17 @@ class _homepageState extends State<homepage> {
                 },
                 icon: Icon(
                   Icons.paste_rounded,
+                  color: Colors.black,
+                )),
+            IconButton(
+                onPressed: () async {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => loginscreen()),
+                  );
+                },
+                icon: Icon(
+                  Icons.logout,
                   color: Colors.black,
                 )),
           ],

@@ -150,6 +150,7 @@ class _UserProfileState extends State<UserProfile> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text("Profile Page"),
+          centerTitle: true,
           backgroundColor: Colors.black26,
         ),
         body: StreamBuilder<DocumentSnapshot>(
@@ -313,12 +314,14 @@ class _UserProfileState extends State<UserProfile> {
                         children: [
                           TextFormField(
                             controller: oldPasswordController,
-                            decoration: InputDecoration(labelText: 'Current Password'),
+                            decoration:
+                                InputDecoration(labelText: 'Current Password'),
                             obscureText: true,
                           ),
                           TextFormField(
                             controller: newPasswordController,
-                            decoration: InputDecoration(labelText: 'New Password'),
+                            decoration:
+                                InputDecoration(labelText: 'New Password'),
                             obscureText: true,
                           ),
                         ],
@@ -338,7 +341,9 @@ class _UserProfileState extends State<UserProfile> {
                             // Validate the new password
                             if (newPassword.length < 6) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Password must be at least 6 characters')),
+                                SnackBar(
+                                    content: Text(
+                                        'Password must be at least 6 characters')),
                               );
                               return;
                             }
@@ -346,25 +351,31 @@ class _UserProfileState extends State<UserProfile> {
                                 !newPassword.contains(RegExp(r'[a-z]')) ||
                                 !newPassword.contains(RegExp(r'[0-9]'))) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Password must include at least one uppercase letter, one lowercase letter, and one digit')),
+                                SnackBar(
+                                    content: Text(
+                                        'Password must include at least one uppercase letter, one lowercase letter, and one digit')),
                               );
                               return;
                             }
                             if (newPassword == oldPassword) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('New password must be different from old password')),
+                                SnackBar(
+                                    content: Text(
+                                        'New password must be different from old password')),
                               );
                               return;
                             }
 
                             try {
                               // Re-authenticate user to verify old password
-                              AuthCredential credential = EmailAuthProvider.credential(
+                              AuthCredential credential =
+                                  EmailAuthProvider.credential(
                                 email: currentUser.email!,
                                 password: oldPassword,
                               );
 
-                              await currentUser.reauthenticateWithCredential(credential);
+                              await currentUser
+                                  .reauthenticateWithCredential(credential);
 
                               // Update password in Firebase Authentication
                               await currentUser.updatePassword(newPassword);
@@ -376,13 +387,16 @@ class _UserProfileState extends State<UserProfile> {
                                   .update({'password': newPassword});
 
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Password updated successfully')),
+                                SnackBar(
+                                    content:
+                                        Text('Password updated successfully')),
                               );
 
                               Navigator.of(context).pop(); // Close dialog
                             } catch (error) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Failed to update password')),
+                                SnackBar(
+                                    content: Text('Failed to update password')),
                               );
                             }
                           },
@@ -399,5 +413,4 @@ class _UserProfileState extends State<UserProfile> {
       ),
     );
   }
-
 }

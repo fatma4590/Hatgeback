@@ -149,9 +149,9 @@
 // }
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hatgeback/screens/forgot_password_page.dart';
 import 'package:hatgeback/screens/homepage.dart';
 import 'package:hatgeback/screens/registerpage.dart';
-import 'package:hatgeback/screens/forgot_password_page.dart';
 
 class loginscreen extends StatefulWidget {
   static String id = 'loginpage';
@@ -256,7 +256,10 @@ class _LoginPageState extends State<loginscreen> {
                               ),
                             );
 
-                            Navigator.pushNamed(context, homepage.id);
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => homepage()),
+                            );
                           } else {
                             FirebaseAuth.instance.currentUser!
                                 .sendEmailVerification();
@@ -291,7 +294,8 @@ class _LoginPageState extends State<loginscreen> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
+                        MaterialPageRoute(
+                            builder: (context) => ForgotPasswordPage()),
                       );
                     },
                     child: Text('Forgot Password?'),
@@ -318,7 +322,6 @@ class _LoginPageState extends State<loginscreen> {
                       ),
                     ],
                   ),
-
                 ],
               ),
             ),
@@ -327,6 +330,7 @@ class _LoginPageState extends State<loginscreen> {
       ),
     );
   }
+
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
