@@ -687,7 +687,11 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
   DateTime? selectedDate;
   TimeOfDay? startTime;
   TimeOfDay? endTime;
-
+  DateTime? startDate;
+   DateTime? endDate;
+   bool isRecurring = false;
+   String recurrenceType = 'daily'; // or 'weekly', 'monthly'
+   List<String> selectedDays = []; // Store selected days for recurring events
   late TabController _tabController;
 
   @override
@@ -846,14 +850,16 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
     );
   }
 
-  Widget buildRecurringForm(DateFormat format) {
+
+
+ Widget buildRecurringForm(DateFormat format) {
     return ListView(
       children: <Widget>[
         buildTextField(location, 'Location'),
         buildTextField(name, 'Name'),
         buildTextField(price, 'Price Per Hour', isNumeric: true),
         DropdownButtonFormField<String>(
-          value: 'daily', // Default value
+          value: recurrenceType,
           decoration: InputDecoration(hintText: 'Select Recurrence Type'),
           items: [
             DropdownMenuItem(value: 'daily', child: Text('Daily')),
@@ -861,19 +867,106 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
             DropdownMenuItem(value: 'monthly', child: Text('Monthly')),
           ],
           onChanged: (value) {
-            // Handle recurrence type change
+            setState(() {
+              recurrenceType = value!;
+            });
           },
         ),
-        // Add checkboxes or other controls for selecting days here if needed
+        CheckboxListTile(
+          title: Text('Monday'),
+          value: selectedDays.contains('Monday'),
+          onChanged: (bool? value) {
+            setState(() {
+              toggleDaySelection('Monday', value);
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('Tuesday'),
+          value: selectedDays.contains('Tuesday'),
+          onChanged: (bool? value) {
+            setState(() {
+              toggleDaySelection('Tuesday', value);
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('Wednesday'),
+          value: selectedDays.contains('Wednesday'),
+          onChanged: (bool? value) {
+            setState(() {
+              toggleDaySelection('Wednesday', value);
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('Thursday'),
+          value: selectedDays.contains('Thursday'),
+          onChanged: (bool? value) {
+            setState(() {
+              toggleDaySelection('Thursday', value);
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('Friday'),
+          value: selectedDays.contains('Friday'),
+          onChanged: (bool? value) {
+            setState(() {
+              toggleDaySelection('Friday', value);
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('Saturday'),
+          value: selectedDays.contains('Saturday'),
+          onChanged: (bool? value) {
+            setState(() {
+              toggleDaySelection('Saturday', value);
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('Sunday'),
+          value: selectedDays.contains('Sunday'),
+          onChanged: (bool? value) {
+            setState(() {
+              toggleDaySelection('Sunday', value);
+            });
+          },
+        ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
           onPressed: () {
-            // Handle recurring event submission
+            FirebaseFirestore.instance.collection('parkingareas').doc(name.text).set({
+              'userid': _auth.currentUser!.email,
+              'Location': location.text,
+              'Name': name.text,
+              'price': price.text,
+              'isRecurring': true,
+              'recurrenceType': recurrenceType,
+              'selectedDays': selectedDays,
+              'startDate': Timestamp.fromDate(startDate!),
+              'endDate': Timestamp.fromDate(endDate!),
+            });
+            Navigator.pushNamed(context, homepage.id);
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Added successfully"),
+              backgroundColor: Colors.green,
+            ));
           },
           child: Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
         ),
       ],
     );
+  }
+
+  void toggleDaySelection(String day, bool? isSelected) {
+    if (isSelected == true) {
+      selectedDays.add(day);
+    } else {
+      selectedDays.remove(day);
+    }
   }
 
   Widget buildTextField(TextEditingController controller, String hint, {bool isNumeric = false}) {
@@ -902,5 +995,6 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
         keyboardType: isNumeric ? TextInputType.number : TextInputType.text,
       ),
     );
+
   }
 }
