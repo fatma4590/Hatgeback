@@ -266,7 +266,7 @@ class _LoginPageState extends State<loginscreen> {
                             _showErrorDialog(
                                 'Open your e-mail and verify your account ');
                           }
-                        } on FirebaseAuthException catch (e) {
+                        } on FirebaseAuthException {
                           _showErrorDialog('Error signing in.');
                         } catch (e) {
                           _showErrorDialog('Error signing in.');
