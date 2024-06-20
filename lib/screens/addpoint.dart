@@ -153,7 +153,6 @@ class addpoint extends StatelessWidget {
   }
 }*/
 
-
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
@@ -347,9 +346,6 @@ class addpoint extends StatelessWidget {
 //     );
 //   }
 // }
-
-
-
 
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
@@ -648,9 +644,6 @@ class addpoint extends StatelessWidget {
 //   }
 // }
 
-
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -665,7 +658,8 @@ class addpoint extends StatefulWidget {
   _AddPointState createState() => _AddPointState();
 }
 
-class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin {
+class _AddPointState extends State<addpoint>
+    with SingleTickerProviderStateMixin {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   TextEditingController userid = TextEditingController();
   TextEditingController location = TextEditingController();
@@ -757,8 +751,8 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
               });
             }
             return startTime != null
-                ? DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day,
-                startTime!.hour, startTime!.minute)
+                ? DateTime(selectedDate!.year, selectedDate!.month,
+                    selectedDate!.day, startTime!.hour, startTime!.minute)
                 : currentValue ?? DateTime.now();
           },
         ),
@@ -778,8 +772,8 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
               });
             }
             return endTime != null
-                ? DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day,
-                endTime!.hour, endTime!.minute)
+                ? DateTime(selectedDate!.year, selectedDate!.month,
+                    selectedDate!.day, endTime!.hour, endTime!.minute)
                 : currentValue ?? DateTime.now();
           },
         ),
@@ -802,7 +796,10 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
                 endTime!.hour,
                 endTime!.minute,
               );
-              FirebaseFirestore.instance.collection('parkingareas').doc(name.text).set({
+              FirebaseFirestore.instance
+                  .collection('parkingareas')
+                  .doc(name.text)
+                  .set({
                 'userid': _auth.currentUser!.email,
                 'Location': location.text,
                 'Name': name.text,
@@ -827,7 +824,8 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
               );
             }
           },
-          child: Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
+          child:
+              Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
         ),
       ],
     );
@@ -857,13 +855,15 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
           onPressed: () {
             // Handle recurring event submission
           },
-          child: Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
+          child:
+              Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
         ),
       ],
     );
   }
 
-  Widget buildTextField(TextEditingController controller, String hint, {bool isNumeric = false}) {
+  Widget buildTextField(TextEditingController controller, String hint,
+      {bool isNumeric = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: TextFormField(
@@ -872,10 +872,12 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
           if (data!.isEmpty) {
             return 'Field is empty';
           }
-          if (hint == 'Name' && !RegExp(r"^[A-Za-z][A-Za-z0-9_]{7,29}$").hasMatch(data)) {
+          if (hint == 'Name' &&
+              !RegExp(r"^[A-Za-z][A-Za-z0-9_]{7,29}$").hasMatch(data)) {
             return 'Enter a valid name';
           }
-          if (hint == 'Price Per Hour' && !RegExp(r"^[1-9]\d{0,7}(?:\.\d{1,4})?$").hasMatch(data)) {
+          if (hint == 'Price Per Hour' &&
+              !RegExp(r"^[1-9]\d{0,7}(?:\.\d{1,4})?$").hasMatch(data)) {
             return 'Enter a valid price';
           }
           return null;
@@ -891,4 +893,3 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
     );
   }
 }
-
