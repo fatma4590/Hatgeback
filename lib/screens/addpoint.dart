@@ -348,6 +348,309 @@ class addpoint extends StatelessWidget {
 //   }
 // }
 
+
+
+
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:flutter/material.dart';
+// import 'package:hatgeback/screens/homepage.dart';
+// import 'package:intl/intl.dart';
+//
+// class addpoint extends StatefulWidget {
+//   static String id = 'addpointpage';
+//
+//   @override
+//   _AddPointState createState() => _AddPointState();
+// }
+//
+// class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin {
+//   final FirebaseAuth _auth = FirebaseAuth.instance;
+//   TextEditingController userid = TextEditingController();
+//   TextEditingController location = TextEditingController();
+//   TextEditingController name = TextEditingController();
+//   TextEditingController price = TextEditingController();
+//   DateTime? startDate;
+//   DateTime? endDate;
+//   bool isRecurring = false;
+//   String recurrenceType = 'daily'; // or 'weekly', 'monthly'
+//   List<String> selectedDays = []; // Store selected days for recurring events
+//
+//   late TabController _tabController;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _tabController = TabController(length: 2, vsync: this);
+//   }
+//
+//   @override
+//   void dispose() {
+//     _tabController.dispose();
+//     super.dispose();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final format = DateFormat('yyyy-MM-dd HH:mm a');
+//     return Scaffold(
+//       appBar: AppBar(
+//         backgroundColor: Colors.black26,
+//         title: Text('My Parking Space'),
+//         bottom: TabBar(
+//           controller: _tabController,
+//           tabs: [
+//             Tab(text: 'One-Time'),
+//             Tab(text: 'Recurring'),
+//           ],
+//         ),
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.symmetric(horizontal: 8.0),
+//         child: TabBarView(
+//           controller: _tabController,
+//           children: <Widget>[
+//             buildOneTimeForm(format),
+//             buildRecurringForm(format),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Widget buildOneTimeForm(DateFormat format) {
+//     return ListView(
+//       children: <Widget>[
+//         buildTextField(location, 'Location'),
+//         buildTextField(name, 'Name'),
+//         buildTextField(price, 'Price Per Hour', isNumeric: true),
+//         DateTimeField(
+//           format: format,
+//           decoration: InputDecoration(hintText: 'Choose Start Date & Time'),
+//           onShowPicker: (context, currentValue) async {
+//             final date = await showDatePicker(
+//               context: context,
+//               initialDate: currentValue ?? DateTime.now(),
+//               firstDate: DateTime(1900),
+//               lastDate: DateTime(2100),
+//             );
+//             if (date != null) {
+//               final time = await showTimePicker(
+//                 context: context,
+//                 initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+//               );
+//               return DateTimeField.combine(date, time);
+//             } else {
+//               return currentValue;
+//             }
+//           },
+//           onChanged: (value) {
+//             setState(() {
+//               startDate = value ?? DateTime.now();
+//             });
+//           },
+//         ),
+//         DateTimeField(
+//           format: format,
+//           decoration: InputDecoration(hintText: 'Choose End Date & Time'),
+//           onShowPicker: (context, currentValue) async {
+//             final date = await showDatePicker(
+//               context: context,
+//               initialDate: currentValue ?? DateTime.now(),
+//               firstDate: DateTime(1900),
+//               lastDate: DateTime(2100),
+//             );
+//             if (date != null) {
+//               final time = await showTimePicker(
+//                 context: context,
+//                 initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+//               );
+//               return DateTimeField.combine(date, time);
+//             } else {
+//               return currentValue;
+//             }
+//           },
+//           onChanged: (value) {
+//             setState(() {
+//               endDate = value ?? DateTime.now();
+//             });
+//           },
+//         ),
+//         ElevatedButton(
+//           style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+//           onPressed: () {
+//             FirebaseFirestore.instance.collection('parkingareas').doc(name.text).set({
+//               'userid': _auth.currentUser!.email,
+//               'Location': location.text,
+//               'Name': name.text,
+//               'price': price.text,
+//               'startDate': Timestamp.fromDate(startDate!),
+//               'endDate': Timestamp.fromDate(endDate!),
+//               'isRecurring': false,
+//             });
+//             Navigator.pushNamed(context, homepage.id);
+//             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+//               content: Text("Added successfully"),
+//               backgroundColor: Colors.green,
+//             ));
+//           },
+//           child: Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
+//         ),
+//       ],
+//     );
+//   }
+//
+//   Widget buildRecurringForm(DateFormat format) {
+//     return ListView(
+//       children: <Widget>[
+//         buildTextField(location, 'Location'),
+//         buildTextField(name, 'Name'),
+//         buildTextField(price, 'Price Per Hour', isNumeric: true),
+//         DropdownButtonFormField<String>(
+//           value: recurrenceType,
+//           decoration: InputDecoration(hintText: 'Select Recurrence Type'),
+//           items: [
+//             DropdownMenuItem(value: 'daily', child: Text('Daily')),
+//             DropdownMenuItem(value: 'weekly', child: Text('Weekly')),
+//             DropdownMenuItem(value: 'monthly', child: Text('Monthly')),
+//           ],
+//           onChanged: (value) {
+//             setState(() {
+//               recurrenceType = value!;
+//             });
+//           },
+//         ),
+//         CheckboxListTile(
+//           title: Text('Monday'),
+//           value: selectedDays.contains('Monday'),
+//           onChanged: (bool? value) {
+//             setState(() {
+//               toggleDaySelection('Monday', value);
+//             });
+//           },
+//         ),
+//         CheckboxListTile(
+//           title: Text('Tuesday'),
+//           value: selectedDays.contains('Tuesday'),
+//           onChanged: (bool? value) {
+//             setState(() {
+//               toggleDaySelection('Tuesday', value);
+//             });
+//           },
+//         ),
+//         CheckboxListTile(
+//           title: Text('Wednesday'),
+//           value: selectedDays.contains('Wednesday'),
+//           onChanged: (bool? value) {
+//             setState(() {
+//               toggleDaySelection('Wednesday', value);
+//             });
+//           },
+//         ),
+//         CheckboxListTile(
+//           title: Text('Thursday'),
+//           value: selectedDays.contains('Thursday'),
+//           onChanged: (bool? value) {
+//             setState(() {
+//               toggleDaySelection('Thursday', value);
+//             });
+//           },
+//         ),
+//         CheckboxListTile(
+//           title: Text('Friday'),
+//           value: selectedDays.contains('Friday'),
+//           onChanged: (bool? value) {
+//             setState(() {
+//               toggleDaySelection('Friday', value);
+//             });
+//           },
+//         ),
+//         CheckboxListTile(
+//           title: Text('Saturday'),
+//           value: selectedDays.contains('Saturday'),
+//           onChanged: (bool? value) {
+//             setState(() {
+//               toggleDaySelection('Saturday', value);
+//             });
+//           },
+//         ),
+//         CheckboxListTile(
+//           title: Text('Sunday'),
+//           value: selectedDays.contains('Sunday'),
+//           onChanged: (bool? value) {
+//             setState(() {
+//               toggleDaySelection('Sunday', value);
+//             });
+//           },
+//         ),
+//         ElevatedButton(
+//           style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+//           onPressed: () {
+//             FirebaseFirestore.instance.collection('parkingareas').doc(name.text).set({
+//               'userid': _auth.currentUser!.email,
+//               'Location': location.text,
+//               'Name': name.text,
+//               'price': price.text,
+//               'isRecurring': true,
+//               'recurrenceType': recurrenceType,
+//               'selectedDays': selectedDays,
+//               'startDate': Timestamp.fromDate(startDate!),
+//               'endDate': Timestamp.fromDate(endDate!),
+//             });
+//             Navigator.pushNamed(context, homepage.id);
+//             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+//               content: Text("Added successfully"),
+//               backgroundColor: Colors.green,
+//             ));
+//           },
+//           child: Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
+//         ),
+//       ],
+//     );
+//   }
+//
+//   void toggleDaySelection(String day, bool? isSelected) {
+//     if (isSelected == true) {
+//       selectedDays.add(day);
+//     } else {
+//       selectedDays.remove(day);
+//     }
+//   }
+//
+//   Widget buildTextField(TextEditingController controller, String hint, {bool isNumeric = false}) {
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(vertical: 12.0),
+//       child: TextFormField(
+//         controller: controller,
+//         validator: (data) {
+//           if (data!.isEmpty) {
+//             return 'Field is empty';
+//           }
+//           if (hint == 'Name' && !RegExp(r"^[A-Za-z][A-Za-z0-9_]{7,29}$").hasMatch(data)) {
+//             return 'Enter a valid name';
+//           }
+//           if (hint == 'Price Per Hour' && !RegExp(r"^[1-9]\d{0,7}(?:\.\d{1,4})?$").hasMatch(data)) {
+//             return 'Enter a valid price';
+//           }
+//           return null;
+//         },
+//         decoration: InputDecoration(
+//           hintText: hint,
+//           hintStyle: TextStyle(color: Colors.black, fontSize: 18),
+//         ),
+//         cursorColor: Colors.black,
+//         showCursor: true,
+//         keyboardType: isNumeric ? TextInputType.number : TextInputType.text,
+//       ),
+//     );
+//
+//   }
+// }
+
+
+
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -368,10 +671,9 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
   TextEditingController location = TextEditingController();
   TextEditingController name = TextEditingController();
   TextEditingController price = TextEditingController();
-  DateTime? startDate;
-  DateTime? endDate;
-  bool isRecurring = false;
-  String recurrenceType = 'daily'; // or 'weekly', 'monthly'
+  DateTime? selectedDate;
+  TimeOfDay? startTime;
+  TimeOfDay? endTime;
 
   late TabController _tabController;
 
@@ -397,7 +699,7 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
         bottom: TabBar(
           controller: _tabController,
           tabs: [
-            Tab(text: 'One-Time'),
+            Tab(text: 'Just Once'),
             Tab(text: 'Recurring'),
           ],
         ),
@@ -407,7 +709,7 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
         child: TabBarView(
           controller: _tabController,
           children: <Widget>[
-            buildOneTimeForm(format),
+            buildJustOnceForm(format),
             buildRecurringForm(format),
           ],
         ),
@@ -415,15 +717,15 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
     );
   }
 
-  Widget buildOneTimeForm(DateFormat format) {
+  Widget buildJustOnceForm(DateFormat format) {
     return ListView(
       children: <Widget>[
         buildTextField(location, 'Location'),
         buildTextField(name, 'Name'),
         buildTextField(price, 'Price Per Hour', isNumeric: true),
         DateTimeField(
-          format: format,
-          decoration: InputDecoration(hintText: 'Choose Start Date & Time'),
+          format: DateFormat('yyyy-MM-dd'),
+          decoration: InputDecoration(hintText: 'Choose Date'),
           onShowPicker: (context, currentValue) async {
             final date = await showDatePicker(
               context: context,
@@ -432,64 +734,98 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
               lastDate: DateTime(2100),
             );
             if (date != null) {
-              final time = await showTimePicker(
-                context: context,
-                initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
-              );
-              return DateTimeField.combine(date, time);
-            } else {
-              return currentValue;
+              setState(() {
+                selectedDate = date;
+              });
             }
-          },
-          onChanged: (value) {
-            setState(() {
-              startDate = value ?? DateTime.now();
-            });
+            return selectedDate ?? currentValue ?? DateTime.now();
           },
         ),
         DateTimeField(
-          format: format,
-          decoration: InputDecoration(hintText: 'Choose End Date & Time'),
+          format: DateFormat('HH:mm'),
+          decoration: InputDecoration(hintText: 'Choose Start Time'),
           onShowPicker: (context, currentValue) async {
-            final date = await showDatePicker(
+            final time = await showTimePicker(
               context: context,
-              initialDate: currentValue ?? DateTime.now(),
-              firstDate: DateTime(1900),
-              lastDate: DateTime(2100),
+              initialTime: currentValue != null
+                  ? TimeOfDay.fromDateTime(currentValue)
+                  : TimeOfDay.now(),
             );
-            if (date != null) {
-              final time = await showTimePicker(
-                context: context,
-                initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
-              );
-              return DateTimeField.combine(date, time);
-            } else {
-              return currentValue;
+            if (time != null) {
+              setState(() {
+                startTime = time;
+              });
             }
+            return startTime != null
+                ? DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day,
+                startTime!.hour, startTime!.minute)
+                : currentValue ?? DateTime.now();
           },
-          onChanged: (value) {
-            setState(() {
-              endDate = value ?? DateTime.now();
-            });
+        ),
+        DateTimeField(
+          format: DateFormat('HH:mm'),
+          decoration: InputDecoration(hintText: 'Choose End Time'),
+          onShowPicker: (context, currentValue) async {
+            final time = await showTimePicker(
+              context: context,
+              initialTime: currentValue != null
+                  ? TimeOfDay.fromDateTime(currentValue)
+                  : TimeOfDay.now(),
+            );
+            if (time != null) {
+              setState(() {
+                endTime = time;
+              });
+            }
+            return endTime != null
+                ? DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day,
+                endTime!.hour, endTime!.minute)
+                : currentValue ?? DateTime.now();
           },
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
           onPressed: () {
-            FirebaseFirestore.instance.collection('parkingareas').doc(name.text).set({
-              'userid': _auth.currentUser!.email,
-              'Location': location.text,
-              'Name': name.text,
-              'price': price.text,
-              'startDate': Timestamp.fromDate(startDate!),
-              'endDate': Timestamp.fromDate(endDate!),
-              'isRecurring': false,
-            });
-            Navigator.pushNamed(context, homepage.id);
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Added successfully"),
-              backgroundColor: Colors.green,
-            ));
+            if (selectedDate != null && startTime != null && endTime != null) {
+              // Combine selectedDate with startTime and endTime
+              DateTime startDate = DateTime(
+                selectedDate!.year,
+                selectedDate!.month,
+                selectedDate!.day,
+                startTime!.hour,
+                startTime!.minute,
+              );
+              DateTime endDate = DateTime(
+                selectedDate!.year,
+                selectedDate!.month,
+                selectedDate!.day,
+                endTime!.hour,
+                endTime!.minute,
+              );
+              FirebaseFirestore.instance.collection('parkingareas').doc(name.text).set({
+                'userid': _auth.currentUser!.email,
+                'Location': location.text,
+                'Name': name.text,
+                'price': price.text,
+                'startDate': Timestamp.fromDate(startDate),
+                'endDate': Timestamp.fromDate(endDate),
+                'isRecurring': false,
+              });
+              Navigator.pushNamed(context, homepage.id);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Added successfully"),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Please fill in all fields"),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
           },
           child: Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
         ),
@@ -504,7 +840,7 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
         buildTextField(name, 'Name'),
         buildTextField(price, 'Price Per Hour', isNumeric: true),
         DropdownButtonFormField<String>(
-          value: recurrenceType,
+          value: 'daily', // Default value
           decoration: InputDecoration(hintText: 'Select Recurrence Type'),
           items: [
             DropdownMenuItem(value: 'daily', child: Text('Daily')),
@@ -512,27 +848,14 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
             DropdownMenuItem(value: 'monthly', child: Text('Monthly')),
           ],
           onChanged: (value) {
-            setState(() {
-              recurrenceType = value!;
-            });
+            // Handle recurrence type change
           },
         ),
+        // Add checkboxes or other controls for selecting days here if needed
         ElevatedButton(
           style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
           onPressed: () {
-            FirebaseFirestore.instance.collection('parkingareas').doc(name.text).set({
-              'userid': _auth.currentUser!.email,
-              'Location': location.text,
-              'Name': name.text,
-              'price': price.text,
-              'isRecurring': true,
-              'recurrenceType': recurrenceType,
-            });
-            Navigator.pushNamed(context, homepage.id);
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Added successfully"),
-              backgroundColor: Colors.green,
-            ));
+            // Handle recurring event submission
           },
           child: Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
         ),
@@ -568,3 +891,4 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
     );
   }
 }
+
