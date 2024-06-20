@@ -872,6 +872,85 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
             });
           },
         ),
+        DateTimeField(
+          format: DateFormat('yyyy-MM-dd'),
+          decoration: InputDecoration(hintText: 'Choose Start Date'),
+          onShowPicker: (context, currentValue) async {
+            final date = await showDatePicker(
+              context: context,
+              initialDate: currentValue ?? DateTime.now(),
+              firstDate: DateTime(1900),
+              lastDate: DateTime(2100),
+            );
+            if (date != null) {
+              setState(() {
+                selectedDate = date;
+              });
+            }
+            return selectedDate ?? currentValue ?? DateTime.now();
+          },
+        ),
+        DateTimeField(
+          format: DateFormat('yyyy-MM-dd'),
+          decoration: InputDecoration(hintText: 'Choose End Date'),
+          onShowPicker: (context, currentValue) async {
+            final date = await showDatePicker(
+              context: context,
+              initialDate: currentValue ?? DateTime.now(),
+              firstDate: DateTime(1900),
+              lastDate: DateTime(2100),
+            );
+            if (date != null) {
+              setState(() {
+                selectedDate = date;
+              });
+            }
+            return selectedDate ?? currentValue ?? DateTime.now();
+          },
+        ),
+        DateTimeField(
+          format: DateFormat('HH:mm'),
+          decoration: InputDecoration(hintText: 'Choose Start Time'),
+          onShowPicker: (context, currentValue) async {
+            final time = await showTimePicker(
+              context: context,
+              initialTime: currentValue != null
+                  ? TimeOfDay.fromDateTime(currentValue)
+                  : TimeOfDay.now(),
+            );
+            if (time != null) {
+              setState(() {
+                startTime = time;
+              });
+            }
+            return startTime != null
+                ? DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day,
+                startTime!.hour, startTime!.minute)
+                : currentValue ?? DateTime.now();
+          },
+        ),
+        DateTimeField(
+          format: DateFormat('HH:mm'),
+          decoration: InputDecoration(hintText: 'Choose End Time'),
+          onShowPicker: (context, currentValue) async {
+            final time = await showTimePicker(
+              context: context,
+              initialTime: currentValue != null
+                  ? TimeOfDay.fromDateTime(currentValue)
+                  : TimeOfDay.now(),
+            );
+            if (time != null) {
+              setState(() {
+                startTime = time;
+              });
+            }
+            return startTime != null
+                ? DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day,
+                startTime!.hour, startTime!.minute)
+                : currentValue ?? DateTime.now();
+          },
+        ),
+
         CheckboxListTile(
           title: Text('Monday'),
           value: selectedDays.contains('Monday'),
