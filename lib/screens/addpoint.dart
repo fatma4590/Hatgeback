@@ -363,6 +363,26 @@ class _AddpointState extends State<addpoint> {
 */
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // recuring
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
@@ -663,7 +683,24 @@ class _AddpointState extends State<addpoint> {
 
 
 
-//just one
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -677,7 +714,6 @@ class addpoint extends StatefulWidget {
   @override
   _AddPointState createState() => _AddPointState();
 }
-
 class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   TextEditingController userid = TextEditingController();
@@ -688,10 +724,10 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
   TimeOfDay? startTime;
   TimeOfDay? endTime;
   DateTime? startDate;
-   DateTime? endDate;
-   bool isRecurring = false;
-   String recurrenceType = 'daily'; // or 'weekly', 'monthly'
-   List<String> selectedDays = []; // Store selected days for recurring events
+  DateTime? endDate;
+  bool isRecurring = false;
+  String recurrenceType = 'daily'; // or 'weekly', 'monthly'
+  List<String> selectedDays = []; // Store selected days for recurring events
   late TabController _tabController;
 
   @override
@@ -850,9 +886,7 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
     );
   }
 
-
-
- Widget buildRecurringForm(DateFormat format) {
+  Widget buildRecurringForm(DateFormat format) {
     return ListView(
       children: <Widget>[
         buildTextField(location, 'Location'),
@@ -884,10 +918,10 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
             );
             if (date != null) {
               setState(() {
-                selectedDate = date;
+                startDate = date;
               });
             }
-            return selectedDate ?? currentValue ?? DateTime.now();
+            return startDate ?? currentValue ?? DateTime.now();
           },
         ),
         DateTimeField(
@@ -902,10 +936,10 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
             );
             if (date != null) {
               setState(() {
-                selectedDate = date;
+                endDate = date;
               });
             }
-            return selectedDate ?? currentValue ?? DateTime.now();
+            return endDate ?? currentValue ?? DateTime.now();
           },
         ),
         DateTimeField(
@@ -924,7 +958,7 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
               });
             }
             return startTime != null
-                ? DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day,
+                ? DateTime(startDate!.year, startDate!.month, startDate!.day,
                 startTime!.hour, startTime!.minute)
                 : currentValue ?? DateTime.now();
           },
@@ -941,98 +975,108 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
             );
             if (time != null) {
               setState(() {
-                startTime = time;
+                endTime = time;
               });
             }
-            return startTime != null
-                ? DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day,
-                startTime!.hour, startTime!.minute)
+            return endTime != null
+                ? DateTime(endDate!.year, endDate!.month, endDate!.day,
+                endTime!.hour, endTime!.minute)
                 : currentValue ?? DateTime.now();
           },
         ),
-
         CheckboxListTile(
           title: Text('Monday'),
           value: selectedDays.contains('Monday'),
-          onChanged: (bool? value) {
+          onChanged: (value) {
             setState(() {
-              toggleDaySelection('Monday', value);
+              value!
+                  ? selectedDays.add('Monday')
+                  : selectedDays.remove('Monday');
             });
           },
         ),
         CheckboxListTile(
           title: Text('Tuesday'),
           value: selectedDays.contains('Tuesday'),
-          onChanged: (bool? value) {
+          onChanged: (value) {
             setState(() {
-              toggleDaySelection('Tuesday', value);
+              value!
+                  ? selectedDays.add('Tuesday')
+                  : selectedDays.remove('Tuesday');
             });
           },
         ),
         CheckboxListTile(
           title: Text('Wednesday'),
           value: selectedDays.contains('Wednesday'),
-          onChanged: (bool? value) {
+          onChanged: (value) {
             setState(() {
-              toggleDaySelection('Wednesday', value);
+              value!
+                  ? selectedDays.add('Wednesday')
+                  : selectedDays.remove('Wednesday');
             });
           },
         ),
         CheckboxListTile(
           title: Text('Thursday'),
           value: selectedDays.contains('Thursday'),
-          onChanged: (bool? value) {
+          onChanged: (value) {
             setState(() {
-              toggleDaySelection('Thursday', value);
+              value!
+                  ? selectedDays.add('Thursday')
+                  : selectedDays.remove('Thursday');
             });
           },
         ),
         CheckboxListTile(
           title: Text('Friday'),
           value: selectedDays.contains('Friday'),
-          onChanged: (bool? value) {
+          onChanged: (value) {
             setState(() {
-              toggleDaySelection('Friday', value);
+              value!
+                  ? selectedDays.add('Friday')
+                  : selectedDays.remove('Friday');
             });
           },
         ),
         CheckboxListTile(
           title: Text('Saturday'),
           value: selectedDays.contains('Saturday'),
-          onChanged: (bool? value) {
+          onChanged: (value) {
             setState(() {
-              toggleDaySelection('Saturday', value);
+              value!
+                  ? selectedDays.add('Saturday')
+                  : selectedDays.remove('Saturday');
             });
           },
         ),
         CheckboxListTile(
           title: Text('Sunday'),
           value: selectedDays.contains('Sunday'),
-          onChanged: (bool? value) {
+          onChanged: (value) {
             setState(() {
-              toggleDaySelection('Sunday', value);
+              value!
+                  ? selectedDays.add('Sunday')
+                  : selectedDays.remove('Sunday');
             });
           },
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
           onPressed: () {
-            FirebaseFirestore.instance.collection('parkingareas').doc(name.text).set({
-              'userid': _auth.currentUser!.email,
-              'Location': location.text,
-              'Name': name.text,
-              'price': price.text,
-              'isRecurring': true,
-              'recurrenceType': recurrenceType,
-              'selectedDays': selectedDays,
-              'startDate': Timestamp.fromDate(startDate!),
-              'endDate': Timestamp.fromDate(endDate!),
-            });
-            Navigator.pushNamed(context, homepage.id);
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Added successfully"),
-              backgroundColor: Colors.green,
-            ));
+            if (startDate != null && endDate != null && startTime != null && endTime != null) {
+              storeRecurringParkingAreas();
+              Navigator.pushNamed(context, homepage.id);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("Added successfully"),
+                backgroundColor: Colors.green,
+              ));
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("Please fill in all fields"),
+                backgroundColor: Colors.red,
+              ));
+            }
           },
           child: Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
         ),
@@ -1040,40 +1084,471 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
     );
   }
 
-  void toggleDaySelection(String day, bool? isSelected) {
-    if (isSelected == true) {
-      selectedDays.add(day);
-    } else {
-      selectedDays.remove(day);
+  void storeRecurringParkingAreas() {
+    DateTime current = startDate!;
+    while (current.isBefore(endDate!) || current.isAtSameMomentAs(endDate!)) {
+      // Check if the current date matches any of the selected days
+      if (selectedDays.contains(DateFormat('EEEE').format(current))) {
+        // Create the start and end DateTime objects for the current date
+        DateTime currentStartDate = DateTime(
+          current.year,
+          current.month,
+          current.day,
+          startTime!.hour,
+          startTime!.minute,
+        );
+        DateTime currentEndDate = DateTime(
+          current.year,
+          current.month,
+          current.day,
+          endTime!.hour,
+          endTime!.minute,
+        );
+
+        // Store the parking area entry in Firestore
+        FirebaseFirestore.instance.collection('parkingareas').add({
+          'userid': _auth.currentUser!.email,
+          'Location': location.text,
+          'Name': name.text,
+          'price': price.text,
+          'startDate': Timestamp.fromDate(currentStartDate),
+          'endDate': Timestamp.fromDate(currentEndDate),
+          'isRecurring': false,
+        });
+      }
+
+      // Move to the next day
+      current = current.add(Duration(days: 1));
     }
   }
 
-  Widget buildTextField(TextEditingController controller, String hint, {bool isNumeric = false}) {
+  Widget buildTextField(TextEditingController controller, String hintText, {bool isNumeric = false}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.0),
-      child: TextFormField(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextField(
         controller: controller,
-        validator: (data) {
-          if (data!.isEmpty) {
-            return 'Field is empty';
-          }
-          if (hint == 'Name' && !RegExp(r"^[A-Za-z][A-Za-z0-9_]{7,29}$").hasMatch(data)) {
-            return 'Enter a valid name';
-          }
-          if (hint == 'Price Per Hour' && !RegExp(r"^[1-9]\d{0,7}(?:\.\d{1,4})?$").hasMatch(data)) {
-            return 'Enter a valid price';
-          }
-          return null;
-        },
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: TextStyle(color: Colors.black, fontSize: 18),
-        ),
-        cursorColor: Colors.black,
-        showCursor: true,
+        decoration: InputDecoration(hintText: hintText),
         keyboardType: isNumeric ? TextInputType.number : TextInputType.text,
       ),
     );
-
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin {
+//   final FirebaseAuth _auth = FirebaseAuth.instance;
+//   TextEditingController userid = TextEditingController();
+//   TextEditingController location = TextEditingController();
+//   TextEditingController name = TextEditingController();
+//   TextEditingController price = TextEditingController();
+//   DateTime? selectedDate;
+//   TimeOfDay? startTime;
+//   TimeOfDay? endTime;
+//   DateTime? startDate;
+//    DateTime? endDate;
+//    bool isRecurring = false;
+//    String recurrenceType = 'daily'; // or 'weekly', 'monthly'
+//    List<String> selectedDays = []; // Store selected days for recurring events
+//   late TabController _tabController;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _tabController = TabController(length: 2, vsync: this);
+//   }
+//
+//   @override
+//   void dispose() {
+//     _tabController.dispose();
+//     super.dispose();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final format = DateFormat('yyyy-MM-dd HH:mm a');
+//     return Scaffold(
+//       appBar: AppBar(
+//         backgroundColor: Colors.black26,
+//         title: Text('My Parking Space'),
+//         bottom: TabBar(
+//           controller: _tabController,
+//           tabs: [
+//             Tab(text: 'Just Once'),
+//             Tab(text: 'Recurring'),
+//           ],
+//         ),
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.symmetric(horizontal: 8.0),
+//         child: TabBarView(
+//           controller: _tabController,
+//           children: <Widget>[
+//             buildJustOnceForm(format),
+//             buildRecurringForm(format),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Widget buildJustOnceForm(DateFormat format) {
+//     return ListView(
+//       children: <Widget>[
+//         buildTextField(location, 'Location'),
+//         buildTextField(name, 'Name'),
+//         buildTextField(price, 'Price Per Hour', isNumeric: true),
+//         DateTimeField(
+//           format: DateFormat('yyyy-MM-dd'),
+//           decoration: InputDecoration(hintText: 'Choose Date'),
+//           onShowPicker: (context, currentValue) async {
+//             final date = await showDatePicker(
+//               context: context,
+//               initialDate: currentValue ?? DateTime.now(),
+//               firstDate: DateTime(1900),
+//               lastDate: DateTime(2100),
+//             );
+//             if (date != null) {
+//               setState(() {
+//                 selectedDate = date;
+//               });
+//             }
+//             return selectedDate ?? currentValue ?? DateTime.now();
+//           },
+//         ),
+//         DateTimeField(
+//           format: DateFormat('HH:mm'),
+//           decoration: InputDecoration(hintText: 'Choose Start Time'),
+//           onShowPicker: (context, currentValue) async {
+//             final time = await showTimePicker(
+//               context: context,
+//               initialTime: currentValue != null
+//                   ? TimeOfDay.fromDateTime(currentValue)
+//                   : TimeOfDay.now(),
+//             );
+//             if (time != null) {
+//               setState(() {
+//                 startTime = time;
+//               });
+//             }
+//             return startTime != null
+//                 ? DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day,
+//                 startTime!.hour, startTime!.minute)
+//                 : currentValue ?? DateTime.now();
+//           },
+//         ),
+//         DateTimeField(
+//           format: DateFormat('HH:mm'),
+//           decoration: InputDecoration(hintText: 'Choose End Time'),
+//           onShowPicker: (context, currentValue) async {
+//             final time = await showTimePicker(
+//               context: context,
+//               initialTime: currentValue != null
+//                   ? TimeOfDay.fromDateTime(currentValue)
+//                   : TimeOfDay.now(),
+//             );
+//             if (time != null) {
+//               setState(() {
+//                 endTime = time;
+//               });
+//             }
+//             return endTime != null
+//                 ? DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day,
+//                 endTime!.hour, endTime!.minute)
+//                 : currentValue ?? DateTime.now();
+//           },
+//         ),
+//         ElevatedButton(
+//           style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+//           onPressed: () {
+//             if (selectedDate != null && startTime != null && endTime != null) {
+//               // Combine selectedDate with startTime and endTime
+//               DateTime startDate = DateTime(
+//                 selectedDate!.year,
+//                 selectedDate!.month,
+//                 selectedDate!.day,
+//                 startTime!.hour,
+//                 startTime!.minute,
+//               );
+//               DateTime endDate = DateTime(
+//                 selectedDate!.year,
+//                 selectedDate!.month,
+//                 selectedDate!.day,
+//                 endTime!.hour,
+//                 endTime!.minute,
+//               );
+//               FirebaseFirestore.instance.collection('parkingareas').doc(name.text).set({
+//                 'userid': _auth.currentUser!.email,
+//                 'Location': location.text,
+//                 'Name': name.text,
+//                 'price': price.text,
+//                 'startDate': Timestamp.fromDate(startDate),
+//                 'endDate': Timestamp.fromDate(endDate),
+//                 'isRecurring': false,
+//               });
+//               Navigator.pushNamed(context, homepage.id);
+//               ScaffoldMessenger.of(context).showSnackBar(
+//                 SnackBar(
+//                   content: Text("Added successfully"),
+//                   backgroundColor: Colors.green,
+//                 ),
+//               );
+//             } else {
+//               ScaffoldMessenger.of(context).showSnackBar(
+//                 SnackBar(
+//                   content: Text("Please fill in all fields"),
+//                   backgroundColor: Colors.red,
+//                 ),
+//               );
+//             }
+//           },
+//           child: Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
+//         ),
+//       ],
+//     );
+//   }
+//
+//
+//
+//  Widget buildRecurringForm(DateFormat format) {
+//     return ListView(
+//       children: <Widget>[
+//         buildTextField(location, 'Location'),
+//         buildTextField(name, 'Name'),
+//         buildTextField(price, 'Price Per Hour', isNumeric: true),
+//         DropdownButtonFormField<String>(
+//           value: recurrenceType,
+//           decoration: InputDecoration(hintText: 'Select Recurrence Type'),
+//           items: [
+//             DropdownMenuItem(value: 'daily', child: Text('Daily')),
+//             DropdownMenuItem(value: 'weekly', child: Text('Weekly')),
+//             DropdownMenuItem(value: 'monthly', child: Text('Monthly')),
+//           ],
+//           onChanged: (value) {
+//             setState(() {
+//               recurrenceType = value!;
+//             });
+//           },
+//         ),
+//         DateTimeField(
+//           format: DateFormat('yyyy-MM-dd'),
+//           decoration: InputDecoration(hintText: 'Choose Start Date'),
+//           onShowPicker: (context, currentValue) async {
+//             final date = await showDatePicker(
+//               context: context,
+//               initialDate: currentValue ?? DateTime.now(),
+//               firstDate: DateTime(1900),
+//               lastDate: DateTime(2100),
+//             );
+//             if (date != null) {
+//               setState(() {
+//                 selectedDate = date;
+//               });
+//             }
+//             return selectedDate ?? currentValue ?? DateTime.now();
+//           },
+//         ),
+//         DateTimeField(
+//           format: DateFormat('yyyy-MM-dd'),
+//           decoration: InputDecoration(hintText: 'Choose End Date'),
+//           onShowPicker: (context, currentValue) async {
+//             final date = await showDatePicker(
+//               context: context,
+//               initialDate: currentValue ?? DateTime.now(),
+//               firstDate: DateTime(1900),
+//               lastDate: DateTime(2100),
+//             );
+//             if (date != null) {
+//               setState(() {
+//                 selectedDate = date;
+//               });
+//             }
+//             return selectedDate ?? currentValue ?? DateTime.now();
+//           },
+//         ),
+//         DateTimeField(
+//           format: DateFormat('HH:mm'),
+//           decoration: InputDecoration(hintText: 'Choose Start Time'),
+//           onShowPicker: (context, currentValue) async {
+//             final time = await showTimePicker(
+//               context: context,
+//               initialTime: currentValue != null
+//                   ? TimeOfDay.fromDateTime(currentValue)
+//                   : TimeOfDay.now(),
+//             );
+//             if (time != null) {
+//               setState(() {
+//                 startTime = time;
+//               });
+//             }
+//             return startTime != null
+//                 ? DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day,
+//                 startTime!.hour, startTime!.minute)
+//                 : currentValue ?? DateTime.now();
+//           },
+//         ),
+//         DateTimeField(
+//           format: DateFormat('HH:mm'),
+//           decoration: InputDecoration(hintText: 'Choose End Time'),
+//           onShowPicker: (context, currentValue) async {
+//             final time = await showTimePicker(
+//               context: context,
+//               initialTime: currentValue != null
+//                   ? TimeOfDay.fromDateTime(currentValue)
+//                   : TimeOfDay.now(),
+//             );
+//             if (time != null) {
+//               setState(() {
+//                 startTime = time;
+//               });
+//             }
+//             return startTime != null
+//                 ? DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day,
+//                 startTime!.hour, startTime!.minute)
+//                 : currentValue ?? DateTime.now();
+//           },
+//         ),
+//
+//         CheckboxListTile(
+//           title: Text('Monday'),
+//           value: selectedDays.contains('Monday'),
+//           onChanged: (bool? value) {
+//             setState(() {
+//               toggleDaySelection('Monday', value);
+//             });
+//           },
+//         ),
+//         CheckboxListTile(
+//           title: Text('Tuesday'),
+//           value: selectedDays.contains('Tuesday'),
+//           onChanged: (bool? value) {
+//             setState(() {
+//               toggleDaySelection('Tuesday', value);
+//             });
+//           },
+//         ),
+//         CheckboxListTile(
+//           title: Text('Wednesday'),
+//           value: selectedDays.contains('Wednesday'),
+//           onChanged: (bool? value) {
+//             setState(() {
+//               toggleDaySelection('Wednesday', value);
+//             });
+//           },
+//         ),
+//         CheckboxListTile(
+//           title: Text('Thursday'),
+//           value: selectedDays.contains('Thursday'),
+//           onChanged: (bool? value) {
+//             setState(() {
+//               toggleDaySelection('Thursday', value);
+//             });
+//           },
+//         ),
+//         CheckboxListTile(
+//           title: Text('Friday'),
+//           value: selectedDays.contains('Friday'),
+//           onChanged: (bool? value) {
+//             setState(() {
+//               toggleDaySelection('Friday', value);
+//             });
+//           },
+//         ),
+//         CheckboxListTile(
+//           title: Text('Saturday'),
+//           value: selectedDays.contains('Saturday'),
+//           onChanged: (bool? value) {
+//             setState(() {
+//               toggleDaySelection('Saturday', value);
+//             });
+//           },
+//         ),
+//         CheckboxListTile(
+//           title: Text('Sunday'),
+//           value: selectedDays.contains('Sunday'),
+//           onChanged: (bool? value) {
+//             setState(() {
+//               toggleDaySelection('Sunday', value);
+//             });
+//           },
+//         ),
+//         ElevatedButton(
+//           style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+//           onPressed: () {
+//             FirebaseFirestore.instance.collection('parkingareas').doc(name.text).set({
+//               'userid': _auth.currentUser!.email,
+//               'Location': location.text,
+//               'Name': name.text,
+//               'price': price.text,
+//               'isRecurring': true,
+//               'recurrenceType': recurrenceType,
+//               'selectedDays': selectedDays,
+//               'startDate': Timestamp.fromDate(startDate!),
+//               'endDate': Timestamp.fromDate(endDate!),
+//             });
+//             Navigator.pushNamed(context, homepage.id);
+//             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+//               content: Text("Added successfully"),
+//               backgroundColor: Colors.green,
+//             ));
+//           },
+//           child: Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
+//         ),
+//       ],
+//     );
+//   }
+//
+//   void toggleDaySelection(String day, bool? isSelected) {
+//     if (isSelected == true) {
+//       selectedDays.add(day);
+//     } else {
+//       selectedDays.remove(day);
+//     }
+//   }
+//
+//   Widget buildTextField(TextEditingController controller, String hint, {bool isNumeric = false}) {
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(vertical: 12.0),
+//       child: TextFormField(
+//         controller: controller,
+//         validator: (data) {
+//           if (data!.isEmpty) {
+//             return 'Field is empty';
+//           }
+//           if (hint == 'Name' && !RegExp(r"^[A-Za-z][A-Za-z0-9_]{7,29}$").hasMatch(data)) {
+//             return 'Enter a valid name';
+//           }
+//           if (hint == 'Price Per Hour' && !RegExp(r"^[1-9]\d{0,7}(?:\.\d{1,4})?$").hasMatch(data)) {
+//             return 'Enter a valid price';
+//           }
+//           return null;
+//         },
+//         decoration: InputDecoration(
+//           hintText: hint,
+//           hintStyle: TextStyle(color: Colors.black, fontSize: 18),
+//         ),
+//         cursorColor: Colors.black,
+//         showCursor: true,
+//         keyboardType: isNumeric ? TextInputType.number : TextInputType.text,
+//       ),
+//     );
+//
+//   }
+// }
