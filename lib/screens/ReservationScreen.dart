@@ -188,22 +188,22 @@ class _ReservationScreenState extends State<ReservationScreen> {
     );
   }
 
-  void _submitReservation() async {
-    final reservation = {
-      'userid': _auth.currentUser!.email,
-      'startDate': _startDate!.toIso8601String(),
-      'endDate': _endDate!.toIso8601String(),
-      'fee': _fee,
-      'paymentMethod': _paymentMethod,
-    };
-    await FirebaseFirestore.instance
-        .collection('Reservations')
-        .add(reservation);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Reservation successfully created!'),
-      ),
-    );
-    Navigator.of(context).pop();
+    void _submitReservation() async {
+      final reservation = {
+        'userid': _auth.currentUser!.email,
+        'startDate': _startDate!.toIso8601String(),
+        'endDate': _endDate!.toIso8601String(),
+        'fee': _fee,
+        'paymentMethod': _paymentMethod,
+      };
+      await FirebaseFirestore.instance
+          .collection('Reservations')
+          .add(reservation);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Reservation successfully created!'),
+        ),
+      );
+      Navigator.of(context).pop();
+    }
   }
-}
