@@ -25,10 +25,9 @@ class ForgotPasswordPage extends StatelessWidget {
                 return null;
               },
               decoration: InputDecoration(
-                hintText: 'Email',
+                hintText: 'Enter your e-mail',
                 filled: true,
                 fillColor: Color(0xFFE3F3E9),
-                prefixIcon: Icon(Icons.email, color: Color(0xFF33AD60)),
                 border: InputBorder.none,
                 focusedBorder: InputBorder.none,
                 enabledBorder: InputBorder.none,
