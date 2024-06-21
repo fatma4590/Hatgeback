@@ -373,12 +373,6 @@ class _AddpointState extends State<addpoint> {
 
 
 
-
-
-
-
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -797,3 +791,11 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
     );
   }
 }
+
+
+
+
+
+
+
+
