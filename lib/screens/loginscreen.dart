@@ -298,7 +298,10 @@ class _LoginPageState extends State<loginscreen> {
                             builder: (context) => ForgotPasswordPage()),
                       );
                     },
-                    child: Text('Forgot Password?'),
+                    child: Text(
+                      'Forgot Password?',
+                      style: TextStyle(color: Color(0xFF33AD60)),
+                    ),
                   ),
                   SizedBox(height: 20.0),
                   Row(

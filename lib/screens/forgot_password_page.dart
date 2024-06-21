@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hatgeback/screens/loginscreen.dart';
 
 class ForgotPasswordPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
@@ -17,24 +18,61 @@ class ForgotPasswordPage extends StatelessWidget {
           children: [
             TextFormField(
               controller: emailController,
-              decoration: InputDecoration(labelText: 'Email'),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Email is required';
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                hintText: 'Email',
+                filled: true,
+                fillColor: Color(0xFFE3F3E9),
+                prefixIcon: Icon(Icons.email, color: Color(0xFF33AD60)),
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+              ),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
                 String email = emailController.text.trim();
                 try {
-                  await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+                  await FirebaseAuth.instance
+                      .sendPasswordResetEmail(email: email);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Password reset email sent. Check your inbox.')),
+                    SnackBar(
+                        content: Text(
+                            'Password reset email sent. Check your inbox.')),
                   );
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Failed to send password reset email.')),
+                    SnackBar(
+                        content: Text('Failed to send password reset email.')),
                   );
                 }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => loginscreen()),
+                );
               },
-              child: Text('Reset Password'),
+              child: Text(
+                'Reset Password',
+                style: TextStyle(
+                  fontSize: 15.0,
+                  wordSpacing: 1,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.white,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 15.0),
+                backgroundColor: Color(0xFF33AD60),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
             ),
           ],
         ),
