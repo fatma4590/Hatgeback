@@ -377,8 +377,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hatgeback/screens/homepage.dart';
 import 'package:intl/intl.dart';
+import 'package:hatgeback/screens/homepage.dart';
+import 'package:hatgeback/widgets/base_screen.dart';
 
 class addpoint extends StatefulWidget {
   static String id = 'addpointpage';
@@ -386,6 +387,7 @@ class addpoint extends StatefulWidget {
   @override
   _AddPointState createState() => _AddPointState();
 }
+
 class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   TextEditingController userid = TextEditingController();
@@ -417,26 +419,28 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     final format = DateFormat('yyyy-MM-dd HH:mm a');
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black26,
-        title: Text('My Parking Space'),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: [
-            Tab(text: 'Just Once'),
-            Tab(text: 'Recurring'),
-          ],
+    return BaseScreen(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.black26,
+          title: Text('My Parking Space'),
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: [
+              Tab(text: 'Just Once'),
+              Tab(text: 'Recurring'),
+            ],
+          ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: TabBarView(
-          controller: _tabController,
-          children: <Widget>[
-            buildJustOnceForm(format),
-            buildRecurringForm(format),
-          ],
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: TabBarView(
+            controller: _tabController,
+            children: <Widget>[
+              buildJustOnceForm(format),
+              buildRecurringForm(format),
+            ],
+          ),
         ),
       ),
     );
@@ -791,11 +795,3 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
     );
   }
 }
-
-
-
-
-
-
-
-

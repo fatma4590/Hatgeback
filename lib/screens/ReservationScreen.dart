@@ -224,6 +224,7 @@ import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:hatgeback/widgets/base_screen.dart';
 
 class ReservationScreen extends StatefulWidget {
   final Map<String, dynamic> parkingArea;
@@ -244,87 +245,89 @@ class _ReservationScreenState extends State<ReservationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Reservation'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              Text(
-                'Parking Area: ${widget.parkingArea['Name']}',
-                style: TextStyle(fontSize: 18),
-              ),
-              SizedBox(height: 20),
-              TimeField(
-                decoration: InputDecoration(hintText: 'Choose Start Time'),
-                onChanged: (value) {
-                  setState(() {
-                    _startTime = value;
-                  });
-                },
-                validator: (value) {
-                  if (value == null) {
-                    return 'Required';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              TimeField(
-                decoration: InputDecoration(hintText: 'Choose End Time'),
-                onChanged: (value) {
-                  setState(() {
-                    _endTime = value;
-                  });
-                },
-                validator: (value) {
-                  if (value == null) {
-                    return 'Required';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              DropdownButtonFormField<String>(
-                decoration: InputDecoration(hintText: 'Payment Method'),
-                value: _paymentMethod,
-                onChanged: (value) {
-                  setState(() {
-                    _paymentMethod = value;
-                  });
-                },
-                items: [
-                  'Bank Card',
-                  'Instapay',
-                  'E Wallet',
-                ].map((e) {
-                  return DropdownMenuItem<String>(
-                    value: e,
-                    child: Text(e),
-                  );
-                }).toList(),
-                validator: (value) {
-                  if (value == null) {
-                    return 'Required';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _showConfirmationDialog();
-                    _calculateFee();
-                  }
-                },
-                child: Text('Confirm Reservation'),
-              ),
-            ],
+    return BaseScreen(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Reservation'),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Text(
+                  'Parking Area: ${widget.parkingArea['Name']}',
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(height: 20),
+                TimeField(
+                  decoration: InputDecoration(hintText: 'Choose Start Time'),
+                  onChanged: (value) {
+                    setState(() {
+                      _startTime = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Required';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                TimeField(
+                  decoration: InputDecoration(hintText: 'Choose End Time'),
+                  onChanged: (value) {
+                    setState(() {
+                      _endTime = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Required';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                DropdownButtonFormField<String>(
+                  decoration: InputDecoration(hintText: 'Payment Method'),
+                  value: _paymentMethod,
+                  onChanged: (value) {
+                    setState(() {
+                      _paymentMethod = value;
+                    });
+                  },
+                  items: [
+                    'Bank Card',
+                    'Instapay',
+                    'E Wallet',
+                  ].map((e) {
+                    return DropdownMenuItem<String>(
+                      value: e,
+                      child: Text(e),
+                    );
+                  }).toList(),
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Required';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _showConfirmationDialog();
+                      _calculateFee();
+                    }
+                  },
+                  child: Text('Confirm Reservation'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

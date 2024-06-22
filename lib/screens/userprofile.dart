@@ -120,6 +120,7 @@ class _UserProfileState extends State<UserProfile> {
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hatgeback/widgets/base_screen.dart';
 
 class UserProfile extends StatefulWidget {
   static String id = 'userprofile';
@@ -157,8 +158,7 @@ class _UserProfileState extends State<UserProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
+    return BaseScreen(
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -328,13 +328,13 @@ class _UserProfileState extends State<UserProfile> {
                           TextFormField(
                             controller: oldPasswordController,
                             decoration:
-                                InputDecoration(labelText: 'Current Password'),
+                            InputDecoration(labelText: 'Current Password'),
                             obscureText: true,
                           ),
                           TextFormField(
                             controller: newPasswordController,
                             decoration:
-                                InputDecoration(labelText: 'New Password'),
+                            InputDecoration(labelText: 'New Password'),
                             obscureText: true,
                           ),
                         ],
@@ -382,7 +382,7 @@ class _UserProfileState extends State<UserProfile> {
                             try {
                               // Re-authenticate user to verify old password
                               AuthCredential credential =
-                                  EmailAuthProvider.credential(
+                              EmailAuthProvider.credential(
                                 email: currentUser.email!,
                                 password: oldPassword,
                               );
@@ -402,7 +402,7 @@ class _UserProfileState extends State<UserProfile> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                     content:
-                                        Text('Password updated successfully')),
+                                    Text('Password updated successfully')),
                               );
 
                               Navigator.of(context).pop(); // Close dialog
