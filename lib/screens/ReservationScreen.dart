@@ -208,18 +208,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
     }
   }*/
 
-
-
-
-
-
-
-
-
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
 import 'package:hatgeback/widgets/base_screen.dart';
 
 class ReservationScreen extends StatefulWidget {
@@ -238,6 +229,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
   String? _paymentMethod;
   double _fee = 0.0;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final db = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -475,9 +467,12 @@ class _ReservationScreenState extends State<ReservationScreen> {
       'endDate': endDateTime.toIso8601String(),
       'fee': _fee,
       'paymentMethod': _paymentMethod,
+      'parkingid': widget.parkingArea['parkingid'],
     };
 
-    await FirebaseFirestore.instance.collection('Reservations').add(reservation);
+    await FirebaseFirestore.instance
+        .collection('Reservations')
+        .add(reservation);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

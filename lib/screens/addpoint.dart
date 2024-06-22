@@ -347,6 +347,7 @@ import 'package:flutter/material.dart';
 import 'package:hatgeback/screens/homepage.dart';
 import 'package:hatgeback/widgets/base_screen.dart';
 import 'package:intl/intl.dart';
+import 'package:isar/isar.dart';
 
 class addpoint extends StatefulWidget {
   static String id = 'addpointpage';
@@ -545,6 +546,7 @@ class _AddPointPageState extends State<addpoint>
                   .doc(name.text)
                   .set({
                 'userid': _auth.currentUser!.email,
+                'parkingid': Isar.defaultMaxSizeMiB,
                 'Location': location.text,
                 'Name': name.text,
                 'price': int.parse(price.text),
@@ -826,6 +828,7 @@ class _AddPointPageState extends State<addpoint>
         // Store the parking area entry in Firestore
         FirebaseFirestore.instance.collection('parkingareas').add({
           'userid': _auth.currentUser!.email,
+          'parkingid': Isar.defaultMaxSizeMiB,
           'Location': location.text,
           'Name': name.text,
           'price': int.parse(price.text),
