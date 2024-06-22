@@ -425,16 +425,34 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
       onBackButtonPressed: () {
         Navigator.of(context).pop(); // Handle back button press as needed
       },
-      child: Scaffold(
-
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: TabBarView(
-            controller: _tabController,
-            children: <Widget>[
-              buildJustOnceForm(format),
-              buildRecurringForm(format),
-            ],
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Column(
+              children: <Widget>[
+                TabBar(
+                  tabs: [
+                    Tab(text: 'Just Once'),
+                    Tab(text: 'Recurring'),
+                  ],
+                  controller: _tabController,
+                  indicatorColor: Colors.green,
+                  labelColor: Colors.green,
+                  unselectedLabelColor: Colors.black,
+                ),
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: <Widget>[
+                      buildJustOnceForm(format),
+                      buildRecurringForm(format),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -508,7 +526,13 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
           },
         ),
         ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green,
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
           onPressed: () {
             if (selectedDate != null && startTime != null && endTime != null) {
               // Combine selectedDate with startTime and endTime
@@ -551,7 +575,10 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
               );
             }
           },
-          child: Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
+          child: Text(
+            "Add",
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
         ),
       ],
     );
@@ -719,7 +746,13 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
           },
         ),
         ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green,
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
           onPressed: () {
             if (startDate != null && endDate != null && startTime != null && endTime != null) {
               storeRecurringParkingAreas();
@@ -735,7 +768,10 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
               ));
             }
           },
-          child: Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
+          child: Text(
+            "Add",
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
         ),
       ],
     );
@@ -770,7 +806,7 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
           'price': price.text,
           'startDate': Timestamp.fromDate(currentStartDate),
           'endDate': Timestamp.fromDate(currentEndDate),
-          'isRecurring': false,
+          'isRecurring': true,
         });
       }
 

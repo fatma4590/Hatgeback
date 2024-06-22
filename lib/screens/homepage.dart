@@ -950,7 +950,6 @@ class _HomePageState extends State<homepage> {
 
 
 
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -964,8 +963,6 @@ import 'package:hatgeback/widgets/base_screen.dart';
 
 class homepage extends StatefulWidget {
   static String id = 'homepage';
-
-  homepage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -1007,18 +1004,14 @@ class _HomePageState extends State<homepage> {
   Widget build(BuildContext context) {
     return BaseScreen(
       pageTitle: 'Home Screen',
-      // showBackButton: true,
-      // onBackButtonPressed: () {
-      //   Navigator.of(context).pop(); // Handle back button press as needed
-      // },
       child: Scaffold(
         backgroundColor: Color(0xFFE3F3E9),
-
         body: SingleChildScrollView(
           child: Container(
             width: double.infinity,
             decoration: BoxDecoration(
               color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -1061,67 +1054,103 @@ class _HomePageState extends State<homepage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: 10),
-                            Container(
-                              height: 150,
-                              width: double.infinity,
+                            ClipRRect(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10),
+                              ),
                               child: Image.network(
                                 'https://example.com/image.jpg',
                                 fit: BoxFit.cover,
+                                height: 150,
+                                width: double.infinity,
+                              ),
+                            ),
+                            Container(
+                              color: Color(0xFFE3F3E9),
+                              padding: EdgeInsets.symmetric(
+                                vertical: 10,
+                                horizontal: 16,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Flexible(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          parking['Name'] != null
+                                              ? parking['Name']
+                                              : '',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xFF33AD60),
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                        SizedBox(height: 5),
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.location_on,
+                                              size: 16,
+                                              color: Color(0xFF33AD60),
+                                            ),
+                                            SizedBox(width: 5),
+                                            Text(
+                                              parking['Location'] != null
+                                                  ? parking['Location']
+                                                  : '',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(10.0),
+                              padding: const EdgeInsets.all(16.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    parking['Name'] != null
-                                        ? parking['Name']
-                                        : '',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xFF33AD60),
-                                    ),
-                                  ),
-                                  SizedBox(height: 10),
-                                  Text(
-                                    parking['Location'] != null
-                                        ? "Location: ${parking['Location']}"
-                                        : '',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  SizedBox(height: 10),
                                   Text(
                                     parking['price'] != null
                                         ? "Price: ${parking['price']}"
                                         : '',
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: Colors.grey,
+                                      color: Colors.black87,
                                     ),
                                   ),
-                                  SizedBox(height: 10),
+                                  SizedBox(height: 5),
                                   Text(
                                     parking['startDate'] != null
                                         ? "Start Date: ${DateFormat('MM/dd/yyyy HH:mm').format(parking['startDate'].toDate())}"
                                         : '',
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: Colors.grey,
+                                      color: Colors.black87,
                                     ),
                                   ),
-                                  SizedBox(height: 10),
+                                  SizedBox(height: 5),
                                   Text(
                                     parking['endDate'] != null
                                         ? "End Date: ${DateFormat('MM/dd/yyyy HH:mm').format(parking['endDate'].toDate())}"
                                         : '',
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: Colors.grey,
+                                      color: Colors.black87,
                                     ),
                                   ),
                                   SizedBox(height: 10),
@@ -1140,29 +1169,37 @@ class _HomePageState extends State<homepage> {
                                       ),
                                     ),
                                   ),
+                                  SizedBox(height: 10),
                                   if (!isUserParkingArea)
-                                  // Show the reservation button only if it's not the user's parking area
-                                    ElevatedButton(
-                                      onPressed: parking['isAvailable'] == true
-                                          ? () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                ReservationScreen(
-                                                  parkingArea: parking,
-                                                ),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: ElevatedButton(
+                                        onPressed: parking['isAvailable'] == true
+                                            ? () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ReservationScreen(
+                                                    parkingArea: parking,
+                                                  ),
+                                            ),
+                                          );
+                                        }
+                                            : null,
+                                        child: Text(
+                                          "Reserve",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Color(0xFF33AD60),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(10),
                                           ),
-                                        );
-                                      }
-                                          : null,
-                                      child: Text(
-                                        "Reserve",
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.green,
-                                        // onSurface: Colors.grey, // Color when the button is disabled
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 12, horizontal: 20),
+                                        ),
                                       ),
                                     ),
                                 ],
