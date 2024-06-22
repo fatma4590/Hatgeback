@@ -371,8 +371,6 @@ class _AddpointState extends State<addpoint> {
 
 
 
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -385,10 +383,10 @@ class addpoint extends StatefulWidget {
   static String id = 'addpointpage';
 
   @override
-  _AddPointState createState() => _AddPointState();
+  _AddPointPageState createState() => _AddPointPageState();
 }
 
-class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin {
+class _AddPointPageState extends State<addpoint> with SingleTickerProviderStateMixin {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   TextEditingController userid = TextEditingController();
   TextEditingController location = TextEditingController();
@@ -425,34 +423,33 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
       onBackButtonPressed: () {
         Navigator.of(context).pop(); // Handle back button press as needed
       },
-      child: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Column(
-              children: <Widget>[
-                TabBar(
-                  tabs: [
-                    Tab(text: 'Just Once'),
-                    Tab(text: 'Recurring'),
-                  ],
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              SizedBox(height: 16),
+              TabBar(
+                tabs: [
+                  Tab(text: 'Just Once'),
+                  Tab(text: 'Recurring'),
+                ],
+                controller: _tabController,
+                indicatorColor: Color(0xFF33AD60),
+                labelColor: Color(0xFF33AD60),
+                unselectedLabelColor: Colors.black,
+              ),
+              Expanded(
+                child: TabBarView(
                   controller: _tabController,
-                  indicatorColor: Colors.green,
-                  labelColor: Colors.green,
-                  unselectedLabelColor: Colors.black,
+                  children: <Widget>[
+                    buildJustOnceForm(format),
+                    buildRecurringForm(format),
+                  ],
                 ),
-                Expanded(
-                  child: TabBarView(
-                    controller: _tabController,
-                    children: <Widget>[
-                      buildJustOnceForm(format),
-                      buildRecurringForm(format),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -465,9 +462,14 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
         buildTextField(location, 'Location'),
         buildTextField(name, 'Name'),
         buildTextField(price, 'Price Per Hour', isNumeric: true),
+        SizedBox(height: 16),
         DateTimeField(
           format: DateFormat('yyyy-MM-dd'),
-          decoration: InputDecoration(hintText: 'Choose Date'),
+          decoration: InputDecoration(
+            labelText: 'Choose Date',
+            border: OutlineInputBorder(),
+            prefixIcon: Icon(Icons.calendar_today),
+          ),
           onShowPicker: (context, currentValue) async {
             final date = await showDatePicker(
               context: context,
@@ -483,55 +485,66 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
             return selectedDate ?? currentValue ?? DateTime.now();
           },
         ),
-        DateTimeField(
-          format: DateFormat('HH:mm'),
-          decoration: InputDecoration(hintText: 'Choose Start Time'),
-          onShowPicker: (context, currentValue) async {
-            final time = await showTimePicker(
-              context: context,
-              initialTime: currentValue != null
-                  ? TimeOfDay.fromDateTime(currentValue)
-                  : TimeOfDay.now(),
-            );
-            if (time != null) {
-              setState(() {
-                startTime = time;
-              });
-            }
-            return startTime != null
-                ? DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day,
-                startTime!.hour, startTime!.minute)
-                : currentValue ?? DateTime.now();
-          },
+        SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: DateTimeField(
+                format: DateFormat('HH:mm'),
+                decoration: InputDecoration(
+                  labelText: 'Choose Start Time',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.access_time),
+                ),
+                onShowPicker: (context, currentValue) async {
+                  final time = await showTimePicker(
+                    context: context,
+                    initialTime: currentValue != null ? TimeOfDay.fromDateTime(currentValue) : TimeOfDay.now(),
+                  );
+                  if (time != null) {
+                    setState(() {
+                      startTime = time;
+                    });
+                  }
+                  return startTime != null
+                      ? DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day, startTime!.hour, startTime!.minute)
+                      : currentValue ?? DateTime.now();
+                },
+              ),
+            ),
+            SizedBox(width: 16),
+            Expanded(
+              child: DateTimeField(
+                format: DateFormat('HH:mm'),
+                decoration: InputDecoration(
+                  labelText: 'Choose End Time',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.access_time),
+                ),
+                onShowPicker: (context, currentValue) async {
+                  final time = await showTimePicker(
+                    context: context,
+                    initialTime: currentValue != null ? TimeOfDay.fromDateTime(currentValue) : TimeOfDay.now(),
+                  );
+                  if (time != null) {
+                    setState(() {
+                      endTime = time;
+                    });
+                  }
+                  return endTime != null
+                      ? DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day, endTime!.hour, endTime!.minute)
+                      : currentValue ?? DateTime.now();
+                },
+              ),
+            ),
+          ],
         ),
-        DateTimeField(
-          format: DateFormat('HH:mm'),
-          decoration: InputDecoration(hintText: 'Choose End Time'),
-          onShowPicker: (context, currentValue) async {
-            final time = await showTimePicker(
-              context: context,
-              initialTime: currentValue != null
-                  ? TimeOfDay.fromDateTime(currentValue)
-                  : TimeOfDay.now(),
-            );
-            if (time != null) {
-              setState(() {
-                endTime = time;
-              });
-            }
-            return endTime != null
-                ? DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day,
-                endTime!.hour, endTime!.minute)
-                : currentValue ?? DateTime.now();
-          },
-        ),
+        SizedBox(height: 16),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.green,
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
+            backgroundColor: Color(0xFF33AD60),
+            padding: EdgeInsets.all(16),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
           onPressed: () {
             if (selectedDate != null && startTime != null && endTime != null) {
@@ -563,7 +576,7 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text("Added successfully"),
-                  backgroundColor: Colors.green,
+                  backgroundColor: Color(0xFF33AD60),
                 ),
               );
             } else {
@@ -590,9 +603,14 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
         buildTextField(location, 'Location'),
         buildTextField(name, 'Name'),
         buildTextField(price, 'Price Per Hour', isNumeric: true),
+        SizedBox(height: 16),
         DateTimeField(
           format: DateFormat('yyyy-MM-dd'),
-          decoration: InputDecoration(hintText: 'Choose Start Date'),
+          decoration: InputDecoration(
+            labelText: 'Choose Start Date',
+            border: OutlineInputBorder(),
+            prefixIcon: Icon(Icons.calendar_today),
+          ),
           onShowPicker: (context, currentValue) async {
             final date = await showDatePicker(
               context: context,
@@ -608,9 +626,14 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
             return startDate ?? currentValue ?? DateTime.now();
           },
         ),
+        SizedBox(height: 16),
         DateTimeField(
           format: DateFormat('yyyy-MM-dd'),
-          decoration: InputDecoration(hintText: 'Choose End Date'),
+          decoration: InputDecoration(
+            labelText: 'Choose End Date',
+            border: OutlineInputBorder(),
+            prefixIcon: Icon(Icons.calendar_today),
+          ),
           onShowPicker: (context, currentValue) async {
             final date = await showDatePicker(
               context: context,
@@ -626,48 +649,61 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
             return endDate ?? currentValue ?? DateTime.now();
           },
         ),
-        DateTimeField(
-          format: DateFormat('HH:mm'),
-          decoration: InputDecoration(hintText: 'Choose Start Time'),
-          onShowPicker: (context, currentValue) async {
-            final time = await showTimePicker(
-              context: context,
-              initialTime: currentValue != null
-                  ? TimeOfDay.fromDateTime(currentValue)
-                  : TimeOfDay.now(),
-            );
-            if (time != null) {
-              setState(() {
-                startTime = time;
-              });
-            }
-            return startTime != null
-                ? DateTime(startDate!.year, startDate!.month, startDate!.day,
-                startTime!.hour, startTime!.minute)
-                : currentValue ?? DateTime.now();
-          },
+        SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: DateTimeField(
+                format: DateFormat('HH:mm'),
+                decoration: InputDecoration(
+                  labelText: 'Choose Start Time',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.access_time),
+                ),
+                onShowPicker: (context, currentValue) async {
+                  final time = await showTimePicker(
+                    context: context,
+                    initialTime: currentValue != null ? TimeOfDay.fromDateTime(currentValue) : TimeOfDay.now(),
+                  );
+                  if (time != null) {
+                    setState(() {
+                      startTime = time;
+                    });
+                  }
+                  return startTime != null
+                      ? DateTime(startDate!.year, startDate!.month, startDate!.day, startTime!.hour, startTime!.minute)
+                      : currentValue ?? DateTime.now();
+                },
+              ),
+            ),
+            SizedBox(width: 16),
+            Expanded(
+              child: DateTimeField(
+                format: DateFormat('HH:mm'),
+                decoration: InputDecoration(
+                  labelText: 'Choose End Time',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.access_time),
+                ),
+                onShowPicker: (context, currentValue) async {
+                  final time = await showTimePicker(
+                    context: context,
+                    initialTime: currentValue != null ? TimeOfDay.fromDateTime(currentValue) : TimeOfDay.now(),
+                  );
+                  if (time != null) {
+                    setState(() {
+                      endTime = time;
+                    });
+                  }
+                  return endTime != null
+                      ? DateTime(endDate!.year, endDate!.month, endDate!.day, endTime!.hour, endTime!.minute)
+                      : currentValue ?? DateTime.now();
+                },
+              ),
+            ),
+          ],
         ),
-        DateTimeField(
-          format: DateFormat('HH:mm'),
-          decoration: InputDecoration(hintText: 'Choose End Time'),
-          onShowPicker: (context, currentValue) async {
-            final time = await showTimePicker(
-              context: context,
-              initialTime: currentValue != null
-                  ? TimeOfDay.fromDateTime(currentValue)
-                  : TimeOfDay.now(),
-            );
-            if (time != null) {
-              setState(() {
-                endTime = time;
-              });
-            }
-            return endTime != null
-                ? DateTime(endDate!.year, endDate!.month, endDate!.day,
-                endTime!.hour, endTime!.minute)
-                : currentValue ?? DateTime.now();
-          },
-        ),
+        SizedBox(height: 16),
         CheckboxListTile(
           title: Text('Monday'),
           value: selectedDays.contains('Monday'),
@@ -745,13 +781,12 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
             });
           },
         ),
+        SizedBox(height: 16),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.green,
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
+            backgroundColor: Color(0xFF33AD60),
+            padding: EdgeInsets.all(16),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
           onPressed: () {
             if (startDate != null && endDate != null && startTime != null && endTime != null) {
@@ -759,7 +794,7 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
               Navigator.pushNamed(context, homepage.id);
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text("Added successfully"),
-                backgroundColor: Colors.green,
+                backgroundColor: Color(0xFF33AD60),
               ));
             } else {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -815,14 +850,18 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
     }
   }
 
-  Widget buildTextField(TextEditingController controller, String hintText, {bool isNumeric = false}) {
+  Widget buildTextField(TextEditingController controller, String labelText, {bool isNumeric = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextField(
         controller: controller,
-        decoration: InputDecoration(hintText: hintText),
+        decoration: InputDecoration(
+          labelText: labelText,
+          border: OutlineInputBorder(),
+        ),
         keyboardType: isNumeric ? TextInputType.number : TextInputType.text,
       ),
     );
   }
 }
+

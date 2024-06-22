@@ -113,10 +113,6 @@ class _UserProfileState extends State<UserProfile> {
 
 
 
-
-
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -162,11 +158,10 @@ class _UserProfileState extends State<UserProfile> {
       pageTitle: 'My Profile',
       showBackButton: true,
       onBackButtonPressed: () {
-        Navigator.of(context).pop(); // Handle back button press as needed
+        Navigator.of(context).pop();
       },
       child: Scaffold(
         backgroundColor: Colors.white,
-
         body: StreamBuilder<DocumentSnapshot>(
           stream: FirebaseFirestore.instance
               .collection("users")
@@ -199,42 +194,48 @@ class _UserProfileState extends State<UserProfile> {
             _passwordController.text = ''; // Clear password field
             _addressController.text = userData['address'] ?? '';
 
-            return ListView(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
-              children: [
-                SizedBox(height: 50),
-                // Profile pic (you can use a real profile picture here)
-                Icon(
-                  Icons.person,
-                  color: Colors.green,
-                  size: 72,
-                ),
-                SizedBox(height: 10),
-                // User email
-                Text(
-                  currentUser.email!,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.green),
-                ),
-                SizedBox(height: 50),
-                // Editable fields
-                buildEditableField(
-                  'username',
-                  'User Name',
-                  _usernameController,
-                ),
-                buildEditableField(
-                  'phone',
-                  'Phone',
-                  _phoneController,
-                ),
-                buildPasswordChangeField(),
-                buildEditableField(
-                  'address',
-                  'Address',
-                  _addressController,
-                ),
-              ],
+            return Padding(
+              padding: EdgeInsets.all(20.0),
+              child: ListView(
+                children: [
+                  SizedBox(height: 20),
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.grey.shade200,
+                    child: Icon(
+                      Icons.person,
+                      color: Colors.grey.shade800,
+                      size: 50,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    currentUser.email!,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.black, fontSize: 16),
+                  ),
+                  SizedBox(height: 40),
+                  buildEditableField(
+                    'username',
+                    'User Name',
+                    _usernameController,
+                    Icons.person,
+                  ),
+                  buildEditableField(
+                    'phone',
+                    'Phone',
+                    _phoneController,
+                    Icons.phone,
+                  ),
+                  buildPasswordChangeField(),
+                  buildEditableField(
+                    'address',
+                    'Address',
+                    _addressController,
+                    Icons.location_on,
+                  ),
+                ],
+              ),
             );
           },
         ),
@@ -242,56 +243,33 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 
-  Widget buildEditableField(
-      String fieldKey, String label, TextEditingController controller) {
+  Widget buildEditableField(String fieldKey, String label, TextEditingController controller, IconData icon) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              '$label: ${controller.text}',
-              style: TextStyle(
-                color: Colors.green,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          prefixIcon: Icon(icon, color: Colors.grey.shade800),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
-          IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text('Edit $label'),
-                  content: TextFormField(
-                    controller: controller,
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        // Save changes to Firestore
-                        await FirebaseFirestore.instance
-                            .collection("users")
-                            .doc(currentUser.email)
-                            .update({fieldKey: controller.text});
-
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('Save'),
-                    ),
-                  ],
-                ),
+          filled: true,
+          fillColor: Colors.grey.shade100,
+          suffixIcon: IconButton(
+            icon: Icon(Icons.save, color: Colors.grey.shade800),
+            onPressed: () async {
+              await FirebaseFirestore.instance
+                  .collection("users")
+                  .doc(currentUser.email)
+                  .update({fieldKey: controller.text});
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('$label updated successfully')),
               );
             },
           ),
-        ],
+        ),
+        style: TextStyle(color: Colors.black),
       ),
     );
   }
@@ -302,134 +280,130 @@ class _UserProfileState extends State<UserProfile> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: Row(
+      child: Column(
         children: [
-          Expanded(
-            child: Text(
-              'Password: ********', // Display masked password
-              style: TextStyle(
-                color: Colors.green,
-                fontWeight: FontWeight.bold,
+          TextFormField(
+            decoration: InputDecoration(
+              labelText: 'Password',
+              prefixIcon: Icon(Icons.lock, color: Colors.grey.shade800),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
+              filled: true,
+              fillColor: Colors.grey.shade100,
             ),
+            obscureText: true,
+            readOnly: true,
           ),
-          IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => StatefulBuilder(
-                  builder: (context, setState) {
-                    return AlertDialog(
-                      title: Text('Change Password'),
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextFormField(
-                            controller: oldPasswordController,
-                            decoration:
-                            InputDecoration(labelText: 'Current Password'),
-                            obscureText: true,
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => StatefulBuilder(
+                    builder: (context, setState) {
+                      return AlertDialog(
+                        title: Text('Change Password'),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextFormField(
+                              controller: oldPasswordController,
+                              decoration: InputDecoration(
+                                labelText: 'Current Password',
+                              ),
+                              obscureText: true,
+                            ),
+                            TextFormField(
+                              controller: newPasswordController,
+                              decoration: InputDecoration(
+                                labelText: 'New Password',
+                              ),
+                              obscureText: true,
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Cancel'),
                           ),
-                          TextFormField(
-                            controller: newPasswordController,
-                            decoration:
-                            InputDecoration(labelText: 'New Password'),
-                            obscureText: true,
+                          TextButton(
+                            onPressed: () async {
+                              String oldPassword = oldPasswordController.text;
+                              String newPassword = newPasswordController.text;
+
+                              // Validate the new password
+                              if (newPassword.length < 6) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Password must be at least 6 characters')),
+                                );
+                                return;
+                              }
+                              if (!newPassword.contains(RegExp(r'[A-Z]')) ||
+                                  !newPassword.contains(RegExp(r'[a-z]')) ||
+                                  !newPassword.contains(RegExp(r'[0-9]'))) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Password must include at least one uppercase letter, one lowercase letter, and one digit')),
+                                );
+                                return;
+                              }
+                              if (newPassword == oldPassword) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('New password must be different from old password')),
+                                );
+                                return;
+                              }
+
+                              try {
+                                // Re-authenticate user to verify old password
+                                AuthCredential credential = EmailAuthProvider.credential(
+                                  email: currentUser.email!,
+                                  password: oldPassword,
+                                );
+
+                                await currentUser.reauthenticateWithCredential(credential);
+
+                                // Update password in Firebase Authentication
+                                await currentUser.updatePassword(newPassword);
+
+                                // Update password in Firestore (optional)
+                                await FirebaseFirestore.instance
+                                    .collection("users")
+                                    .doc(currentUser.email)
+                                    .update({'password': newPassword});
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Password updated successfully')),
+                                );
+
+                                Navigator.of(context).pop(); // Close dialog
+                              } catch (error) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Failed to update password')),
+                                );
+                              }
+                            },
+                            child: Text('Save'),
                           ),
                         ],
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text('Cancel'),
-                        ),
-                        TextButton(
-                          onPressed: () async {
-                            String oldPassword = oldPasswordController.text;
-                            String newPassword = newPasswordController.text;
-
-                            // Validate the new password
-                            if (newPassword.length < 6) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text(
-                                        'Password must be at least 6 characters')),
-                              );
-                              return;
-                            }
-                            if (!newPassword.contains(RegExp(r'[A-Z]')) ||
-                                !newPassword.contains(RegExp(r'[a-z]')) ||
-                                !newPassword.contains(RegExp(r'[0-9]'))) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text(
-                                        'Password must include at least one uppercase letter, one lowercase letter, and one digit')),
-                              );
-                              return;
-                            }
-                            if (newPassword == oldPassword) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text(
-                                        'New password must be different from old password')),
-                              );
-                              return;
-                            }
-
-                            try {
-                              // Re-authenticate user to verify old password
-                              AuthCredential credential =
-                              EmailAuthProvider.credential(
-                                email: currentUser.email!,
-                                password: oldPassword,
-                              );
-
-                              await currentUser
-                                  .reauthenticateWithCredential(credential);
-
-                              // Update password in Firebase Authentication
-                              await currentUser.updatePassword(newPassword);
-
-                              // Update password in Firestore (optional)
-                              await FirebaseFirestore.instance
-                                  .collection("users")
-                                  .doc(currentUser.email)
-                                  .update({'password': newPassword});
-
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content:
-                                    Text('Password updated successfully')),
-                              );
-
-                              Navigator.of(context).pop(); // Close dialog
-                            } catch (error) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text('Failed to update password')),
-                              );
-                            }
-                          },
-                          child: Text('Save'),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              );
-            },
+                      );
+                    },
+                  ),
+                );
+              },
+              child: Text('Change', style: TextStyle(color: Color(0xFF33AD60))),
+            ),
           ),
         ],
       ),
     );
   }
 }
-
-
 
 
 

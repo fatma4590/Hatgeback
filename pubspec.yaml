@@ -44,6 +44,8 @@ dependencies:
   cloud_firestore: ^4.17.0
   datetime_picker_formfield_new: ^2.1.0
   google_maps_flutter: ^2.6.1
+  file_picker: ^4.2.0
+  image_picker: ^0.8.4+4
 
 dev_dependencies:
   flutter_test:

@@ -438,7 +438,7 @@ class _RegisterPageState extends State<registerpage> {
                             });
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text("Sign up success ."),
-                              backgroundColor: Colors.green,
+                              backgroundColor: Color(0xFF33AD60),
                             ));
                             FirebaseAuth.instance.currentUser!
                                 .sendEmailVerification();
@@ -482,8 +482,10 @@ class _RegisterPageState extends State<registerpage> {
                       children: [
                         //dont have account
                         Text(
-                          "already have account ",
-                          style: TextStyle(color: Colors.black),
+                          "already have account? ",
+                          style: TextStyle(
+                            color: Color(0xFF33AD60),)
+
                         ),
                         //register
                         GestureDetector(
@@ -492,7 +494,10 @@ class _RegisterPageState extends State<registerpage> {
                           },
                           child: Text(
                             " Login",
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(
+                              color: Color(0xFF33AD60),                            fontWeight: FontWeight.bold,
+                            )
+                            ,
                           ),
                         )
                       ],

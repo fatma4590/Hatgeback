@@ -1,7 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hatgeback/screens/loginscreen.dart';
-import 'package:hatgeback/widgets//base_screen.dart';
 
 class ForgotPasswordPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
@@ -10,35 +9,39 @@ class ForgotPasswordPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
-        title: Text('Forgot Password'),
+        backgroundColor: Color(0xFF33AD60),
+        title: Text('My Parking Areas'),
         titleTextStyle: TextStyle(
-          color: Colors.black,
+          color: Colors.white,
           fontWeight: FontWeight.bold,
           fontSize: 25,
         ),
         centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white), // Changing back arrow color to white
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextFormField(
-              controller: emailController,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return 'Email is required';
-                }
-                return null;
-              },
-              decoration: InputDecoration(
-                hintText: 'Enter your e-mail',
-                filled: true,
-                fillColor: Color(0xFFE3F3E9),
-                border: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
+            Container(
+              decoration: BoxDecoration(
+                color: Color(0xFFE3F3E9),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: TextFormField(
+                controller: emailController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Email is required';
+                  }
+                  return null;
+                },
+                decoration: InputDecoration(
+                  hintText: 'Enter your e-mail',
+                  contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
+                  border: InputBorder.none,
+                ),
               ),
             ),
             SizedBox(height: 20),
@@ -46,17 +49,19 @@ class ForgotPasswordPage extends StatelessWidget {
               onPressed: () async {
                 String email = emailController.text.trim();
                 try {
-                  await FirebaseAuth.instance
-                      .sendPasswordResetEmail(email: email);
+                  await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                        content: Text(
-                            'Password reset email sent. Check your inbox.')),
+                      content: Text('Password reset email sent. Check your inbox.'),
+                      backgroundColor: Color(0xFF33AD60),
+                    ),
                   );
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                        content: Text('Failed to send password reset email.')),
+                      content: Text('Failed to send password reset email.'),
+                      backgroundColor: Colors.red,
+                    ),
                   );
                 }
                 Navigator.push(
@@ -64,17 +69,18 @@ class ForgotPasswordPage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => loginscreen()),
                 );
               },
-              child: Text(
-                'Reset Password',
-                style: TextStyle(
-                  fontSize: 15.0,
-                  wordSpacing: 1,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.white,
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 15.0),
+                child: Text(
+                  'Reset Password',
+                  style: TextStyle(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.white, // Text color of the button
+                  ),
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 15.0),
                 backgroundColor: Color(0xFF33AD60),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
@@ -87,6 +93,9 @@ class ForgotPasswordPage extends StatelessWidget {
     );
   }
 }
+
+
+
 
 
 

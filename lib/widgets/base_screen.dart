@@ -63,8 +63,8 @@ class BaseScreen extends StatelessWidget {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Colors.green.withOpacity(0.8),
-                Colors.green.withOpacity(0.95),
+                Color(0xFF33AD60),
+                Color(0xFF33AD60),
               ],
             ),
             borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)), // Adjusted border radius
@@ -115,8 +115,8 @@ class BaseScreen extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Colors.green.withOpacity(0.8),
-            Colors.green.withOpacity(0.95),
+            Color(0xFF33AD60),
+            Color(0xFF33AD60),
           ],
         ),
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)), // Adjusted border radius

@@ -216,13 +216,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
 
 
 
-
-
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:hatgeback/widgets/base_screen.dart';
 
@@ -249,23 +245,24 @@ class _ReservationScreenState extends State<ReservationScreen> {
       pageTitle: 'Reservation Screen',
       showBackButton: true,
       onBackButtonPressed: () {
-        Navigator.of(context).pop(); // Handle back button press as needed
+        Navigator.of(context).pop();
       },
       child: Scaffold(
-
         body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Form(
             key: _formKey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
                   'Parking Area: ${widget.parkingArea['Name']}',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 20),
-                TimeField(
-                  decoration: InputDecoration(hintText: 'Choose Start Time'),
+                _buildTimeField(
+                  labelText: 'Start Time',
+                  hintText: 'Choose Start Time',
                   onChanged: (value) {
                     setState(() {
                       _startTime = value;
@@ -279,8 +276,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
                   },
                 ),
                 SizedBox(height: 20),
-                TimeField(
-                  decoration: InputDecoration(hintText: 'Choose End Time'),
+                _buildTimeField(
+                  labelText: 'End Time',
+                  hintText: 'Choose End Time',
                   onChanged: (value) {
                     setState(() {
                       _endTime = value;
@@ -294,31 +292,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                   },
                 ),
                 SizedBox(height: 20),
-                DropdownButtonFormField<String>(
-                  decoration: InputDecoration(hintText: 'Payment Method'),
-                  value: _paymentMethod,
-                  onChanged: (value) {
-                    setState(() {
-                      _paymentMethod = value;
-                    });
-                  },
-                  items: [
-                    'Bank Card',
-                    'Instapay',
-                    'E Wallet',
-                  ].map((e) {
-                    return DropdownMenuItem<String>(
-                      value: e,
-                      child: Text(e),
-                    );
-                  }).toList(),
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Required';
-                    }
-                    return null;
-                  },
-                ),
+                _buildPaymentMethodDropdown(),
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
@@ -327,13 +301,118 @@ class _ReservationScreenState extends State<ReservationScreen> {
                       _calculateFee();
                     }
                   },
-                  child: Text('Confirm Reservation'),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 15.0),
+                    child: Text(
+                      'Confirm Reservation',
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Color(0xFF33AD60), // Button text color
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTimeField({
+    required String labelText,
+    required String hintText,
+    required ValueChanged<TimeOfDay?> onChanged,
+    required FormFieldValidator<TimeOfDay>? validator,
+  }) {
+    return FormField<TimeOfDay>(
+      validator: validator,
+      builder: (state) {
+        return InputDecorator(
+          decoration: InputDecoration(
+            labelText: labelText,
+            hintText: hintText,
+            contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            errorText: state.errorText,
+            hintStyle: TextStyle(color: Colors.grey), // Placeholder text style
+          ),
+          child: InkWell(
+            onTap: () async {
+              final time = await showTimePicker(
+                context: context,
+                initialTime: TimeOfDay.now(),
+              );
+              state.didChange(time);
+              onChanged(time);
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    state.value?.format(context) ?? hintText,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: state.value == null
+                          ? Theme.of(context).hintColor
+                          : Colors.black,
+                    ),
+                  ),
+                  Icon(Icons.access_time, color: Colors.black),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildPaymentMethodDropdown() {
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+        labelText: 'Payment Method',
+        hintText: 'Choose Payment Method',
+        contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+      value: _paymentMethod,
+      onChanged: (value) {
+        setState(() {
+          _paymentMethod = value;
+        });
+      },
+      items: [
+        'Bank Card',
+        'Instapay',
+        'E Wallet',
+      ].map((e) {
+        return DropdownMenuItem<String>(
+          value: e,
+          child: Text(e),
+        );
+      }).toList(),
+      validator: (value) {
+        if (value == null) {
+          return 'Required';
+        }
+        return null;
+      },
     );
   }
 
@@ -375,8 +454,20 @@ class _ReservationScreenState extends State<ReservationScreen> {
   }
 
   void _submitReservation() async {
-    final startDateTime = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, _startTime!.hour, _startTime!.minute);
-    final endDateTime = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, _endTime!.hour, _endTime!.minute);
+    final startDateTime = DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+      _startTime!.hour,
+      _startTime!.minute,
+    );
+    final endDateTime = DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+      _endTime!.hour,
+      _endTime!.minute,
+    );
 
     final reservation = {
       'userid': _auth.currentUser!.email,
@@ -386,60 +477,15 @@ class _ReservationScreenState extends State<ReservationScreen> {
       'paymentMethod': _paymentMethod,
     };
 
-    await FirebaseFirestore.instance
-        .collection('Reservations')
-        .add(reservation);
+    await FirebaseFirestore.instance.collection('Reservations').add(reservation);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Reservation successfully created!'),
+        backgroundColor: Color(0xFF33AD60),
       ),
     );
 
     Navigator.of(context).pop();
-  }
-}
-
-class TimeField extends StatelessWidget {
-  final InputDecoration decoration;
-  final ValueChanged<TimeOfDay?>? onChanged;
-  final FormFieldValidator<TimeOfDay>? validator;
-
-  TimeField({
-    required this.decoration,
-    this.onChanged,
-    this.validator,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return FormField<TimeOfDay>(
-      validator: validator,
-      builder: (state) {
-        return InputDecorator(
-          decoration: decoration.copyWith(
-            errorText: state.errorText,
-          ),
-          child: InkWell(
-            onTap: () async {
-              final time = await showTimePicker(
-                context: context,
-                initialTime: TimeOfDay.now(),
-              );
-              state.didChange(time);
-              onChanged?.call(time);
-            },
-            child: Text(
-              state.value?.format(context) ?? 'Choose Time',
-              style: TextStyle(
-                color: state.value == null
-                    ? Theme.of(context).hintColor
-                    : null,
-              ),
-            ),
-          ),
-        );
-      },
-    );
   }
 }
