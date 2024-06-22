@@ -246,10 +246,13 @@ class _ReservationScreenState extends State<ReservationScreen> {
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
+      pageTitle: 'Reservation Screen',
+      showBackButton: true,
+      onBackButtonPressed: () {
+        Navigator.of(context).pop(); // Handle back button press as needed
+      },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Reservation'),
-        ),
+
         body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Form(

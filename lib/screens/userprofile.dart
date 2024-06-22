@@ -159,13 +159,14 @@ class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
+      pageTitle: 'My Profile',
+      showBackButton: true,
+      onBackButtonPressed: () {
+        Navigator.of(context).pop(); // Handle back button press as needed
+      },
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: Text("Profile Page"),
-          centerTitle: true,
-          backgroundColor: Colors.black26,
-        ),
+
         body: StreamBuilder<DocumentSnapshot>(
           stream: FirebaseFirestore.instance
               .collection("users")
@@ -427,3 +428,9 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 }
+
+
+
+
+
+

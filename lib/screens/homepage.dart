@@ -1006,15 +1006,14 @@ class _HomePageState extends State<homepage> {
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
+      pageTitle: 'Home Screen',
+      // showBackButton: true,
+      // onBackButtonPressed: () {
+      //   Navigator.of(context).pop(); // Handle back button press as needed
+      // },
       child: Scaffold(
         backgroundColor: Color(0xFFE3F3E9),
-        appBar: AppBar(
-          title: Text("Home Page"),
-          automaticallyImplyLeading: false,
-          centerTitle: true,
-          backgroundColor: Color(0xFF33AD60),
-          elevation: 0,
-        ),
+
         body: SingleChildScrollView(
           child: Container(
             width: double.infinity,

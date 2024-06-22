@@ -420,18 +420,13 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     final format = DateFormat('yyyy-MM-dd HH:mm a');
     return BaseScreen(
+      pageTitle: 'Add Parking Area',
+      showBackButton: true,
+      onBackButtonPressed: () {
+        Navigator.of(context).pop(); // Handle back button press as needed
+      },
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.black26,
-          title: Text('My Parking Space'),
-          bottom: TabBar(
-            controller: _tabController,
-            tabs: [
-              Tab(text: 'Just Once'),
-              Tab(text: 'Recurring'),
-            ],
-          ),
-        ),
+
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: TabBarView(

@@ -37,10 +37,13 @@ class _EditParkingScreenState extends State<EditParkingScreen> {
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
+      pageTitle: 'Edit Parking Area Screen',
+      showBackButton: true,
+      onBackButtonPressed: () {
+        Navigator.of(context).pop(); // Handle back button press as needed
+      },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Edit Parking'),
-        ),
+
         body: Padding(
           padding: EdgeInsets.all(16.0),
           child: Column(

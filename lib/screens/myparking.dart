@@ -587,17 +587,13 @@ class _myparkingareasState extends State<myparking> {
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
+      pageTitle: 'My Parking Areas',
+      showBackButton: true,
+      onBackButtonPressed: () {
+        Navigator.of(context).pop(); // Handle back button press as needed
+      },
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.green,
-          title: Text('My Parking Areas'),
-          titleTextStyle: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 25,
-          ),
-          centerTitle: true,
-        ),
+
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: ListView.builder(
