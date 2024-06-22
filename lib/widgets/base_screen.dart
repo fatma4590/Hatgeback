@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hatgeback/screens/CardDetailsScreen.dart';
 import 'package:hatgeback/screens/addpoint.dart';
 import 'package:hatgeback/screens/loginscreen.dart';
 import 'package:hatgeback/screens/myparking.dart';
@@ -97,6 +98,12 @@ class BaseScreen extends StatelessWidget {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => loginscreen()),
                   );
+                },
+              ),
+              _buildFooterButton(
+                icon: Icons.paste_rounded,
+                onPressed: () {
+                  Navigator.pushNamed(context, CardDetailsScreen.id);
                 },
               ),
             ],
