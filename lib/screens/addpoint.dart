@@ -144,28 +144,6 @@ class addpoint extends StatelessWidget {
   }
 }*/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
@@ -362,22 +340,14 @@ class _AddpointState extends State<addpoint> {
 }
 */
 
-
-
-
-
-
-
-
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:hatgeback/screens/homepage.dart';
 import 'package:hatgeback/widgets/base_screen.dart';
+import 'package:intl/intl.dart';
+import 'package:isar/isar.dart';
 
 class addpoint extends StatefulWidget {
   static String id = 'addpointpage';
@@ -386,7 +356,8 @@ class addpoint extends StatefulWidget {
   _AddPointPageState createState() => _AddPointPageState();
 }
 
-class _AddPointPageState extends State<addpoint> with SingleTickerProviderStateMixin {
+class _AddPointPageState extends State<addpoint>
+    with SingleTickerProviderStateMixin {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   TextEditingController userid = TextEditingController();
   TextEditingController location = TextEditingController();
@@ -499,7 +470,9 @@ class _AddPointPageState extends State<addpoint> with SingleTickerProviderStateM
                 onShowPicker: (context, currentValue) async {
                   final time = await showTimePicker(
                     context: context,
-                    initialTime: currentValue != null ? TimeOfDay.fromDateTime(currentValue) : TimeOfDay.now(),
+                    initialTime: currentValue != null
+                        ? TimeOfDay.fromDateTime(currentValue)
+                        : TimeOfDay.now(),
                   );
                   if (time != null) {
                     setState(() {
@@ -507,7 +480,8 @@ class _AddPointPageState extends State<addpoint> with SingleTickerProviderStateM
                     });
                   }
                   return startTime != null
-                      ? DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day, startTime!.hour, startTime!.minute)
+                      ? DateTime(selectedDate!.year, selectedDate!.month,
+                          selectedDate!.day, startTime!.hour, startTime!.minute)
                       : currentValue ?? DateTime.now();
                 },
               ),
@@ -524,7 +498,9 @@ class _AddPointPageState extends State<addpoint> with SingleTickerProviderStateM
                 onShowPicker: (context, currentValue) async {
                   final time = await showTimePicker(
                     context: context,
-                    initialTime: currentValue != null ? TimeOfDay.fromDateTime(currentValue) : TimeOfDay.now(),
+                    initialTime: currentValue != null
+                        ? TimeOfDay.fromDateTime(currentValue)
+                        : TimeOfDay.now(),
                   );
                   if (time != null) {
                     setState(() {
@@ -532,7 +508,8 @@ class _AddPointPageState extends State<addpoint> with SingleTickerProviderStateM
                     });
                   }
                   return endTime != null
-                      ? DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day, endTime!.hour, endTime!.minute)
+                      ? DateTime(selectedDate!.year, selectedDate!.month,
+                          selectedDate!.day, endTime!.hour, endTime!.minute)
                       : currentValue ?? DateTime.now();
                 },
               ),
@@ -544,7 +521,8 @@ class _AddPointPageState extends State<addpoint> with SingleTickerProviderStateM
           style: ElevatedButton.styleFrom(
             backgroundColor: Color(0xFF33AD60),
             padding: EdgeInsets.all(16),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
           onPressed: () {
             if (selectedDate != null && startTime != null && endTime != null) {
@@ -563,11 +541,15 @@ class _AddPointPageState extends State<addpoint> with SingleTickerProviderStateM
                 endTime!.hour,
                 endTime!.minute,
               );
-              FirebaseFirestore.instance.collection('parkingareas').doc(name.text).set({
+              FirebaseFirestore.instance
+                  .collection('parkingareas')
+                  .doc(name.text)
+                  .set({
                 'userid': _auth.currentUser!.email,
+                'parkingid': Isar.defaultMaxSizeMiB,
                 'Location': location.text,
                 'Name': name.text,
-                'price': price.text,
+                'price': int.parse(price.text),
                 'startDate': Timestamp.fromDate(startDate),
                 'endDate': Timestamp.fromDate(endDate),
                 'isRecurring': false,
@@ -663,7 +645,9 @@ class _AddPointPageState extends State<addpoint> with SingleTickerProviderStateM
                 onShowPicker: (context, currentValue) async {
                   final time = await showTimePicker(
                     context: context,
-                    initialTime: currentValue != null ? TimeOfDay.fromDateTime(currentValue) : TimeOfDay.now(),
+                    initialTime: currentValue != null
+                        ? TimeOfDay.fromDateTime(currentValue)
+                        : TimeOfDay.now(),
                   );
                   if (time != null) {
                     setState(() {
@@ -671,7 +655,8 @@ class _AddPointPageState extends State<addpoint> with SingleTickerProviderStateM
                     });
                   }
                   return startTime != null
-                      ? DateTime(startDate!.year, startDate!.month, startDate!.day, startTime!.hour, startTime!.minute)
+                      ? DateTime(startDate!.year, startDate!.month,
+                          startDate!.day, startTime!.hour, startTime!.minute)
                       : currentValue ?? DateTime.now();
                 },
               ),
@@ -688,7 +673,9 @@ class _AddPointPageState extends State<addpoint> with SingleTickerProviderStateM
                 onShowPicker: (context, currentValue) async {
                   final time = await showTimePicker(
                     context: context,
-                    initialTime: currentValue != null ? TimeOfDay.fromDateTime(currentValue) : TimeOfDay.now(),
+                    initialTime: currentValue != null
+                        ? TimeOfDay.fromDateTime(currentValue)
+                        : TimeOfDay.now(),
                   );
                   if (time != null) {
                     setState(() {
@@ -696,7 +683,8 @@ class _AddPointPageState extends State<addpoint> with SingleTickerProviderStateM
                     });
                   }
                   return endTime != null
-                      ? DateTime(endDate!.year, endDate!.month, endDate!.day, endTime!.hour, endTime!.minute)
+                      ? DateTime(endDate!.year, endDate!.month, endDate!.day,
+                          endTime!.hour, endTime!.minute)
                       : currentValue ?? DateTime.now();
                 },
               ),
@@ -786,10 +774,14 @@ class _AddPointPageState extends State<addpoint> with SingleTickerProviderStateM
           style: ElevatedButton.styleFrom(
             backgroundColor: Color(0xFF33AD60),
             padding: EdgeInsets.all(16),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
           onPressed: () {
-            if (startDate != null && endDate != null && startTime != null && endTime != null) {
+            if (startDate != null &&
+                endDate != null &&
+                startTime != null &&
+                endTime != null) {
               storeRecurringParkingAreas();
               Navigator.pushNamed(context, homepage.id);
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -836,9 +828,10 @@ class _AddPointPageState extends State<addpoint> with SingleTickerProviderStateM
         // Store the parking area entry in Firestore
         FirebaseFirestore.instance.collection('parkingareas').add({
           'userid': _auth.currentUser!.email,
+          'parkingid': Isar.defaultMaxSizeMiB,
           'Location': location.text,
           'Name': name.text,
-          'price': price.text,
+          'price': int.parse(price.text),
           'startDate': Timestamp.fromDate(currentStartDate),
           'endDate': Timestamp.fromDate(currentEndDate),
           'isRecurring': true,
@@ -850,7 +843,8 @@ class _AddPointPageState extends State<addpoint> with SingleTickerProviderStateM
     }
   }
 
-  Widget buildTextField(TextEditingController controller, String labelText, {bool isNumeric = false}) {
+  Widget buildTextField(TextEditingController controller, String labelText,
+      {bool isNumeric = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextField(
@@ -864,4 +858,3 @@ class _AddPointPageState extends State<addpoint> with SingleTickerProviderStateM
     );
   }
 }
-

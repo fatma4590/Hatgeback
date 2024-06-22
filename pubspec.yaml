@@ -37,20 +37,25 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
-  
+  isar: ^4.0.0-dev.14
+  isar_flutter_libs: ^4.0.0-dev.14
   firebase_core: ^2.30.0
   firebase_auth: ^4.19.2
   modal_progress_hud_nsn: ^0.5.1
   cloud_firestore: ^4.17.0
   datetime_picker_formfield_new: ^2.1.0
-  google_maps_flutter: ^2.6.1
-  file_picker: ^4.2.0
+
+  file_picker: 8.0.5
   image_picker: ^0.8.4+4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: ^0.13.1
+  build_runner: ^2.4.6
+  flutter_lints: ^2.0.0
+
+
 flutter_icons:
   android: true
   ios: true
@@ -78,7 +83,7 @@ flutter:
   assets:
     #- assets/IMG________________.jpg
     - assets/CompleteLogo   (1).png
-   # - assets/CompleteLogo   (2).png
+  # - assets/CompleteLogo   (2).png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
