@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hatgeback/screens/homepage.dart';
 
 class CardDetailsScreen extends StatefulWidget {
   static String id = 'CardDetailsScreen';
@@ -7,11 +10,14 @@ class CardDetailsScreen extends StatefulWidget {
   _CardDetailsScreenState createState() => _CardDetailsScreenState();
 }
 
+final FirebaseAuth _auth = FirebaseAuth.instance;
+
 class _CardDetailsScreenState extends State<CardDetailsScreen> {
   final _formKey = GlobalKey<FormState>();
   final _cardNumberController = TextEditingController();
   final _cardholderNameController = TextEditingController();
-  final _expiryDateController = TextEditingController();
+  final _expiryDateControlleryear = TextEditingController();
+  final _expiryDateControllermonth = TextEditingController();
   final _cvvController = TextEditingController();
 
   @override
@@ -56,17 +62,35 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
               ),
               SizedBox(height: 16),
               _buildCardField(
-                controller: _expiryDateController,
-                labelText: 'Expiration Date (MM/YY)',
+                controller: _expiryDateControllermonth,
+                labelText: 'Expiration Date (MM)',
                 hintText: 'MM/YY',
-                keyboardType: TextInputType.datetime,
+                keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter expiration date';
+                    return 'Please enter expiration date month';
                   }
-                  if (!RegExp(r"^(0[1-9]|1[0-2])\/?([0-9]{2})$").hasMatch(value)) {
-                    return 'Enter valid expiration date';
+                  if (int.parse(value) > 31) {
+                    return 'Write the correct month ';
                   }
+
+                  return null;
+                },
+              ),
+              SizedBox(height: 16),
+              _buildCardField(
+                controller: _expiryDateControlleryear,
+                labelText: 'Expiration Date (YY)',
+                hintText: 'YY',
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter expiration date year';
+                  }
+                  if (int.parse(value) < 24) {
+                    return 'Write the correct month ';
+                  }
+
                   return null;
                 },
               ),
@@ -92,10 +116,14 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _saveCardData();
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => homepage()),
+                    );
                   }
                 },
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 15.0, horizontal: 20.0),
                   child: Text('Save Card', style: TextStyle(fontSize: 16)),
                 ),
                 style: ElevatedButton.styleFrom(
@@ -107,7 +135,6 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
                   elevation: 5.0,
                 ),
               ),
-
             ],
           ),
         ),
@@ -141,18 +168,23 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
     );
   }
 
-  void _saveCardData() {
-    final cardNumber = _cardNumberController.text;
+  void _saveCardData() async {
+    final cardNumber = int.parse(_cardNumberController.text);
     final cardholderName = _cardholderNameController.text;
-    final expiryDate = _expiryDateController.text;
-    final cvv = _cvvController.text;
-
+    final expiryDateyear = _expiryDateControlleryear.text;
+    final expiryDatemonth = _expiryDateControllermonth.text;
+    final cvv = int.parse(_cvvController.text);
+    await FirebaseFirestore.instance.collection('CARDS')
+      ..doc(cvv.toString()).set({
+        'userid': _auth.currentUser!.email,
+        'cardNumber': cardNumber,
+        'cardholderName': cardholderName,
+        'expiryDateyear': expiryDateyear,
+        'expiryDatemonth': expiryDatemonth,
+        'cvv': cvv,
+      });
     // Save the card data logic here
     // For now, just print the card data
-    print('Card Number: $cardNumber');
-    print('Cardholder Name: $cardholderName');
-    print('Expiration Date: $expiryDate');
-    print('CVV: $cvv');
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -166,7 +198,8 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
   void dispose() {
     _cardNumberController.dispose();
     _cardholderNameController.dispose();
-    _expiryDateController.dispose();
+    _expiryDateControlleryear.dispose();
+    _expiryDateControllermonth.dispose();
     _cvvController.dispose();
     super.dispose();
   }

@@ -169,15 +169,14 @@ class BaseScreen extends StatelessWidget {
     );
   }
  }*/
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:hatgeback/screens/CardDetailsScreen.dart';
 import 'package:hatgeback/screens/addpoint.dart';
 import 'package:hatgeback/screens/homepage.dart';
 import 'package:hatgeback/screens/loginscreen.dart';
 import 'package:hatgeback/screens/myparking.dart';
 import 'package:hatgeback/screens/userprofile.dart';
-import 'package:hatgeback/screens/WalletScreen.dart';
 
 class BaseScreen extends StatelessWidget {
   final Widget child;
@@ -203,7 +202,8 @@ class BaseScreen extends StatelessWidget {
       drawer: isHomeScreen ? _buildDrawer(context) : null,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 12.0), // Padding adjusted for top and bottom
+          padding: const EdgeInsets.fromLTRB(
+              16.0, 12.0, 16.0, 12.0), // Padding adjusted for top and bottom
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -212,7 +212,8 @@ class BaseScreen extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)), // Adjusted border radius
+                    borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20.0)), // Adjusted border radius
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.5),
@@ -246,7 +247,8 @@ class BaseScreen extends StatelessWidget {
                 Color(0xFF33AD60),
               ],
             ),
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)), // Adjusted border radius
+            borderRadius: BorderRadius.vertical(
+                top: Radius.circular(20.0)), // Adjusted border radius
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -286,8 +288,10 @@ class BaseScreen extends StatelessWidget {
     final user = FirebaseAuth.instance.currentUser;
 
     return Container(
-      padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 12.0), // Padding adjusted for top and bottom
-      margin: EdgeInsets.only(bottom: 12.0), // Added bottom margin to match footer
+      padding: EdgeInsets.fromLTRB(
+          16.0, 12.0, 16.0, 12.0), // Padding adjusted for top and bottom
+      margin:
+          EdgeInsets.only(bottom: 12.0), // Added bottom margin to match footer
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
@@ -297,14 +301,16 @@ class BaseScreen extends StatelessWidget {
             Color(0xFF33AD60),
           ],
         ),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)), // Adjusted border radius
+        borderRadius: BorderRadius.vertical(
+            top: Radius.circular(20.0)), // Adjusted border radius
       ),
       child: Row(
         children: [
           if (showBackButton)
             IconButton(
               icon: Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: onBackButtonPressed ?? () => Navigator.of(context).pop(),
+              onPressed:
+                  onBackButtonPressed ?? () => Navigator.of(context).pop(),
             ),
           Expanded(
             child: Text(
@@ -335,7 +341,8 @@ class BaseScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFooterButton({required IconData icon, required VoidCallback onPressed}) {
+  Widget _buildFooterButton(
+      {required IconData icon, required VoidCallback onPressed}) {
     return IconButton(
       onPressed: onPressed,
       icon: Icon(
@@ -392,16 +399,6 @@ class BaseScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => myparking()),
-              );
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.account_balance_wallet),
-            title: Text('Wallet'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => WalletPage()),
               );
             },
           ),
