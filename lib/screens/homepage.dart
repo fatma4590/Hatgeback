@@ -379,14 +379,6 @@ class _homepageState extends State<homepage> {
 }
 */
 
-
-
-
-
-
-
-
-
 /* import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -644,27 +636,6 @@ class _homepageState extends State<homepage> {
     );
   }
 }*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -934,27 +905,12 @@ class _HomePageState extends State<homepage> {
   }
 }*/
 
-
-
-
-
-
-
-
-
-
-
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:hatgeback/screens/ReservationScreen.dart';
-import 'package:hatgeback/screens/addpoint.dart';
-import 'package:hatgeback/screens/loginscreen.dart';
-import 'package:hatgeback/screens/myparking.dart';
-import 'package:hatgeback/screens/userprofile.dart';
 import 'package:hatgeback/widgets/base_screen.dart';
+import 'package:intl/intl.dart';
 
 class homepage extends StatefulWidget {
   static String id = 'homepage';
@@ -971,7 +927,7 @@ class _HomePageState extends State<homepage> {
     final db = FirebaseFirestore.instance;
     final QuerySnapshot snapshot = await db.collection('parkingareas').get();
     final List<Map<String, dynamic>> list =
-    snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+        snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
     setState(() {
       _parkingAreas = list.where((parking) {
         final startDate = parking['startDate'].toDate();
@@ -979,9 +935,9 @@ class _HomePageState extends State<homepage> {
         final now = DateTime.now();
         final currentDateTime = DateTime(now.year, now.month, now.day);
         final startDateWithoutTime =
-        DateTime(startDate.year, startDate.month, startDate.day);
+            DateTime(startDate.year, startDate.month, startDate.day);
         final endDateWithoutTime =
-        DateTime(endDate.year, endDate.month, endDate.day);
+            DateTime(endDate.year, endDate.month, endDate.day);
 
         return startDateWithoutTime == currentDateTime &&
             endDateWithoutTime == currentDateTime;
@@ -999,7 +955,7 @@ class _HomePageState extends State<homepage> {
   Widget build(BuildContext context) {
     return BaseScreen(
       pageTitle: 'Home Screen',
-        isHomeScreen: true,
+      isHomeScreen: true,
       child: Scaffold(
         backgroundColor: Color(0xFFE3F3E9),
         body: SingleChildScrollView(
@@ -1171,20 +1127,21 @@ class _HomePageState extends State<homepage> {
                                 child: Align(
                                   alignment: Alignment.centerRight,
                                   child: Container(
-                                    margin: EdgeInsets.only(top: 20), // Top margin added
+                                    margin: EdgeInsets.only(
+                                        top: 20), // Top margin added
                                     child: ElevatedButton(
                                       onPressed: parking['isAvailable'] == true
                                           ? () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                ReservationScreen(
-                                                  parkingArea: parking,
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ReservationScreen(
+                                                    parkingArea: parking,
+                                                  ),
                                                 ),
-                                          ),
-                                        );
-                                      }
+                                              );
+                                            }
                                           : null,
                                       child: Text(
                                         "Reserve",
@@ -1193,7 +1150,8 @@ class _HomePageState extends State<homepage> {
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Color(0xFF33AD60),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
                                         padding: EdgeInsets.symmetric(
                                             vertical: 12, horizontal: 20),
@@ -1216,13 +1174,3 @@ class _HomePageState extends State<homepage> {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-

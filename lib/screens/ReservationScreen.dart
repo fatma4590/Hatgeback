@@ -208,18 +208,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
     }
   }*/
 
-
-
-
-
-
-
-
-
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
 import 'package:hatgeback/widgets/base_screen.dart';
 
 class ReservationScreen extends StatefulWidget {
@@ -290,7 +281,6 @@ class _ReservationScreenState extends State<ReservationScreen> {
                     }
                     return null;
                   },
-
                 ),
                 SizedBox(height: 20),
                 _buildPaymentMethodDropdown(),
@@ -476,10 +466,12 @@ class _ReservationScreenState extends State<ReservationScreen> {
       'endDate': endDateTime.toIso8601String(),
       'fee': _fee,
       'paymentMethod': _paymentMethod,
-'parkingName': widget.parkingArea['Name'],
+      'parkingName': widget.parkingArea['Name'],
     };
 
-    await FirebaseFirestore.instance.collection('Reservations').add(reservation);
+    await FirebaseFirestore.instance
+        .collection('Reservations')
+        .add(reservation);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
