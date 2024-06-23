@@ -259,6 +259,7 @@ class BaseScreen extends StatelessWidget {
                   Navigator.pushNamed(context, addpoint.id);
                 },
               ),
+              //momen to fatma
               // _buildFooterButton(
               //   icon: Icons.paste_rounded,
               //   onPressed: () {
