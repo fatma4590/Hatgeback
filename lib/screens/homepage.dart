@@ -945,8 +945,8 @@ class _HomePageState extends State<homepage> {
 
 
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:hatgeback/screens/ReservationScreen.dart';
@@ -999,6 +999,7 @@ class _HomePageState extends State<homepage> {
   Widget build(BuildContext context) {
     return BaseScreen(
       pageTitle: 'Home Screen',
+        isHomeScreen: true,
       child: Scaffold(
         backgroundColor: Color(0xFFE3F3E9),
         body: SingleChildScrollView(
@@ -1215,3 +1216,13 @@ class _HomePageState extends State<homepage> {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+

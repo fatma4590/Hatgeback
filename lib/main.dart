@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hatgeback/screens/CardDetailsScreen.dart';
+import 'package:hatgeback/screens/WalletScreen.dart';
 //import 'package:hatgeback/screens/accountuser.dart';
 import 'package:hatgeback/screens/addpoint.dart';
 import 'package:hatgeback/screens/homepage.dart';
@@ -12,6 +13,7 @@ import 'package:hatgeback/screens/userprofile.dart';
 import 'package:hatgeback/screens/CardDetailsScreen.dart';
 import 'package:isar/isar.dart';
 import 'firebase_options.dart';
+import 'package:hatgeback/screens/WalletScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,6 +58,7 @@ class mainmyapp extends State<MyApp> {
         addpoint.id: (context) => addpoint(),
         myparking.id: (context) => myparking(),
         CardDetailsScreen.id: (context) => CardDetailsScreen(),
+        WalletPage.id: (context) =>WalletPage(),
       },
       initialRoute: loginscreen.id,
     );
