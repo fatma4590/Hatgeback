@@ -83,6 +83,12 @@ flutter:
   assets:
     #- assets/IMG________________.jpg
     - assets/CompleteLogo   (1).png
+    - assets/visa_logo.png
+
+
+
+
+
   # - assets/CompleteLogo   (2).png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

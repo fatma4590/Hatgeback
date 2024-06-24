@@ -126,52 +126,106 @@ class CreditCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10.0),
+      padding: EdgeInsets.all(16.0),
+      height: 200.0,
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15.0),
-      ),
-      elevation: 5.0,
-      child: Container(
-        padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blue, Colors.green],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '**** **** **** ${cardNumber.substring(cardNumber.length - 4)}',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2.0,
-              ),
-            ),
-            SizedBox(height: 16.0),
-            Text(
-              cardholderName.toUpperCase(),
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 8.0),
-            Text(
-              'EXP: $expiryMonth/$expiryYear',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16.0,
-              ),
-            ),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFFECCD4D),
+            Color(0xFFF8F09F),
           ],
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 6.0,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            top: 10.0,
+            right: 10.0,
+            child: Image.asset(
+              'assets/visa_logo.png',
+              height: 40.0,
+              width: 60.0,
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'CARD NUMBER',
+                style: TextStyle(
+                  fontSize: 10.0,
+                  letterSpacing: 1.5,
+                ),
+              ),
+              SizedBox(height: 5.0),
+              Text(
+                '**** **** **** ${cardNumber.substring(cardNumber.length - 4)}',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  letterSpacing: 2.0,
+                ),
+              ),
+              SizedBox(height: 20.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'CARDHOLDER NAME',
+                        style: TextStyle(
+                          fontSize: 10.0,
+                          letterSpacing: 1.5,
+                        ),
+                      ),
+                      SizedBox(height: 5.0),
+                      Text(
+                        cardholderName.toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'EXPIRES',
+                        style: TextStyle(
+                          fontSize: 10.0,
+                          letterSpacing: 1.5,
+                        ),
+                      ),
+                      SizedBox(height: 5.0),
+                      Text(
+                        '$expiryMonth/$expiryYear',
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

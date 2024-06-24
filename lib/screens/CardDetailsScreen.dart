@@ -408,6 +408,7 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
         'expiryDateyear': expiryDateyear,
         'expiryDatemonth': expiryDatemonth,
         'cvv': cvv,
+        'Balance': 50
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
