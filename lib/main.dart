@@ -9,6 +9,7 @@ import 'package:hatgeback/screens/loginscreen.dart';
 import 'package:hatgeback/screens/myparking.dart';
 import 'package:hatgeback/screens/registerpage.dart';
 import 'package:hatgeback/screens/userprofile.dart';
+import 'package:hatgeback/payment/payscreen.dart';
 
 import 'firebase_options.dart';
 
@@ -55,6 +56,7 @@ class mainmyapp extends State<MyApp> {
         addpoint.id: (context) => addpoint(),
         myparking.id: (context) => myparking(),
         CardDetailsScreen.id: (context) => CardDetailsScreen(),
+        payscreen.id:(contexts)=>payscreen(),
       },
       initialRoute: loginscreen.id,
     );

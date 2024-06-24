@@ -178,6 +178,7 @@ import 'package:hatgeback/screens/homepage.dart';
 import 'package:hatgeback/screens/loginscreen.dart';
 import 'package:hatgeback/screens/myparking.dart';
 import 'package:hatgeback/screens/userprofile.dart';
+import 'package:hatgeback/payment/payscreen.dart';
 
 class BaseScreen extends StatelessWidget {
   final Widget child;
@@ -271,6 +272,12 @@ class BaseScreen extends StatelessWidget {
                 icon: Icons.credit_card,
                 onPressed: () {
                   Navigator.pushNamed(context, CardDetailsScreen.id);
+                },
+              ),
+              _buildFooterButton(
+                icon: Icons.payment,
+                onPressed: () {
+                  Navigator.pushNamed(context, payscreen.id);
                 },
               ),
               _buildFooterButton(
