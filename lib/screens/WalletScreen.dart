@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hatgeback/screens/CardDetailsScreen.dart';
 
 class WalletPage extends StatefulWidget {
@@ -11,6 +12,7 @@ class WalletPage extends StatefulWidget {
 
 class _WalletPageState extends State<WalletPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   List<Map<String, dynamic>> _cards = [];
 
   @override
@@ -20,16 +22,19 @@ class _WalletPageState extends State<WalletPage> {
   }
 
   void _fetchCards() async {
-    final userId = 'your_user_id'; // Replace with the actual user ID
-    final snapshot = await _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('cards')
-        .get();
+    final user = _auth.currentUser;
+    if (user != null) {
+      final userId = user.uid;
+      final snapshot = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('cards')
+          .get();
 
-    setState(() {
-      _cards = snapshot.docs.map((doc) => doc.data()).toList();
-    });
+      setState(() {
+        _cards = snapshot.docs.map((doc) => doc.data()).toList();
+      });
+    }
   }
 
   void _addCard(Map<String, dynamic> card) {
@@ -40,12 +45,15 @@ class _WalletPageState extends State<WalletPage> {
   }
 
   void _saveCardToFirestore(Map<String, dynamic> card) async {
-    final userId = 'your_user_id'; // Replace with the actual user ID
-    await _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('cards')
-        .add(card);
+    final user = _auth.currentUser;
+    if (user != null) {
+      final userId = user.uid;
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('cards')
+          .add(card);
+    }
   }
 
   @override
@@ -53,6 +61,7 @@ class _WalletPageState extends State<WalletPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Wallet'),
+        backgroundColor: Color(0xFF33AD60), // Primary color for AppBar
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -65,8 +74,8 @@ class _WalletPageState extends State<WalletPage> {
                   final card = _cards[index];
                   return Card(
                     child: ListTile(
-                      title: Text(card['cardNumber']),
-                      subtitle: Text('${card['cardholderName']}\n${card['expiryDate']}'),
+                      title: Text(card['cardNumber'].toString()),
+                      subtitle: Text('${card['cardholderName']}\n${card['expiryDatemonth']}/${card['expiryDateyear']}'),
                       isThreeLine: true,
                       trailing: Icon(Icons.credit_card),
                     ),

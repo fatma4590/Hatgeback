@@ -172,6 +172,7 @@ class BaseScreen extends StatelessWidget {
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hatgeback/screens/CardDetailsScreen.dart';
+import 'package:hatgeback/screens/WalletScreen.dart';
 import 'package:hatgeback/screens/addpoint.dart';
 import 'package:hatgeback/screens/homepage.dart';
 import 'package:hatgeback/screens/loginscreen.dart';
@@ -395,6 +396,16 @@ class BaseScreen extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.copy_all_rounded),
+            title: Text('Wallet'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => WalletPage()),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.copy_all_rounded),
             title: Text('My Parking Areas'),
             onTap: () {
               Navigator.push(
@@ -413,6 +424,7 @@ class BaseScreen extends StatelessWidget {
               );
             },
           ),
+
         ],
       ),
     );
