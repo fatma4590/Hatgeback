@@ -224,7 +224,7 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
   final _expiryDateControlleryear = TextEditingController();
   final _expiryDateControllermonth = TextEditingController();
   final _cvvController = TextEditingController();
-
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -383,10 +383,9 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
       final userId = user.uid;
 
       await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
           .collection('cards')
           .add({
+        'userid': _auth.currentUser!.email,
         'cardNumber': cardNumber,
         'cardholderName': cardholderName,
         'expiryDateyear': expiryDateyear,
