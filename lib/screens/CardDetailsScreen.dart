@@ -290,7 +290,8 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
                       '/',
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Expanded(
@@ -408,6 +409,7 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
         'expiryDateyear': expiryDateyear,
         'expiryDatemonth': expiryDatemonth,
         'cvv': cvv,
+        'Balance': 50
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
