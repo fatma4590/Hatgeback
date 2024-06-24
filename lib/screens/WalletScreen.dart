@@ -14,6 +14,7 @@ class _WalletPageState extends State<WalletPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   List<Map<String, dynamic>> _cards = [];
+  List<String> _cardIds = [];
 
   @override
   void initState() {
@@ -33,6 +34,7 @@ class _WalletPageState extends State<WalletPage> {
 
       setState(() {
         _cards = snapshot.docs.map((doc) => doc.data()).toList();
+        _cardIds = snapshot.docs.map((doc) => doc.id).toList();
       });
     }
   }
@@ -48,11 +50,42 @@ class _WalletPageState extends State<WalletPage> {
     final user = _auth.currentUser;
     if (user != null) {
       final userId = user.uid;
-      await _firestore
+      final docRef = await _firestore
           .collection('users')
           .doc(userId)
           .collection('cards')
           .add(card);
+
+      setState(() {
+        _cardIds.add(docRef.id);
+      });
+    }
+  }
+
+  void _deleteCard(int index) async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      final userId = user.uid;
+      final cardId = _cardIds[index];
+
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('cards')
+          .doc(cardId)
+          .delete();
+
+      setState(() {
+        _cards.removeAt(index);
+        _cardIds.removeAt(index);
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Card deleted successfully!'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -72,11 +105,27 @@ class _WalletPageState extends State<WalletPage> {
                 itemCount: _cards.length,
                 itemBuilder: (context, index) {
                   final card = _cards[index];
-                  return CreditCard(
-                    cardNumber: card['cardNumber'].toString(),
-                    cardholderName: card['cardholderName'],
-                    expiryMonth: card['expiryDatemonth'],
-                    expiryYear: card['expiryDateyear'],
+                  return Dismissible(
+                    key: Key(_cardIds[index]),
+                    direction: DismissDirection.endToStart,
+                    background: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      color: Colors.red,
+                      alignment: Alignment.centerRight,
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
+                    ),
+                    onDismissed: (direction) {
+                      _deleteCard(index);
+                    },
+                    child: CreditCard(
+                      cardNumber: card['cardNumber'].toString(),
+                      cardholderName: card['cardholderName'],
+                      expiryMonth: card['expiryDatemonth'],
+                      expiryYear: card['expiryDateyear'],
+                    ),
                   );
                 },
               ),
