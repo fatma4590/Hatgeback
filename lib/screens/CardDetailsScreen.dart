@@ -225,6 +225,7 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
   final _expiryDateControllermonth = TextEditingController();
   final _cvvController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -266,36 +267,50 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
                 },
               ),
               SizedBox(height: 16),
-              _buildCardField(
-                controller: _expiryDateControllermonth,
-                labelText: 'Expiration Date (MM)',
-                hintText: 'MM/YY',
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter expiration date month';
-                  }
-                  if (int.parse(value) > 12) {
-                    return 'Please enter a valid month';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 16),
-              _buildCardField(
-                controller: _expiryDateControlleryear,
-                labelText: 'Expiration Date (YY)',
-                hintText: 'YY',
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter expiration date year';
-                  }
-                  if (int.parse(value) < DateTime.now().year % 100) {
-                    return 'Please enter a valid year';
-                  }
-                  return null;
-                },
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildCardField(
+                      controller: _expiryDateControllermonth,
+                      labelText: 'MM',
+                      hintText: 'MM',
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter expiration date month';
+                        }
+                        if (int.parse(value) < 1 || int.parse(value) > 12) {
+                          return 'Please enter a valid month';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      '/',
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Expanded(
+                    child: _buildCardField(
+                      controller: _expiryDateControlleryear,
+                      labelText: 'YY',
+                      hintText: 'YY',
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter expiration date year';
+                        }
+                        if (int.parse(value) < DateTime.now().year % 100) {
+                          return 'Please enter a valid year';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 16),
               _buildCardField(
@@ -383,6 +398,8 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
       final userId = user.uid;
 
       await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
           .collection('cards')
           .add({
         'userid': _auth.currentUser!.email,

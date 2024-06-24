@@ -72,13 +72,11 @@ class _WalletPageState extends State<WalletPage> {
                 itemCount: _cards.length,
                 itemBuilder: (context, index) {
                   final card = _cards[index];
-                  return Card(
-                    child: ListTile(
-                      title: Text(card['cardNumber'].toString()),
-                      subtitle: Text('${card['cardholderName']}\n${card['expiryDatemonth']}/${card['expiryDateyear']}'),
-                      isThreeLine: true,
-                      trailing: Icon(Icons.credit_card),
-                    ),
+                  return CreditCard(
+                    cardNumber: card['cardNumber'].toString(),
+                    cardholderName: card['cardholderName'],
+                    expiryMonth: card['expiryDatemonth'],
+                    expiryYear: card['expiryDateyear'],
                   );
                 },
               ),
@@ -104,6 +102,72 @@ class _WalletPageState extends State<WalletPage> {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 elevation: 5.0,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CreditCard extends StatelessWidget {
+  final String cardNumber;
+  final String cardholderName;
+  final String expiryMonth;
+  final String expiryYear;
+
+  CreditCard({
+    required this.cardNumber,
+    required this.cardholderName,
+    required this.expiryMonth,
+    required this.expiryYear,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      elevation: 5.0,
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blue, Colors.green],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '**** **** **** ${cardNumber.substring(cardNumber.length - 4)}',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 2.0,
+              ),
+            ),
+            SizedBox(height: 16.0),
+            Text(
+              cardholderName.toUpperCase(),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 8.0),
+            Text(
+              'EXP: $expiryMonth/$expiryYear',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16.0,
               ),
             ),
           ],
