@@ -576,7 +576,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Card not found. Please try again.'),
+                              content: Text('Card not found or insufficient balance. Please try again.'),
                               backgroundColor: Colors.red,
                             ),
                           );
@@ -632,7 +632,26 @@ class _ReservationScreenState extends State<ReservationScreen> {
         .where('cvv', isEqualTo: int.parse(cvv))
         .get();
 
-    return cardSnapshot.docs.isNotEmpty;
+    if (cardSnapshot.docs.isEmpty) {
+      return false;
+    }
+
+    final cardData = cardSnapshot.docs.first.data();
+    final Balance = cardData['Balance'] ?? 0.0;
+
+    if (Balance >= _fee) {
+      // Update card balance
+      final newBalance = Balance - _fee;
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('cards')
+          .doc(cardSnapshot.docs.first.id)
+          .update({'Balance': newBalance});
+      return true;
+    } else {
+      return false;
+    }
   }
 
   void _submitReservation() async {
@@ -701,8 +720,6 @@ class _ReservationScreenState extends State<ReservationScreen> {
     );
   }
 }
-
-
 
 
 
