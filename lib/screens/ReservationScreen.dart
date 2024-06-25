@@ -211,6 +211,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hatgeback/screens/homepage.dart';
 import 'package:hatgeback/widgets/base_screen.dart';
 
 class ReservationScreen extends StatefulWidget {
@@ -229,6 +230,11 @@ class _ReservationScreenState extends State<ReservationScreen> {
   String? _paymentMethod;
   double _fee = 0.0;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final _cardNumberController = TextEditingController();
+  final _cardholderNameController = TextEditingController();
+  final _expiryDateControlleryear = TextEditingController();
+  final _expiryDateControllermonth = TextEditingController();
+  final _cvvController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -433,8 +439,8 @@ class _ReservationScreenState extends State<ReservationScreen> {
             ),
             TextButton(
               onPressed: () {
-                _submitReservation();
                 Navigator.of(context).pop();
+                showvisacard();
               },
               child: Text('Proceed'),
             ),
@@ -442,6 +448,135 @@ class _ReservationScreenState extends State<ReservationScreen> {
         );
       },
     );
+  }
+
+  void showvisacard() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Card Details"),
+            content: Column(
+              children: [
+                _buildCardField(
+                  controller: _cardNumberController,
+                  labelText: 'Card Number',
+                  hintText: '1234 5678 9012 3456',
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter card number';
+                    }
+                    if (value.length != 16) {
+                      return 'Card number must be 16 digits';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 16),
+                _buildCardField(
+                  controller: _cardholderNameController,
+                  labelText: 'Cardholder Name',
+                  hintText: 'John Doe',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter cardholder name';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildCardField(
+                        controller: _expiryDateControllermonth,
+                        labelText: 'MM',
+                        hintText: 'MM',
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter expiration date month';
+                          }
+                          if (int.parse(value) < 1 || int.parse(value) > 12) {
+                            return 'Please enter a valid month';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        '/',
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Expanded(
+                      child: _buildCardField(
+                        controller: _expiryDateControlleryear,
+                        labelText: 'YY',
+                        hintText: 'YY',
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter expiration date year';
+                          }
+                          if (int.parse(value) < DateTime.now().year % 100) {
+                            return 'Please enter a valid year';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+                _buildCardField(
+                  controller: _cvvController,
+                  labelText: 'CVV',
+                  hintText: '123',
+                  keyboardType: TextInputType.number,
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter CVV';
+                    }
+                    if (value.length != 3) {
+                      return 'CVV must be 3 digits';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _submitReservation();
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => homepage()),
+                      );
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15.0, horizontal: 20.0),
+                    child: Text('Save Card', style: TextStyle(fontSize: 16)),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green, // Button background color
+                    foregroundColor: Colors.white, // Button text color
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    elevation: 5.0,
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   void _submitReservation() async {
@@ -471,7 +606,8 @@ class _ReservationScreenState extends State<ReservationScreen> {
 
     await FirebaseFirestore.instance
         .collection('Reservations')
-        .add(reservation);
+        .doc(widget.parkingArea['Name'])
+        .set(reservation);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -484,9 +620,31 @@ class _ReservationScreenState extends State<ReservationScreen> {
   }
 }
 
-
-
-
+Widget _buildCardField({
+  required TextEditingController controller,
+  required String labelText,
+  required String hintText,
+  TextInputType keyboardType = TextInputType.text,
+  bool obscureText = false,
+  required FormFieldValidator<String> validator,
+}) {
+  return TextFormField(
+    controller: controller,
+    decoration: InputDecoration(
+      labelText: labelText,
+      hintText: hintText,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      filled: true,
+      fillColor: Colors.white,
+      contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+    ),
+    keyboardType: keyboardType,
+    obscureText: obscureText,
+    validator: validator,
+  );
+}
 
 
 
@@ -803,4 +961,4 @@ class _ReservationScreenState extends State<ReservationScreen> {
 //       ),
 //     );
 //   }
-// }
+//
