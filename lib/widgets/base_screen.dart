@@ -171,14 +171,13 @@ class BaseScreen extends StatelessWidget {
  }*/
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hatgeback/screens/CardDetailsScreen.dart';
+import 'package:hatgeback/payment/payscreen.dart';
 import 'package:hatgeback/screens/WalletScreen.dart';
 import 'package:hatgeback/screens/addpoint.dart';
 import 'package:hatgeback/screens/homepage.dart';
 import 'package:hatgeback/screens/loginscreen.dart';
 import 'package:hatgeback/screens/myparking.dart';
 import 'package:hatgeback/screens/userprofile.dart';
-import 'package:hatgeback/payment/payscreen.dart';
 
 class BaseScreen extends StatelessWidget {
   final Widget child;
@@ -268,12 +267,7 @@ class BaseScreen extends StatelessWidget {
               //     Navigator.pushNamed(context, myparking.id);
               //   },
               // ),
-              _buildFooterButton(
-                icon: Icons.credit_card,
-                onPressed: () {
-                  Navigator.pushNamed(context, CardDetailsScreen.id);
-                },
-              ),
+
               _buildFooterButton(
                 icon: Icons.payment,
                 onPressed: () {
@@ -431,7 +425,6 @@ class BaseScreen extends StatelessWidget {
               );
             },
           ),
-
         ],
       ),
     );
