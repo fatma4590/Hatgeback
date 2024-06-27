@@ -971,6 +971,17 @@ class _HomePageState extends State<homepage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextField(
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Color(0xFFE3F3E9),
+                      labelText: "Search",
+                      suffixIcon: Icon(Icons.search, color: Color(0xFF33AD60)),
+                    ),
+                  ),
                   SizedBox(height: 30),
                   Text(
                     "Parking Areas",
