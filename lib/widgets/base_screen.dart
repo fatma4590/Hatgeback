@@ -170,12 +170,14 @@ class BaseScreen extends StatelessWidget {
   }
  }*/
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hatgeback/screens/myReservations.dart';
 import 'package:flutter/material.dart';
 import 'package:hatgeback/payment/payscreen.dart';
 import 'package:hatgeback/screens/WalletScreen.dart';
 import 'package:hatgeback/screens/addpoint.dart';
 import 'package:hatgeback/screens/homepage.dart';
 import 'package:hatgeback/screens/loginscreen.dart';
+import 'package:hatgeback/screens/myReservations.dart';
 import 'package:hatgeback/screens/myparking.dart';
 import 'package:hatgeback/screens/userprofile.dart';
 
@@ -391,7 +393,7 @@ class BaseScreen extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => myparking()),
+                MaterialPageRoute(builder: (context) => myReservations()),
               );
             },
           ),

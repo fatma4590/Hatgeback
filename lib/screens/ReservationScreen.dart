@@ -208,8 +208,8 @@ class _ReservationScreenState extends State<ReservationScreen> {
     }
   }*/
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hatgeback/screens/homepage.dart';
 import 'package:hatgeback/widgets/base_screen.dart';
@@ -398,8 +398,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
       },
       items: [
         'Bank Card',
-        'Instapay',
-        'E Wallet',
+        'PayMob',
       ].map((e) {
         return DropdownMenuItem<String>(
           value: e,
@@ -528,8 +527,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                             if (value == null || value.isEmpty) {
                               return 'Please enter expiration date year';
                             }
-                            if (int.parse(value) <
-                                DateTime.now().year % 100) {
+                            if (int.parse(value) < DateTime.now().year % 100) {
                               return 'Please enter a valid year';
                             }
                             return null;
@@ -559,7 +557,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                   ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        final isCardValid = await _checkCardInFirestore(
+                        final cardCheckResult = await _checkCardInFirestore(
                           cardNumber: _cardNumberController.text,
                           cardholderName: _cardholderNameController.text,
                           expiryMonth: _expiryDateControllerMonth.text,
@@ -567,16 +565,17 @@ class _ReservationScreenState extends State<ReservationScreen> {
                           cvv: _cvvController.text,
                         );
 
-                        if (isCardValid) {
+                        if (cardCheckResult == 'Card is valid') {
                           _submitReservation();
                           Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                                builder: (context) => homepage()),
+                            MaterialPageRoute(builder: (context) => homepage()),
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Card not found or insufficient balance. Please try again.'),
+                              content: Text(cardCheckResult == 'Card not found'
+                                  ? 'Card not found. Please try again.'
+                                  : 'Insufficient balance. Please try again.'),
                               backgroundColor: Colors.red,
                             ),
                           );
@@ -606,7 +605,33 @@ class _ReservationScreenState extends State<ReservationScreen> {
     );
   }
 
-  Future<bool> _checkCardInFirestore({
+  Widget _buildCardField({
+    required TextEditingController controller,
+    required String labelText,
+    required String hintText,
+    TextInputType keyboardType = TextInputType.text,
+    bool obscureText = false,
+    FormFieldValidator<String>? validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: labelText,
+        hintText: hintText,
+        contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+      keyboardType: keyboardType,
+      obscureText: obscureText,
+      validator: validator,
+    );
+  }
+
+  Future<String> _checkCardInFirestore({
     required String cardNumber,
     required String cardholderName,
     required String expiryMonth,
@@ -616,7 +641,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       // User not authenticated
-      return false;
+      return 'User not authenticated';
     }
     final userId = user.uid;
 
@@ -633,7 +658,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
         .get();
 
     if (cardSnapshot.docs.isEmpty) {
-      return false;
+      return 'Card not found';
     }
 
     final cardData = cardSnapshot.docs.first.data();
@@ -648,87 +673,36 @@ class _ReservationScreenState extends State<ReservationScreen> {
           .collection('cards')
           .doc(cardSnapshot.docs.first.id)
           .update({'Balance': newBalance});
-      return true;
+      return 'Card is valid';
     } else {
-      return false;
+      return 'Insufficient balance';
     }
   }
 
-  void _submitReservation() async {
-    final startDateTime = DateTime(
-      DateTime.now().year,
-      DateTime.now().month,
-      DateTime.now().day,
-      _startTime!.hour,
-      _startTime!.minute,
-    );
-    final endDateTime = DateTime(
-      DateTime.now().year,
-      DateTime.now().month,
-      DateTime.now().day,
-      _endTime!.hour,
-      _endTime!.minute,
-    );
+  Future<void> _submitReservation() async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      final reservation = {
+        'userId': user.uid,
+        'parkingAreaId': widget.parkingArea['id'],
+        'startTime': _startTime!.format(context),
+        'endTime': _endTime!.format(context),
+        'fee': _fee,
+        'paymentMethod': _paymentMethod,
+        'timestamp': FieldValue.serverTimestamp(),
+      };
 
-    final reservation = {
-      'userid': _auth.currentUser!.email,
-      'startDate': startDateTime.toIso8601String(),
-      'endDate': endDateTime.toIso8601String(),
-      'fee': _fee,
-      'paymentMethod': _paymentMethod,
-      'parkingName': widget.parkingArea['Name'],
-    };
+      await _firestore.collection('reservations').add(reservation);
 
-    await _firestore
-        .collection('Reservations')
-        .doc(widget.parkingArea['Name'])
-        .set(reservation);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Reservation successfully created!'),
-        backgroundColor: Color(0xFF33AD60),
-      ),
-    );
-
-    Navigator.of(context).pop();
-  }
-
-  Widget _buildCardField({
-    required TextEditingController controller,
-    required String labelText,
-    required String hintText,
-    TextInputType keyboardType = TextInputType.text,
-    bool obscureText = false,
-    required FormFieldValidator<String> validator,
-  }) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: labelText,
-        hintText: hintText,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Reservation successful!'),
+          backgroundColor: Colors.green,
         ),
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-      ),
-      keyboardType: keyboardType,
-      obscureText: obscureText,
-      validator: validator,
-    );
+      );
+    }
   }
 }
-
-
-
-
-
-
-
-
-
 
 
 
