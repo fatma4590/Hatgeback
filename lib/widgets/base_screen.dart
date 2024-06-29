@@ -179,6 +179,7 @@ import 'package:hatgeback/screens/homepage.dart';
 import 'package:hatgeback/screens/loginscreen.dart';
 import 'package:hatgeback/screens/myReservations.dart';
 import 'package:hatgeback/screens/myparking.dart';
+import 'package:hatgeback/screens/FeedbackScreen.dart';
 import 'package:hatgeback/screens/userprofile.dart';
 
 class BaseScreen extends StatelessWidget {
@@ -274,6 +275,12 @@ class BaseScreen extends StatelessWidget {
                 icon: Icons.payment,
                 onPressed: () {
                   Navigator.pushNamed(context, payscreen.id);
+                },
+              ),
+              _buildFooterButton(
+                icon: Icons.payment,
+                onPressed: () {
+                  Navigator.pushNamed(context, FeedbackScreen.id);
                 },
               ),
               _buildFooterButton(

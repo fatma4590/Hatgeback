@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hatgeback/screens/CardDetailsScreen.dart';
 //import 'package:hatgeback/screens/accountuser.dart';
+import 'package:hatgeback/screens/FeedbackScreen.dart';
 import 'package:hatgeback/screens/addpoint.dart';
 import 'package:hatgeback/screens/homepage.dart';
 import 'package:hatgeback/screens/loginscreen.dart';
@@ -61,6 +62,8 @@ class mainmyapp extends State<MyApp> {
         CardDetailsScreen.id: (context) => CardDetailsScreen(),
         payscreen.id: (contexts) => payscreen(),
         myReservations.id: (context) =>myReservations(),
+        FeedbackScreen.id: (context) =>FeedbackScreen(),
+
       },
       initialRoute: loginscreen.id,
     );
