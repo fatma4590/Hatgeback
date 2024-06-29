@@ -104,7 +104,6 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
  }*/
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -219,6 +218,7 @@ class _UserProfileState extends State<UserProfile> {
                     'Phone',
                     _phoneController,
                     Icons.phone,
+                    phoneValidation: true,
                   ),
                   buildPasswordChangeField(),
                   buildEditableField(
@@ -237,7 +237,8 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   Widget buildEditableField(String fieldKey, String label,
-      TextEditingController controller, IconData icon) {
+      TextEditingController controller, IconData icon,
+      {bool phoneValidation = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: TextFormField(
@@ -253,6 +254,19 @@ class _UserProfileState extends State<UserProfile> {
           suffixIcon: IconButton(
             icon: Icon(Icons.save, color: Colors.grey.shade800),
             onPressed: () async {
+              // Phone number validation
+              if (phoneValidation) {
+                String phone = controller.text;
+                if (phone.length != 11 || !phone.startsWith('0')) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text(
+                            'Phone number must be 11 digits and start with 0')),
+                  );
+                  return;
+                }
+              }
+
               await FirebaseFirestore.instance
                   .collection("users")
                   .doc(currentUser.email)
@@ -362,7 +376,7 @@ class _UserProfileState extends State<UserProfile> {
                               try {
                                 // Re-authenticate user to verify old password
                                 AuthCredential credential =
-                                    EmailAuthProvider.credential(
+                                EmailAuthProvider.credential(
                                   email: currentUser.email!,
                                   password: oldPassword,
                                 );
@@ -393,7 +407,7 @@ class _UserProfileState extends State<UserProfile> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                       content:
-                                          Text('Failed to update password')),
+                                      Text('Failed to update password')),
                                 );
                               }
                             },
