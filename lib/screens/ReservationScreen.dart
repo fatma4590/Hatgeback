@@ -207,7 +207,6 @@ class _ReservationScreenState extends State<ReservationScreen> {
       Navigator.of(context).pop();
     }
   }*/
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -287,6 +286,13 @@ class _ReservationScreenState extends State<ReservationScreen> {
                     if (value == null) {
                       return 'Required';
                     }
+                    if (_startTime != null && value != null) {
+                      final startTimeInMinutes = _startTime!.hour * 60 + _startTime!.minute;
+                      final endTimeInMinutes = value.hour * 60 + value.minute;
+                      if (endTimeInMinutes <= startTimeInMinutes) {
+                        return 'End time must be after start time';
+                      }
+                    }
                     return null;
                   },
                 ),
@@ -296,8 +302,28 @@ class _ReservationScreenState extends State<ReservationScreen> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      _calculateFee();
-                      _showConfirmationDialog();
+                      if (_startTime != null && _endTime != null) {
+                        final startTimeInMinutes = _startTime!.hour * 60 + _startTime!.minute;
+                        final endTimeInMinutes = _endTime!.hour * 60 + _endTime!.minute;
+                        if (endTimeInMinutes > startTimeInMinutes) {
+                          _calculateFee();
+                          _showConfirmationDialog();
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('End time must be after start time'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Please fill in all fields'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
                     }
                   },
                   child: Padding(
@@ -703,8 +729,6 @@ class _ReservationScreenState extends State<ReservationScreen> {
     }
   }
 }
-
-
 
 
 
