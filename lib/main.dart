@@ -34,13 +34,7 @@ class MyApp extends StatefulWidget {
 class mainmyapp extends State<MyApp> {
   @override
   void initState() {
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user == null) {
-        print('User is currently signed out!');
-      } else {
-        print('User is signed in!');
-      }
-    });
+
     super.initState();
   }
 
@@ -49,9 +43,7 @@ class mainmyapp extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: FirebaseAuth.instance.currentUser == null
-          ? loginscreen()
-          : homepage(),
+
       routes: <String, WidgetBuilder>{
         UserProfile.id: (context) => UserProfile(),
         loginscreen.id: (context) => loginscreen(),

@@ -207,12 +207,17 @@ class _ReservationScreenState extends State<ReservationScreen> {
       Navigator.of(context).pop();
     }
   }*/
+
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hatgeback/screens/homepage.dart';
+import 'package:hatgeback/screens/homepage.dart'; // Replace with your Homepage import
 import 'package:hatgeback/widgets/base_screen.dart';
+import 'package:hatgeback/payment/payscreen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../paymobmanger/paymobmanager.dart';
 class ReservationScreen extends StatefulWidget {
   final Map<String, dynamic> parkingArea;
 
@@ -270,6 +275,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
                     if (value == null) {
                       return 'Required';
                     }
+                    if (!_isTimeWithinAvailableHours(value, _endTime)) {
+                      return 'Invalid start time';
+                    }
                     return null;
                   },
                 ),
@@ -286,12 +294,8 @@ class _ReservationScreenState extends State<ReservationScreen> {
                     if (value == null) {
                       return 'Required';
                     }
-                    if (_startTime != null && value != null) {
-                      final startTimeInMinutes = _startTime!.hour * 60 + _startTime!.minute;
-                      final endTimeInMinutes = value.hour * 60 + value.minute;
-                      if (endTimeInMinutes <= startTimeInMinutes) {
-                        return 'End time must be after start time';
-                      }
+                    if (!_isTimeWithinAvailableHours(_startTime, value)) {
+                      return 'Invalid end time';
                     }
                     return null;
                   },
@@ -302,28 +306,8 @@ class _ReservationScreenState extends State<ReservationScreen> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      if (_startTime != null && _endTime != null) {
-                        final startTimeInMinutes = _startTime!.hour * 60 + _startTime!.minute;
-                        final endTimeInMinutes = _endTime!.hour * 60 + _endTime!.minute;
-                        if (endTimeInMinutes > startTimeInMinutes) {
-                          _calculateFee();
-                          _showConfirmationDialog();
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('End time must be after start time'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                        }
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Please fill in all fields'),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      }
+                      _calculateFee();
+                      _showConfirmationDialog();
                     }
                   },
                   child: Padding(
@@ -334,8 +318,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Color(0xFF33AD60), // Button text color
+                    backgroundColor: Color(0xFF33AD60),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
@@ -369,7 +352,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
               borderRadius: BorderRadius.circular(10.0),
             ),
             errorText: state.errorText,
-            hintStyle: TextStyle(color: Colors.grey), // Placeholder text style
+            hintStyle: TextStyle(color: Colors.grey),
           ),
           child: InkWell(
             onTap: () async {
@@ -377,6 +360,22 @@ class _ReservationScreenState extends State<ReservationScreen> {
                 context: context,
                 initialTime: TimeOfDay.now(),
               );
+
+              // Ensure end time is at least 1 hour after start time
+              if (labelText == 'End Time' && _startTime != null) {
+                final startTimeInMinutes = _startTime!.hour * 60 + _startTime!.minute;
+                final selectedTimeInMinutes = time!.hour * 60 + time.minute;
+                if (selectedTimeInMinutes <= startTimeInMinutes + 60) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('End time must be at least 1 hour after start time.'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                  return;
+                }
+              }
+
               state.didChange(time);
               onChanged(time);
             },
@@ -403,6 +402,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
       },
     );
   }
+
 
   Widget _buildPaymentMethodDropdown() {
     return DropdownButtonFormField<String>(
@@ -467,7 +467,16 @@ class _ReservationScreenState extends State<ReservationScreen> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                _showCardDetailsDialog();
+                if (_paymentMethod == 'Bank Card') {
+                  _showBankCardDetailsDialog();
+                } else if (_paymentMethod == 'PayMob') {
+                  PaymobManager().getPaymentKey(
+                      10,"EGP"
+                  ).then((String paymentKey) {
+                    launchUrl(
+                      Uri.parse("https://accept.paymob.com/api/acceptance/iframes/852900?payment_token=$paymentKey"),
+                    );
+                  });             }
               },
               child: Text('Proceed'),
             ),
@@ -477,7 +486,30 @@ class _ReservationScreenState extends State<ReservationScreen> {
     );
   }
 
-  void _showCardDetailsDialog() {
+
+  void _showPayMobPaymentDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("PayMob Payment Details"),
+          content: Center(
+            child: Text("Place PayMob Payment UI here."),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showBankCardDetailsDialog() {
     showDialog(
       context: context,
       builder: (context) {
@@ -487,6 +519,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
             key: _formKey, // Ensure card details form is validated
             child: SingleChildScrollView(
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   _buildCardField(
                     controller: _cardNumberController,
@@ -528,21 +561,16 @@ class _ReservationScreenState extends State<ReservationScreen> {
                             if (value == null || value.isEmpty) {
                               return 'Please enter expiration date month';
                             }
-                            if (int.parse(value) < 1 || int.parse(value) > 12) {
+                            if (int.tryParse(value) == null ||
+                                int.parse(value) < 1 ||
+                                int.parse(value) > 12) {
                               return 'Please enter a valid month';
                             }
                             return null;
                           },
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text(
-                          '/',
-                          style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
-                        ),
-                      ),
+                      SizedBox(width: 16),
                       Expanded(
                         child: _buildCardField(
                           controller: _expiryDateControllerYear,
@@ -553,7 +581,8 @@ class _ReservationScreenState extends State<ReservationScreen> {
                             if (value == null || value.isEmpty) {
                               return 'Please enter expiration date year';
                             }
-                            if (int.parse(value) < DateTime.now().year % 100) {
+                            if (int.tryParse(value) == null ||
+                                int.parse(value) < DateTime.now().year % 100) {
                               return 'Please enter a valid year';
                             }
                             return null;
@@ -594,7 +623,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
                         if (cardCheckResult == 'Card is valid') {
                           _submitReservation();
                           Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) => homepage()),
+                            MaterialPageRoute(
+                              builder: (context) => homepage(), // Replace with your Homepage widget
+                            ),
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -611,15 +642,16 @@ class _ReservationScreenState extends State<ReservationScreen> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                           vertical: 15.0, horizontal: 20.0),
-                      child: Text('Save Card', style: TextStyle(fontSize: 16)),
+                      child: Text(
+                        'Save Card',
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green, // Button background color
-                      foregroundColor: Colors.white, // Button text color
+                      backgroundColor: Colors.green,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      elevation: 5.0,
                     ),
                   ),
                 ],
@@ -664,23 +696,21 @@ class _ReservationScreenState extends State<ReservationScreen> {
     required String expiryYear,
     required String cvv,
   }) async {
-    final user = FirebaseAuth.instance.currentUser;
+    final user = _auth.currentUser;
     if (user == null) {
-      // User not authenticated
       return 'User not authenticated';
     }
     final userId = user.uid;
 
-    // Query the user's cards subcollection for matching card details
     final cardSnapshot = await _firestore
         .collection('users')
         .doc(userId)
         .collection('cards')
-        .where('cardNumber', isEqualTo: int.parse(cardNumber))
+        .where('cardNumber', isEqualTo: int.tryParse(cardNumber))
         .where('cardholderName', isEqualTo: cardholderName)
-        .where('expiryDatemonth', isEqualTo: expiryMonth)
-        .where('expiryDateyear', isEqualTo: expiryYear)
-        .where('cvv', isEqualTo: int.parse(cvv))
+        .where('expiryDateMonth', isEqualTo: expiryMonth)
+        .where('expiryDateYear', isEqualTo: expiryYear)
+        .where('cvv', isEqualTo: int.tryParse(cvv))
         .get();
 
     if (cardSnapshot.docs.isEmpty) {
@@ -688,11 +718,10 @@ class _ReservationScreenState extends State<ReservationScreen> {
     }
 
     final cardData = cardSnapshot.docs.first.data();
-    final Balance = cardData['Balance'] ?? 0.0;
+    final balance = cardData['Balance'] ?? 0.0;
 
-    if (Balance >= _fee) {
-      // Update card balance
-      final newBalance = Balance - _fee;
+    if (balance >= _fee) {
+      final newBalance = balance - _fee;
       await _firestore
           .collection('users')
           .doc(userId)
@@ -705,7 +734,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
     }
   }
 
-  Future<void> _submitReservation() async {
+  void _submitReservation() async {
     final user = _auth.currentUser;
     if (user != null) {
       final reservation = {
@@ -728,8 +757,25 @@ class _ReservationScreenState extends State<ReservationScreen> {
       );
     }
   }
-}
 
+  bool _isTimeWithinAvailableHours(TimeOfDay? startTime, TimeOfDay? endTime) {
+    if (startTime == null || endTime == null) {
+      return false;
+    }
+
+    // Implement your own logic here to check if the selected time is within available hours
+    // Example logic: Ensure the parking area is open during these hours
+    // This is a placeholder and should be replaced with your actual logic
+    // Example:
+    // final startHour = startTime.hour;
+    // final endHour = endTime.hour;
+    // if (startHour < 8 || endHour >= 20) {
+    //   return false;
+    // }
+
+    return true; // Placeholder return value
+  }
+}
 
 
 // trial for time validation

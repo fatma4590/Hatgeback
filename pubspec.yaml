@@ -30,13 +30,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_svg: ^0.22.0
   intl: ^0.17.0
   http: ^0.13.3
   url_launcher: ^6.1.14
   dio: ^5.4.3+1
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
   isar: ^4.0.0-dev.14
   isar_flutter_libs: ^4.0.0-dev.14
@@ -45,16 +43,21 @@ dependencies:
   modal_progress_hud_nsn: ^0.5.1
   cloud_firestore: ^4.17.0
   datetime_picker_formfield_new: ^2.1.0
-
   file_picker: 8.0.5
   image_picker: ^0.8.4+4
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.13.1
+  flutter_launcher_icons: ^0.11.0
+  datetime_picker_formfield: ^2.0.0
+  flutter_svg: ^0.22.0
   build_runner: ^2.4.6
   flutter_lints: ^2.0.0
+  google_fonts: ^2.3.3
+
+
 
 
 flutter_icons:

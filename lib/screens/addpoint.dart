@@ -144,28 +144,6 @@ class addpoint extends StatelessWidget {
   }
 }*/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
@@ -361,27 +339,24 @@ class _AddpointState extends State<addpoint> {
   }
 }
 */
-
-
-
-
-
-// works well
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hatgeback/screens/homepage.dart';
+import 'package:hatgeback/widgets/base_screen.dart';
 import 'package:intl/intl.dart';
+import 'package:isar/isar.dart';
 
 class addpoint extends StatefulWidget {
   static String id = 'addpointpage';
 
   @override
-  _AddPointState createState() => _AddPointState();
+  _AddPointPageState createState() => _AddPointPageState();
 }
 
-class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin {
+class _AddPointPageState extends State<addpoint>
+    with SingleTickerProviderStateMixin {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   TextEditingController userid = TextEditingController();
   TextEditingController location = TextEditingController();
@@ -412,26 +387,40 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     final format = DateFormat('yyyy-MM-dd HH:mm a');
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black26,
-        title: Text('My Parking Space'),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: [
-            Tab(text: 'Just Once'),
-            Tab(text: 'Recurring'),
-          ],
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: TabBarView(
-          controller: _tabController,
-          children: <Widget>[
-            buildJustOnceForm(format),
-            buildRecurringForm(format),
-          ],
+    return BaseScreen(
+      pageTitle: 'Add Parking Area',
+      showBackButton: true,
+      onBackButtonPressed: () {
+        Navigator.of(context).pop(); // Handle back button press as needed
+      },
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              SizedBox(height: 16),
+              TabBar(
+                tabs: [
+                  Tab(text: 'Just Once'),
+                  Tab(text: 'Recurring'),
+                ],
+                controller: _tabController,
+                indicatorColor: Color(0xFF33AD60),
+                labelColor: Color(0xFF33AD60),
+                unselectedLabelColor: Colors.black,
+              ),
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: <Widget>[
+                    buildJustOnceForm(format),
+                    buildRecurringForm(format),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -443,9 +432,18 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
         buildTextField(location, 'Location'),
         buildTextField(name, 'Name'),
         buildTextField(price, 'Price Per Hour', isNumeric: true),
+        SizedBox(height: 16),
         DateTimeField(
           format: DateFormat('yyyy-MM-dd'),
-          decoration: InputDecoration(hintText: 'Choose Date'),
+          decoration: InputDecoration(
+            labelText: 'Choose Date',
+            border: OutlineInputBorder(),
+            prefixIcon: Icon(Icons.calendar_today),
+          ),
+          controller: TextEditingController(
+              text: selectedDate != null
+                  ? DateFormat('yyyy-MM-dd').format(selectedDate!)
+                  : ''),
           onShowPicker: (context, currentValue) async {
             final date = await showDatePicker(
               context: context,
@@ -461,82 +459,106 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
             return selectedDate ?? currentValue ?? DateTime.now();
           },
         ),
-        DateTimeField(
-          format: DateFormat('HH:mm'),
-          decoration: InputDecoration(hintText: 'Choose Start Time'),
-          onShowPicker: (context, currentValue) async {
-            final time = await showTimePicker(
-              context: context,
-              initialTime: currentValue != null
-                  ? TimeOfDay.fromDateTime(currentValue)
-                  : TimeOfDay.now(),
-            );
-            if (time != null) {
-              setState(() {
-                startTime = time;
-              });
-            }
-            return startTime != null
-                ? DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day,
-                startTime!.hour, startTime!.minute)
-                : currentValue ?? DateTime.now();
-          },
+        SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: DateTimeField(
+                format: DateFormat('HH:mm'),
+                decoration: InputDecoration(
+                  labelText: 'Choose Start Time',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.access_time),
+                ),
+                controller: TextEditingController(
+                    text: startTime != null ? startTime!.format(context) : ''),
+                onShowPicker: (context, currentValue) async {
+                  final time = await showTimePicker(
+                    context: context,
+                    initialTime: currentValue != null
+                        ? TimeOfDay.fromDateTime(currentValue)
+                        : TimeOfDay.now(),
+                  );
+                  if (time != null) {
+                    setState(() {
+                      startTime = time;
+                    });
+                  }
+                  return startTime != null
+                      ? DateTime(selectedDate!.year, selectedDate!.month,
+                      selectedDate!.day, startTime!.hour, startTime!.minute)
+                      : currentValue ?? DateTime.now();
+                },
+              ),
+            ),
+            SizedBox(width: 16),
+            Expanded(
+              child: DateTimeField(
+                format: DateFormat('HH:mm'),
+                decoration: InputDecoration(
+                  labelText: 'Choose End Time',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.access_time),
+                ),
+                controller: TextEditingController(
+                    text: endTime != null ? endTime!.format(context) : ''),
+                onShowPicker: (context, currentValue) async {
+                  final time = await showTimePicker(
+                    context: context,
+                    initialTime: currentValue != null
+                        ? TimeOfDay.fromDateTime(currentValue)
+                        : TimeOfDay.now(),
+                  );
+                  if (time != null) {
+                    setState(() {
+                      endTime = time;
+                    });
+                  }
+                  return endTime != null
+                      ? DateTime(selectedDate!.year, selectedDate!.month,
+                      selectedDate!.day, endTime!.hour, endTime!.minute)
+                      : currentValue ?? DateTime.now();
+                },
+              ),
+            ),
+          ],
         ),
-        DateTimeField(
-          format: DateFormat('HH:mm'),
-          decoration: InputDecoration(hintText: 'Choose End Time'),
-          onShowPicker: (context, currentValue) async {
-            final time = await showTimePicker(
-              context: context,
-              initialTime: currentValue != null
-                  ? TimeOfDay.fromDateTime(currentValue)
-                  : TimeOfDay.now(),
-            );
-            if (time != null) {
-              setState(() {
-                endTime = time;
-              });
-            }
-            return endTime != null
-                ? DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day,
-                endTime!.hour, endTime!.minute)
-                : currentValue ?? DateTime.now();
-          },
-        ),
+        SizedBox(height: 16),
         ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Color(0xFF33AD60),
+            padding: EdgeInsets.all(16),
+            shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          ),
           onPressed: () {
             if (selectedDate != null && startTime != null && endTime != null) {
-              // Check if start time is before end time
-              if (startTime!.hour > endTime!.hour ||
-                  (startTime!.hour == endTime!.hour && startTime!.minute >= endTime!.minute)) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text("Start time must be before end time"),
-                    backgroundColor: Colors.red,
-                  ),
-                );
-              } else {
-                // Combine selectedDate with startTime and endTime
-                DateTime startDate = DateTime(
-                  selectedDate!.year,
-                  selectedDate!.month,
-                  selectedDate!.day,
-                  startTime!.hour,
-                  startTime!.minute,
-                );
-                DateTime endDate = DateTime(
-                  selectedDate!.year,
-                  selectedDate!.month,
-                  selectedDate!.day,
-                  endTime!.hour,
-                  endTime!.minute,
-                );
-                FirebaseFirestore.instance.collection('parkingareas').doc(name.text).set({
+              // Combine selectedDate with startTime and endTime
+              DateTime startDate = DateTime(
+                selectedDate!.year,
+                selectedDate!.month,
+                selectedDate!.day,
+                startTime!.hour,
+                startTime!.minute,
+              );
+              DateTime endDate = DateTime(
+                selectedDate!.year,
+                selectedDate!.month,
+                selectedDate!.day,
+                endTime!.hour,
+                endTime!.minute,
+              );
+
+              // Validate end time is at least 1 hour after start time
+              if (endTime!.hour > startTime!.hour ||
+                  (endTime!.hour == startTime!.hour &&
+                      endTime!.minute > startTime!.minute)) {
+                FirebaseFirestore.instance.collection('parkingareas').add({
                   'userid': _auth.currentUser!.email,
+                  'parkingid': Isar.defaultMaxSizeMiB,
                   'Location': location.text,
                   'Name': name.text,
-                  'price': price.text,
+                  'price': int.parse(price.text),
                   'startDate': Timestamp.fromDate(startDate),
                   'endDate': Timestamp.fromDate(endDate),
                   'isRecurring': false,
@@ -545,7 +567,14 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text("Added successfully"),
-                    backgroundColor: Colors.green,
+                    backgroundColor: Color(0xFF33AD60),
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("End time must be after start time"),
+                    backgroundColor: Colors.red,
                   ),
                 );
               }
@@ -558,7 +587,10 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
               );
             }
           },
-          child: Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
+          child: Text(
+            "Add",
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
         ),
       ],
     );
@@ -570,168 +602,186 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
         buildTextField(location, 'Location'),
         buildTextField(name, 'Name'),
         buildTextField(price, 'Price Per Hour', isNumeric: true),
-        DateTimeField(
-          format: DateFormat('yyyy-MM-dd'),
-          decoration: InputDecoration(hintText: 'Choose Start Date'),
-          onShowPicker: (context, currentValue) async {
-            final date = await showDatePicker(
-              context: context,
-              initialDate: currentValue ?? DateTime.now(),
-              firstDate: DateTime(1900),
-              lastDate: DateTime(2100),
-            );
-            if (date != null) {
-              setState(() {
-                startDate = date;
-              });
-            }
-            return startDate ?? currentValue ?? DateTime.now();
-          },
+        SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  DateTimeField(
+                    format: DateFormat('yyyy-MM-dd'),
+                    decoration: InputDecoration(
+                      labelText: 'Choose Start Date',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.calendar_today),
+                    ),
+                    controller: TextEditingController(
+                        text: startDate != null
+                            ? DateFormat('yyyy-MM-dd').format(startDate!)
+                            : ''),
+                    onShowPicker: (context, currentValue) async {
+                      final date = await showDatePicker(
+                        context: context,
+                        initialDate: currentValue ?? DateTime.now(),
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime(2100),
+                      );
+                      if (date != null) {
+                        setState(() {
+                          startDate = date;
+                        });
+                      }
+                      return startDate ?? currentValue ?? DateTime.now();
+                    },
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  DateTimeField(
+                    format: DateFormat('yyyy-MM-dd'),
+                    decoration: InputDecoration(
+                      labelText: 'Choose End Date',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.calendar_today),
+                    ),
+                    controller: TextEditingController(
+                        text: endDate != null
+                            ? DateFormat('yyyy-MM-dd').format(endDate!)
+                            : ''),
+                    onShowPicker: (context, currentValue) async {
+                      final date = await showDatePicker(
+                        context: context,
+                        initialDate: currentValue ?? DateTime.now(),
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime(2100),
+                      );
+                      if (date != null) {
+                        setState(() {
+                          endDate = date;
+                        });
+                      }
+                      return endDate ?? currentValue ?? DateTime.now();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-        DateTimeField(
-          format: DateFormat('yyyy-MM-dd'),
-          decoration: InputDecoration(hintText: 'Choose End Date'),
-          onShowPicker: (context, currentValue) async {
-            final date = await showDatePicker(
-              context: context,
-              initialDate: currentValue ?? DateTime.now(),
-              firstDate: DateTime(1900),
-              lastDate: DateTime(2100),
-            );
-            if (date != null) {
-              setState(() {
-                endDate = date;
-              });
-            }
-            return endDate ?? currentValue ?? DateTime.now();
-          },
+        SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: DateTimeField(
+                format: DateFormat('HH:mm'),
+                decoration: InputDecoration(
+                  labelText: 'Choose Start Time',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.access_time),
+                ),
+                controller: TextEditingController(
+                    text: startTime != null ? startTime!.format(context) : ''),
+                onShowPicker: (context, currentValue) async {
+                  final time = await showTimePicker(
+                    context: context,
+                    initialTime: currentValue != null
+                        ? TimeOfDay.fromDateTime(currentValue)
+                        : TimeOfDay.now(),
+                  );
+                  if (time != null) {
+                    setState(() {
+                      startTime = time;
+                    });
+                  }
+                  return startTime != null
+                      ? DateTime(startDate!.year, startDate!.month,
+                      startDate!.day, startTime!.hour, startTime!.minute)
+                      : currentValue ?? DateTime.now();
+                },
+              ),
+            ),
+            SizedBox(width: 16),
+            Expanded(
+              child: DateTimeField(
+                format: DateFormat('HH:mm'),
+                decoration: InputDecoration(
+                  labelText: 'Choose End Time',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.access_time),
+                ),
+                controller: TextEditingController(
+                    text: endTime != null ? endTime!.format(context) : ''),
+                onShowPicker: (context, currentValue) async {
+                  final time = await showTimePicker(
+                    context: context,
+                    initialTime: currentValue != null
+                        ? TimeOfDay.fromDateTime(currentValue)
+                        : TimeOfDay.now(),
+                  );
+                  if (time != null) {
+                    setState(() {
+                      endTime = time;
+                    });
+                  }
+                  return endTime != null
+                      ? DateTime(endDate!.year, endDate!.month, endDate!.day,
+                      endTime!.hour, endTime!.minute)
+                      : currentValue ?? DateTime.now();
+                },
+              ),
+            ),
+          ],
         ),
-        DateTimeField(
-          format: DateFormat('HH:mm'),
-          decoration: InputDecoration(hintText: 'Choose Start Time'),
-          onShowPicker: (context, currentValue) async {
-            final time = await showTimePicker(
-              context: context,
-              initialTime: currentValue != null
-                  ? TimeOfDay.fromDateTime(currentValue)
-                  : TimeOfDay.now(),
-            );
-            if (time != null) {
-              setState(() {
-                startTime = time;
-              });
-            }
-            return startTime != null
-                ? DateTime(startDate!.year, startDate!.month, startDate!.day,
-                startTime!.hour, startTime!.minute)
-                : currentValue ?? DateTime.now();
-          },
+        SizedBox(height: 16),
+        Text(
+          'Select Days',
+          style: TextStyle(fontSize: 16),
         ),
-        DateTimeField(
-          format: DateFormat('HH:mm'),
-          decoration: InputDecoration(hintText: 'Choose End Time'),
-          onShowPicker: (context, currentValue) async {
-            final time = await showTimePicker(
-              context: context,
-              initialTime: currentValue != null
-                  ? TimeOfDay.fromDateTime(currentValue)
-                  : TimeOfDay.now(),
-            );
-            if (time != null) {
-              setState(() {
-                endTime = time;
-              });
-            }
-            return endTime != null
-                ? DateTime(endDate!.year, endDate!.month, endDate!.day,
-                endTime!.hour, endTime!.minute)
-                : currentValue ?? DateTime.now();
-          },
-        ),
-        CheckboxListTile(
-          title: Text('Monday'),
-          value: selectedDays.contains('Monday'),
-          onChanged: (value) {
-            setState(() {
-              value!
-                  ? selectedDays.add('Monday')
-                  : selectedDays.remove('Monday');
-            });
-          },
-        ),
-        CheckboxListTile(
-          title: Text('Tuesday'),
-          value: selectedDays.contains('Tuesday'),
-          onChanged: (value) {
-            setState(() {
-              value!
-                  ? selectedDays.add('Tuesday')
-                  : selectedDays.remove('Tuesday');
-            });
-          },
-        ),
-        CheckboxListTile(
-          title: Text('Wednesday'),
-          value: selectedDays.contains('Wednesday'),
-          onChanged: (value) {
-            setState(() {
-              value!
-                  ? selectedDays.add('Wednesday')
-                  : selectedDays.remove('Wednesday');
-            });
-          },
-        ),
-        CheckboxListTile(
-          title: Text('Thursday'),
-          value: selectedDays.contains('Thursday'),
-          onChanged: (value) {
-            setState(() {
-              value!
-                  ? selectedDays.add('Thursday')
-                  : selectedDays.remove('Thursday');
-            });
-          },
-        ),
-        CheckboxListTile(
-          title: Text('Friday'),
-          value: selectedDays.contains('Friday'),
-          onChanged: (value) {
-            setState(() {
-              value!
-                  ? selectedDays.add('Friday')
-                  : selectedDays.remove('Friday');
-            });
-          },
-        ),
-        CheckboxListTile(
-          title: Text('Saturday'),
-          value: selectedDays.contains('Saturday'),
-          onChanged: (value) {
-            setState(() {
-              value!
-                  ? selectedDays.add('Saturday')
-                  : selectedDays.remove('Saturday');
-            });
-          },
-        ),
-        CheckboxListTile(
-          title: Text('Sunday'),
-          value: selectedDays.contains('Sunday'),
-          onChanged: (value) {
-            setState(() {
-              value!
-                  ? selectedDays.add('Sunday')
-                  : selectedDays.remove('Sunday');
-            });
-          },
+        SizedBox(height: 16),
+        Wrap(
+          spacing: 8,
+          children: [
+            for (String day in [
+              'Monday',
+              'Tuesday',
+              'Wednesday',
+              'Thursday',
+              'Friday',
+              'Saturday',
+              'Sunday'
+            ])
+              ChoiceChip(
+                label: Text(day),
+                selected: selectedDays.contains(day),
+                onSelected: (selected) {
+                  setState(() {
+                    if (selected) {
+                      selectedDays.add(day);
+                    } else {
+                      selectedDays.remove(day);
+                    }
+                  });
+                },
+              ),
+          ],
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
           onPressed: () {
-            if (startDate != null && endDate != null && startTime != null && endTime != null) {
+            if (startDate != null &&
+                endDate != null &&
+                startTime != null &&
+                endTime != null) {
               // Check if start time is before end time
               if (startTime!.hour > endTime!.hour ||
-                  (startTime!.hour == endTime!.hour && startTime!.minute >= endTime!.minute)) {
+                  (startTime!.hour == endTime!.hour &&
+                      startTime!.minute >= endTime!.minute)) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text("Start time must be before end time"),
@@ -753,7 +803,8 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
               ));
             }
           },
-          child: Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
+          child:
+          Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
         ),
       ],
     );
@@ -788,7 +839,7 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
           'price': price.text,
           'startDate': Timestamp.fromDate(currentStartDate),
           'endDate': Timestamp.fromDate(currentEndDate),
-          'isRecurring': false,
+          'isRecurring': true,
         });
       }
 
@@ -797,13 +848,17 @@ class _AddPointState extends State<addpoint> with SingleTickerProviderStateMixin
     }
   }
 
-  Widget buildTextField(TextEditingController controller, String hintText, {bool isNumeric = false}) {
+  Widget buildTextField(TextEditingController controller, String labelText,
+      {bool isNumeric = false}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextField(
+      padding: EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
         controller: controller,
-        decoration: InputDecoration(hintText: hintText),
         keyboardType: isNumeric ? TextInputType.number : TextInputType.text,
+        decoration: InputDecoration(
+          labelText: labelText,
+          border: OutlineInputBorder(),
+        ),
       ),
     );
   }
