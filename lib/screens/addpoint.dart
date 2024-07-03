@@ -587,10 +587,8 @@ class _AddPointPageState extends State<addpoint>
               );
             }
           },
-          child: Text(
-            "Add",
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
+          child:
+              Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
         ),
       ],
     );
