@@ -531,7 +531,7 @@ class _AddPointPageState extends State<addpoint>
             shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
-          onPressed: () {
+          onPressed: () async {
             if (selectedDate != null && startTime != null && endTime != null) {
               // Combine selectedDate with startTime and endTime
               DateTime startDate = DateTime(
@@ -553,9 +553,10 @@ class _AddPointPageState extends State<addpoint>
               if (endTime!.hour > startTime!.hour ||
                   (endTime!.hour == startTime!.hour &&
                       endTime!.minute > startTime!.minute)) {
+                int parkingId = await getNextParkingId();
                 FirebaseFirestore.instance.collection('parkingareas').add({
                   'userid': _auth.currentUser!.email,
-                  'parkingid': Isar.defaultMaxSizeMiB,
+                  'parkingid': parkingId,
                   'Location': location.text,
                   'Name': name.text,
                   'price': int.parse(price.text),
