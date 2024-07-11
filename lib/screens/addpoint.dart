@@ -588,7 +588,7 @@ class _AddPointPageState extends State<addpoint>
             }
           },
           child:
-              Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
+          Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
         ),
       ],
     );
@@ -859,5 +859,20 @@ class _AddPointPageState extends State<addpoint>
         ),
       ),
     );
+  }
+}
+Future<int> getNextParkingId() async {
+  DocumentReference counterRef = FirebaseFirestore.instance.collection(
+      'counters').doc('parkingid');
+  DocumentSnapshot counterSnapshot = await counterRef.get();
+
+  if (counterSnapshot.exists) {
+    int currentCounter = counterSnapshot['parkingid'];
+    int newCounter = currentCounter + 1;
+    await counterRef.update({'parkingid': newCounter});
+    return newCounter;
+  } else {
+    await counterRef.set({'parkingid': 1});
+    return 1;
   }
 }
