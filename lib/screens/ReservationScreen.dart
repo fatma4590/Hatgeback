@@ -215,12 +215,12 @@ class _ReservationScreenState extends State<ReservationScreen> {
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hatgeback/screens/homepage.dart'; // Replace with your Homepage import
-import 'package:hatgeback/widgets/base_screen.dart';
-import 'package:hatgeback/payment/payscreen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../paymobmanger/paymobmanager.dart';
+import '../screens/homepage.dart'; // Adjust import as per your project structure
+import '../widgets/base_screen.dart';
+
 class ReservationScreen extends StatefulWidget {
   final Map<String, dynamic> parkingArea;
 
@@ -237,7 +237,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
   String? _paymentMethod;
   double _fee = 0.0;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   final _cardNumberController = TextEditingController();
   final _cardholderNameController = TextEditingController();
@@ -273,16 +273,16 @@ class _ReservationScreenState extends State<ReservationScreen> {
                     setState(() {
                       _startTime = value;
                     });
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Required';
-                    }
-                    if (!_isTimeWithinAvailableHours(value, _endTime)) {
-                      return 'Invalid start time';
-                    }
-                    return null;
-                  },
+                  }, validator: (TimeOfDay? value) {  },
+                  // validator: (value) {
+                  //   if (value == null) {
+                  //     return 'Required';
+                  //   }
+                  //   if (!_isTimeWithinAvailableHours(value, _endTime)) {
+                  //     return 'Invalid start time';
+                  //   }
+                  //   return "A7A";
+                  // },
                 ),
                 SizedBox(height: 20),
                 _buildTimeField(
@@ -292,16 +292,16 @@ class _ReservationScreenState extends State<ReservationScreen> {
                     setState(() {
                       _endTime = value;
                     });
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Required';
-                    }
-                    if (!_isTimeWithinAvailableHours(_startTime, value)) {
-                      return 'Invalid end time';
-                    }
-                    return null;
-                  },
+                  }, validator: (TimeOfDay? value) {  },
+                  // validator: (value) {
+                  //   if (value == null) {
+                  //     return 'Required';
+                  //   }
+                  //   if (!_isTimeWithinAvailableHours(_startTime, value)) {
+                  //     return 'Invalid end time';
+                  //   }
+                  //   return null;
+                  // },
                 ),
                 SizedBox(height: 20),
                 _buildPaymentMethodDropdown(),
@@ -366,12 +366,14 @@ class _ReservationScreenState extends State<ReservationScreen> {
 
               // Ensure end time is at least 1 hour after start time
               if (labelText == 'End Time' && _startTime != null) {
-                final startTimeInMinutes = _startTime!.hour * 60 + _startTime!.minute;
+                final startTimeInMinutes = _startTime!.hour * 60 +
+                    _startTime!.minute;
                 final selectedTimeInMinutes = time!.hour * 60 + time.minute;
                 if (selectedTimeInMinutes <= startTimeInMinutes + 60) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('End time must be at least 1 hour after start time.'),
+                      content: Text(
+                          'End time must be at least 1 hour after start time.'),
                       backgroundColor: Colors.red,
                     ),
                   );
@@ -392,7 +394,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
                     style: TextStyle(
                       fontSize: 16,
                       color: state.value == null
-                          ? Theme.of(context).hintColor
+                          ? Theme
+                          .of(context)
+                          .hintColor
                           : Colors.black,
                     ),
                   ),
@@ -405,7 +409,6 @@ class _ReservationScreenState extends State<ReservationScreen> {
       },
     );
   }
-
 
   Widget _buildPaymentMethodDropdown() {
     return DropdownButtonFormField<String>(
@@ -458,7 +461,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
         return AlertDialog(
           title: Text('Confirm Reservation'),
           content: Text(
-            'You are about to reserve a parking spot from ${_startTime!.format(context)} to ${_endTime!.format(context)} for a fee of $_fee EG. Proceed?',
+            'You are about to reserve a parking spot from ${_startTime!.format(
+                context)} to ${_endTime!.format(
+                context)} for a fee of $_fee EG. Proceed?',
           ),
           actions: [
             TextButton(
@@ -473,13 +478,15 @@ class _ReservationScreenState extends State<ReservationScreen> {
                 if (_paymentMethod == 'Bank Card') {
                   _showBankCardDetailsDialog();
                 } else if (_paymentMethod == 'PayMob') {
-                  PaymobManager().getPaymentKey(
-                      10,"EGP"
-                  ).then((String paymentKey) {
+                  PaymobManager()
+                      .getPaymentKey(10, "EGP")
+                      .then((String paymentKey) {
                     launchUrl(
-                      Uri.parse("https://accept.paymob.com/api/acceptance/iframes/852900?payment_token=$paymentKey"),
+                      Uri.parse(
+                          "https://accept.paymob.com/api/acceptance/iframes/852900?payment_token=$paymentKey"),
                     );
-                  });             }
+                  });
+                }
               },
               child: Text('Proceed'),
             ),
@@ -488,7 +495,6 @@ class _ReservationScreenState extends State<ReservationScreen> {
       },
     );
   }
-
 
   void _showPayMobPaymentDialog() {
     showDialog(
@@ -585,7 +591,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
                               return 'Please enter expiration date year';
                             }
                             if (int.tryParse(value) == null ||
-                                int.parse(value) < DateTime.now().year % 100) {
+                                int.parse(value) < DateTime
+                                    .now()
+                                    .year % 100) {
                               return 'Please enter a valid year';
                             }
                             return null;
@@ -627,7 +635,8 @@ class _ReservationScreenState extends State<ReservationScreen> {
                           _submitReservation();
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                              builder: (context) => homepage(), // Replace with your Homepage widget
+                              builder: (context) =>
+                                  homepage(), // Replace with your Homepage widget
                             ),
                           );
                         } else {
@@ -711,8 +720,8 @@ class _ReservationScreenState extends State<ReservationScreen> {
         .collection('cards')
         .where('cardNumber', isEqualTo: int.tryParse(cardNumber))
         .where('cardholderName', isEqualTo: cardholderName)
-        .where('expiryDateMonth', isEqualTo: expiryMonth)
-        .where('expiryDateYear', isEqualTo: expiryYear)
+        .where('expiryDatemonth', isEqualTo: expiryMonth)
+        .where('expiryDateyear', isEqualTo: expiryYear)
         .where('cvv', isEqualTo: int.tryParse(cvv))
         .get();
 
@@ -766,19 +775,28 @@ class _ReservationScreenState extends State<ReservationScreen> {
       return false;
     }
 
-    // Implement your own logic here to check if the selected time is within available hours
-    // Example logic: Ensure the parking area is open during these hours
-    // This is a placeholder and should be replaced with your actual logic
-    // Example:
-    // final startHour = startTime.hour;
-    // final endHour = endTime.hour;
-    // if (startHour < 8 || endHour >= 20) {
-    //   return false;
-    // }
+    // Retrieve operational hours from Firestore (replace with your actual logic to fetch data)
+    final openingTime = TimeOfDay(
+        hour: 8, minute: 0); // Replace with fetched data
+    final closingTime = TimeOfDay(
+        hour: 20, minute: 0); // Replace with fetched data
 
-    return true; // Placeholder return value
+    // Convert TimeOfDay to minutes for easier comparison
+    final startMinutes = startTime.hour * 60 + startTime.minute;
+    final endMinutes = endTime.hour * 60 + endTime.minute;
+    final openingMinutes = openingTime.hour * 60 + openingTime.minute;
+    final closingMinutes = closingTime.hour * 60 + closingTime.minute;
+
+    // Check if start time is after opening time and end time is before closing time
+    if (startMinutes < openingMinutes || endMinutes > closingMinutes ||
+        startMinutes >= endMinutes) {
+      return false;
+    }
+
+    return true;
   }
 }
+
 
 
 // trial for time validation
