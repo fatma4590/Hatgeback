@@ -170,16 +170,15 @@ class BaseScreen extends StatelessWidget {
   }
  }*/
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:hatgeback/screens/myReservations.dart';
 import 'package:flutter/material.dart';
 import 'package:hatgeback/payment/payscreen.dart';
+import 'package:hatgeback/screens/FeedbackScreen.dart';
 import 'package:hatgeback/screens/WalletScreen.dart';
 import 'package:hatgeback/screens/addpoint.dart';
 import 'package:hatgeback/screens/homepage.dart';
 import 'package:hatgeback/screens/loginscreen.dart';
 import 'package:hatgeback/screens/myReservations.dart';
 import 'package:hatgeback/screens/myparking.dart';
-import 'package:hatgeback/screens/FeedbackScreen.dart';
 import 'package:hatgeback/screens/userprofile.dart';
 
 class BaseScreen extends StatelessWidget {
@@ -405,7 +404,7 @@ class BaseScreen extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.copy_all_rounded),
+            leading: Icon(Icons.wallet),
             title: Text('Wallet'),
             onTap: () {
               Navigator.push(
@@ -415,7 +414,7 @@ class BaseScreen extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.copy_all_rounded),
+            leading: Icon(Icons.garage_outlined),
             title: Text('My Parking Areas'),
             onTap: () {
               Navigator.push(
