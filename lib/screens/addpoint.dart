@@ -1,344 +1,3 @@
-/*import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:hatgeback/screens/homepage.dart';
-
-class addpoint extends StatelessWidget {
-  static String id = 'addpointpage';
-  addpoint({super.key});
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  TextEditingController userid = TextEditingController();
-  TextEditingController Location = TextEditingController();
-  TextEditingController Name = TextEditingController();
-  TextEditingController Price = TextEditingController();
-  TextEditingController Time = TextEditingController();
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.green,
-        actions: [],
-        title: Text('My parking Space'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: ListView(
-          children: <Widget>[
-            Container(
-              height: 250,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(75),
-                  bottomLeft: Radius.circular(25),
-                ),
-              ),
-            ),
-            TextFormField(
-              controller: Location,
-              validator: (data) {
-                if (data!.isEmpty) {
-                  return "feild is emply";
-                }
-              },
-              decoration: InputDecoration(
-                hintText: "Location",
-                hintStyle: TextStyle(color: Colors.black, fontSize: 18),
-              ),
-              cursorColor: Colors.black,
-              showCursor: true,
-            ),
-            SizedBox(
-              height: 12.0,
-            ),
-            TextFormField(
-              controller: Name,
-              validator: (data) {
-                if (data == null || data.isEmpty) {
-                  return 'Required';
-                } else if (!RegExp(r"^[A-Za-z][A-Za-z0-9_]{7,29}$")
-                    .hasMatch(data)) {
-                  return "Enter valid name";
-                }
-                return null;
-              },
-              cursorColor: Colors.black,
-              showCursor: true,
-              decoration: InputDecoration(
-                hintText: "Name",
-                hintStyle: TextStyle(color: Colors.black, fontSize: 18),
-              ),
-            ),
-            SizedBox(
-              height: 12.0,
-            ),
-            TextFormField(
-                controller: Price,
-                validator: (data) {
-                  if (data == null || data.isEmpty) {
-                    return 'Required';
-                  } else if (!RegExp(r"^[1-9]\d{0,7}(?:\.\d{1,4})?$")
-                      .hasMatch(data)) {
-                    return "Enter valid price";
-                  }
-                  return null;
-                },
-                cursorColor: Colors.black,
-                showCursor: true,
-                decoration: InputDecoration(
-                  hintText: "Price",
-                  hintStyle: TextStyle(color: Colors.black, fontSize: 18),
-                ),
-                keyboardType: TextInputType.number),
-            SizedBox(
-              height: 12.0,
-            ),
-
-            TextFormField(
-              controller: Time,
-              validator: (data) {
-                if (data!.isEmpty) {
-                  return "feild is emply";
-                }
-              },
-              cursorColor: Colors.black,
-              showCursor: true,
-              decoration: InputDecoration(
-                hintText: "Time",
-                hintStyle: TextStyle(color: Colors.black, fontSize: 18),
-              ),
-            ),
-            SizedBox(
-              height: 12.0,
-            ),
-
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              onPressed: () {
-                FirebaseFirestore.instance
-                    .collection('parkingareas')
-                    .doc(Name!.text)
-                    .set({
-                  'userid': _auth.currentUser!.email,
-                  'Location': Location.text,
-                  'Name': Name.text,
-                  'price': Price.text,
-                  'time': Time.text
-                });
-
-                Navigator.pushNamed(context, homepage.id);
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text("added succefully"),
-                  backgroundColor: Colors.green,
-                ));
-              },
-              child: Text(
-                "Add",
-                style: TextStyle(fontSize: 22, color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}*/
-
-/*
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:hatgeback/screens/homepage.dart';
-import 'package:intl/intl.dart';
-
-class addpoint extends StatefulWidget {
-  static String id = 'addpointpage';
-
-  @override
-  _AddpointState createState() => _AddpointState();
-}
-
-class _AddpointState extends State<addpoint> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  TextEditingController userid = TextEditingController();
-  TextEditingController Location = TextEditingController();
-  TextEditingController Name = TextEditingController();
-  TextEditingController Price = TextEditingController();
-  DateTime? startDate;
-  DateTime? endDate;
-
-  @override
-  Widget build(BuildContext context) {
-    final format = DateFormat('yyyy-MM-dd HH:mm a');
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black26,
-        actions: [],
-        title: Text('My parking Space'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: ListView(
-          children: <Widget>[
-            Container(
-              height: 250,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(75),
-                  bottomLeft: Radius.circular(25),
-                ),
-              ),
-            ),
-            TextFormField(
-              controller: Location,
-              validator: (data) {
-                if (data!.isEmpty) {
-                  return "feild is emply";
-                }
-                return null;
-              },
-              decoration: InputDecoration(
-                hintText: "Location",
-                hintStyle: TextStyle(color: Colors.black, fontSize: 18),
-              ),
-              cursorColor: Colors.black,
-              showCursor: true,
-            ),
-            SizedBox(
-              height: 12.0,
-            ),
-            TextFormField(
-              controller: Name,
-              validator: (data) {
-                if (data == null || data.isEmpty) {
-                  return 'Required';
-                } else if (!RegExp(r"^[A-Za-z][A-Za-z0-9_]{7,29}$")
-                    .hasMatch(data)) {
-                  return "Enter valid name";
-                }
-                return null;
-              },
-              cursorColor: Colors.black,
-              showCursor: true,
-              decoration: InputDecoration(
-                hintText: "Name",
-                hintStyle: TextStyle(color: Colors.black, fontSize: 18),
-              ),
-            ),
-            SizedBox(
-              height: 12.0,
-            ),
-            TextFormField(
-                controller: Price,
-                validator: (data) {
-                  if (data == null || data.isEmpty) {
-                    return 'Required';
-                  } else if (!RegExp(r"^[1-9]\d{0,7}(?:\.\d{1,4})?$")
-                      .hasMatch(data)) {
-                    return "Enter valid price";
-                  }
-                  return null;
-                },
-                cursorColor: Colors.black,
-                showCursor: true,
-                decoration: InputDecoration(
-                  hintText: "Price Per hour",
-                  hintStyle: TextStyle(color: Colors.black, fontSize: 18),
-                ),
-                keyboardType: TextInputType.number),
-            SizedBox(
-              height: 12.0,
-            ),
-            DateTimeField(
-                format: format,
-                decoration:
-                InputDecoration(hintText: 'Choose Start Date & Time'),
-                onShowPicker: (context, currentValue) async {
-                  final date = await showDatePicker(
-                      context: context,
-                      initialDate: currentValue ?? DateTime.now(),
-                      firstDate: DateTime(1900),
-                      lastDate: DateTime(2100));
-
-                  if (date != null) {
-                    final time = await showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay.fromDateTime(
-                            currentValue ?? DateTime.now()));
-                    return DateTimeField.combine(date, time);
-                  } else {
-                    return currentValue;
-                  }
-                },
-                onChanged: (value) {
-                  setState(() {
-                    startDate = value ?? DateTime.now();
-                  });
-                }),
-            SizedBox(height: 16.0),
-            DateTimeField(
-                format: format,
-                decoration: InputDecoration(hintText: 'Choose End Date & Time'),
-                onShowPicker: (context, currentValue) async {
-                  final date = await showDatePicker(
-                      context: context,
-                      initialDate: currentValue ?? DateTime.now(),
-                      firstDate: DateTime(1900),
-                      lastDate: DateTime(2100));
-
-                  if (date != null) {
-                    final time = await showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay.fromDateTime(
-                            currentValue ?? DateTime.now()));
-                    return DateTimeField.combine(date, time);
-                  } else {
-                    return currentValue;
-                  }
-                },
-                onChanged: (value) {
-                  setState(() {
-                    endDate = value ?? DateTime.now();
-                  });
-                }),
-            SizedBox(
-              height: 12.0,
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              onPressed: () {
-                FirebaseFirestore.instance
-                    .collection('parkingareas')
-                    .doc(Name.text)
-                    .set({
-                  'userid': _auth.currentUser!.email,
-                  'Location': Location.text,
-                  'Name': Name.text,
-                  'price': Price.text,
-                  'startDate': Timestamp.fromDate(startDate!),
-                  'endDate': Timestamp.fromDate(endDate!),
-                });
-
-                Navigator.pushNamed(context, homepage.id);
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text("added succefully"),
-                  backgroundColor: Colors.green,
-                ));
-              },
-              child: Text(
-                "Add",
-                style: TextStyle(fontSize: 22, color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-*/
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -346,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:hatgeback/screens/homepage.dart';
 import 'package:hatgeback/widgets/base_screen.dart';
 import 'package:intl/intl.dart';
-import 'package:isar/isar.dart';
 
 class addpoint extends StatefulWidget {
   static String id = 'addpointpage';
@@ -486,7 +144,7 @@ class _AddPointPageState extends State<addpoint>
                   }
                   return startTime != null
                       ? DateTime(selectedDate!.year, selectedDate!.month,
-                      selectedDate!.day, startTime!.hour, startTime!.minute)
+                          selectedDate!.day, startTime!.hour, startTime!.minute)
                       : currentValue ?? DateTime.now();
                 },
               ),
@@ -516,7 +174,7 @@ class _AddPointPageState extends State<addpoint>
                   }
                   return endTime != null
                       ? DateTime(selectedDate!.year, selectedDate!.month,
-                      selectedDate!.day, endTime!.hour, endTime!.minute)
+                          selectedDate!.day, endTime!.hour, endTime!.minute)
                       : currentValue ?? DateTime.now();
                 },
               ),
@@ -529,7 +187,7 @@ class _AddPointPageState extends State<addpoint>
             backgroundColor: Color(0xFF33AD60),
             padding: EdgeInsets.all(16),
             shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
           onPressed: () async {
             if (selectedDate != null && startTime != null && endTime != null) {
@@ -553,10 +211,10 @@ class _AddPointPageState extends State<addpoint>
               if (endTime!.hour > startTime!.hour ||
                   (endTime!.hour == startTime!.hour &&
                       endTime!.minute > startTime!.minute)) {
-                int parkingId = await getNextParkingId();
+                int parkingId = await getNextParkingId(isRecurring: false);
                 FirebaseFirestore.instance.collection('parkingareas').add({
                   'userid': _auth.currentUser!.email,
-                  'parkingid': parkingId,
+                  'parkingid': parkingId.toString(),
                   'Location': location.text,
                   'Name': name.text,
                   'price': int.parse(price.text),
@@ -589,7 +247,7 @@ class _AddPointPageState extends State<addpoint>
             }
           },
           child:
-          Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
+              Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
         ),
       ],
     );
@@ -634,6 +292,40 @@ class _AddPointPageState extends State<addpoint>
                       return startDate ?? currentValue ?? DateTime.now();
                     },
                   ),
+                  SizedBox(height: 16),
+                  DateTimeField(
+                    format: DateFormat('HH:mm'),
+                    decoration: InputDecoration(
+                      labelText: 'Choose Start Time',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.access_time),
+                    ),
+                    controller: TextEditingController(
+                        text: startTime != null
+                            ? startTime!.format(context)
+                            : ''),
+                    onShowPicker: (context, currentValue) async {
+                      final time = await showTimePicker(
+                        context: context,
+                        initialTime: currentValue != null
+                            ? TimeOfDay.fromDateTime(currentValue)
+                            : TimeOfDay.now(),
+                      );
+                      if (time != null) {
+                        setState(() {
+                          startTime = time;
+                        });
+                      }
+                      return startTime != null
+                          ? DateTime(
+                              startDate!.year,
+                              startDate!.month,
+                              startDate!.day,
+                              startTime!.hour,
+                              startTime!.minute)
+                          : currentValue ?? DateTime.now();
+                    },
+                  ),
                 ],
               ),
             ),
@@ -668,183 +360,212 @@ class _AddPointPageState extends State<addpoint>
                       return endDate ?? currentValue ?? DateTime.now();
                     },
                   ),
+                  SizedBox(height: 16),
+                  DateTimeField(
+                    format: DateFormat('HH:mm'),
+                    decoration: InputDecoration(
+                      labelText: 'Choose End Time',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.access_time),
+                    ),
+                    controller: TextEditingController(
+                        text: endTime != null ? endTime!.format(context) : ''),
+                    onShowPicker: (context, currentValue) async {
+                      final time = await showTimePicker(
+                        context: context,
+                        initialTime: currentValue != null
+                            ? TimeOfDay.fromDateTime(currentValue)
+                            : TimeOfDay.now(),
+                      );
+                      if (time != null) {
+                        setState(() {
+                          endTime = time;
+                        });
+                      }
+                      return endTime != null
+                          ? DateTime(endDate!.year, endDate!.month,
+                              endDate!.day, endTime!.hour, endTime!.minute)
+                          : currentValue ?? DateTime.now();
+                    },
+                  ),
                 ],
               ),
             ),
           ],
         ),
         SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(
-              child: DateTimeField(
-                format: DateFormat('HH:mm'),
-                decoration: InputDecoration(
-                  labelText: 'Choose Start Time',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.access_time),
-                ),
-                controller: TextEditingController(
-                    text: startTime != null ? startTime!.format(context) : ''),
-                onShowPicker: (context, currentValue) async {
-                  final time = await showTimePicker(
-                    context: context,
-                    initialTime: currentValue != null
-                        ? TimeOfDay.fromDateTime(currentValue)
-                        : TimeOfDay.now(),
-                  );
-                  if (time != null) {
-                    setState(() {
-                      startTime = time;
-                    });
-                  }
-                  return startTime != null
-                      ? DateTime(startDate!.year, startDate!.month,
-                      startDate!.day, startTime!.hour, startTime!.minute)
-                      : currentValue ?? DateTime.now();
-                },
-              ),
-            ),
-            SizedBox(width: 16),
-            Expanded(
-              child: DateTimeField(
-                format: DateFormat('HH:mm'),
-                decoration: InputDecoration(
-                  labelText: 'Choose End Time',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.access_time),
-                ),
-                controller: TextEditingController(
-                    text: endTime != null ? endTime!.format(context) : ''),
-                onShowPicker: (context, currentValue) async {
-                  final time = await showTimePicker(
-                    context: context,
-                    initialTime: currentValue != null
-                        ? TimeOfDay.fromDateTime(currentValue)
-                        : TimeOfDay.now(),
-                  );
-                  if (time != null) {
-                    setState(() {
-                      endTime = time;
-                    });
-                  }
-                  return endTime != null
-                      ? DateTime(endDate!.year, endDate!.month, endDate!.day,
-                      endTime!.hour, endTime!.minute)
-                      : currentValue ?? DateTime.now();
-                },
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 16),
-        Text(
-          'Select Days',
-          style: TextStyle(fontSize: 16),
-        ),
-        SizedBox(height: 16),
         Wrap(
-          spacing: 8,
+          spacing: 8.0,
+          runSpacing: 4.0,
           children: [
-            for (String day in [
-              'Monday',
-              'Tuesday',
-              'Wednesday',
-              'Thursday',
-              'Friday',
-              'Saturday',
-              'Sunday'
-            ])
-              ChoiceChip(
-                label: Text(day),
-                selected: selectedDays.contains(day),
-                onSelected: (selected) {
-                  setState(() {
-                    if (selected) {
-                      selectedDays.add(day);
-                    } else {
-                      selectedDays.remove(day);
-                    }
-                  });
-                },
-              ),
+            ChoiceChip(
+              label: Text('Mon'),
+              selected: selectedDays.contains('Mon'),
+              onSelected: (selected) {
+                setState(() {
+                  if (selected) {
+                    selectedDays.add('Mon');
+                  } else {
+                    selectedDays.remove('Mon');
+                  }
+                });
+              },
+            ),
+            ChoiceChip(
+              label: Text('Tue'),
+              selected: selectedDays.contains('Tue'),
+              onSelected: (selected) {
+                setState(() {
+                  if (selected) {
+                    selectedDays.add('Tue');
+                  } else {
+                    selectedDays.remove('Tue');
+                  }
+                });
+              },
+            ),
+            ChoiceChip(
+              label: Text('Wed'),
+              selected: selectedDays.contains('Wed'),
+              onSelected: (selected) {
+                setState(() {
+                  if (selected) {
+                    selectedDays.add('Wed');
+                  } else {
+                    selectedDays.remove('Wed');
+                  }
+                });
+              },
+            ),
+            ChoiceChip(
+              label: Text('Thu'),
+              selected: selectedDays.contains('Thu'),
+              onSelected: (selected) {
+                setState(() {
+                  if (selected) {
+                    selectedDays.add('Thu');
+                  } else {
+                    selectedDays.remove('Thu');
+                  }
+                });
+              },
+            ),
+            ChoiceChip(
+              label: Text('Fri'),
+              selected: selectedDays.contains('Fri'),
+              onSelected: (selected) {
+                setState(() {
+                  if (selected) {
+                    selectedDays.add('Fri');
+                  } else {
+                    selectedDays.remove('Fri');
+                  }
+                });
+              },
+            ),
+            ChoiceChip(
+              label: Text('Sat'),
+              selected: selectedDays.contains('Sat'),
+              onSelected: (selected) {
+                setState(() {
+                  if (selected) {
+                    selectedDays.add('Sat');
+                  } else {
+                    selectedDays.remove('Sat');
+                  }
+                });
+              },
+            ),
+            ChoiceChip(
+              label: Text('Sun'),
+              selected: selectedDays.contains('Sun'),
+              onSelected: (selected) {
+                setState(() {
+                  if (selected) {
+                    selectedDays.add('Sun');
+                  } else {
+                    selectedDays.remove('Sun');
+                  }
+                });
+              },
+            ),
           ],
         ),
+        SizedBox(height: 16),
         ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-          onPressed: () {
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Color(0xFF33AD60),
+            padding: EdgeInsets.all(16),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          ),
+          onPressed: () async {
             if (startDate != null &&
                 endDate != null &&
                 startTime != null &&
-                endTime != null) {
-              // Check if start time is before end time
-              if (startTime!.hour > endTime!.hour ||
-                  (startTime!.hour == endTime!.hour &&
-                      startTime!.minute >= endTime!.minute)) {
+                endTime != null &&
+                selectedDays.isNotEmpty) {
+              // Combine startDate and startTime, endDate and endTime
+              DateTime startDateTime = DateTime(
+                startDate!.year,
+                startDate!.month,
+                startDate!.day,
+                startTime!.hour,
+                startTime!.minute,
+              );
+              DateTime endDateTime = DateTime(
+                endDate!.year,
+                endDate!.month,
+                endDate!.day,
+                endTime!.hour,
+                endTime!.minute,
+              );
+
+              // Validate end time is at least 1 hour after start time
+              if (endDateTime.isAfter(startDateTime)) {
+                int parkingId = await getNextParkingId(isRecurring: true);
+                await FirebaseFirestore.instance
+                    .collection('parkingareas')
+                    .add({
+                  'userid': _auth.currentUser!.email,
+                  'parkingid': parkingId.toString(),
+                  'Location': location.text,
+                  'Name': name.text,
+                  'price': int.parse(price.text),
+                  'startDate': Timestamp.fromDate(startDateTime),
+                  'endDate': Timestamp.fromDate(endDateTime),
+                  'isRecurring': true,
+                  'selectedDays': selectedDays,
+                });
+                Navigator.pushNamed(context, homepage.id);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text("Start time must be before end time"),
-                    backgroundColor: Colors.red,
+                    content: Text("Added successfully"),
+                    backgroundColor: Color(0xFF33AD60),
                   ),
                 );
               } else {
-                storeRecurringParkingAreas();
-                Navigator.pushNamed(context, homepage.id);
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text("Added successfully"),
-                  backgroundColor: Colors.green,
-                ));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("End time must be after start time"),
+                    backgroundColor: Colors.red,
+                  ),
+                );
               }
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text("Please fill in all fields"),
-                backgroundColor: Colors.red,
-              ));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Please fill in all fields"),
+                  backgroundColor: Colors.red,
+                ),
+              );
             }
           },
           child:
-          Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
+              Text("Add", style: TextStyle(fontSize: 22, color: Colors.white)),
         ),
       ],
     );
-  }
-
-  void storeRecurringParkingAreas() {
-    DateTime current = startDate!;
-    while (current.isBefore(endDate!) || current.isAtSameMomentAs(endDate!)) {
-      // Check if the current date matches any of the selected days
-      if (selectedDays.contains(DateFormat('EEEE').format(current))) {
-        // Create the start and end DateTime objects for the current date
-        DateTime currentStartDate = DateTime(
-          current.year,
-          current.month,
-          current.day,
-          startTime!.hour,
-          startTime!.minute,
-        );
-        DateTime currentEndDate = DateTime(
-          current.year,
-          current.month,
-          current.day,
-          endTime!.hour,
-          endTime!.minute,
-        );
-
-        // Store the parking area entry in Firestore
-        FirebaseFirestore.instance.collection('parkingareas').add({
-          'userid': _auth.currentUser!.email,
-          'Location': location.text,
-          'Name': name.text,
-          'price': price.text,
-          'startDate': Timestamp.fromDate(currentStartDate),
-          'endDate': Timestamp.fromDate(currentEndDate),
-          'isRecurring': true,
-        });
-      }
-
-      // Move to the next day
-      current = current.add(Duration(days: 1));
-    }
   }
 
   Widget buildTextField(TextEditingController controller, String labelText,
@@ -862,18 +583,34 @@ class _AddPointPageState extends State<addpoint>
     );
   }
 }
-Future<int> getNextParkingId() async {
-  DocumentReference counterRef = FirebaseFirestore.instance.collection(
-      'counters').doc('parkingid');
+
+Future<int> getNextParkingId({bool isRecurring = false}) async {
+  DocumentReference counterRef;
+  if (isRecurring) {
+    counterRef = FirebaseFirestore.instance
+        .collection('counters')
+        .doc('recurring_parkingid');
+  } else {
+    counterRef =
+        FirebaseFirestore.instance.collection('counters').doc('once_parkingid');
+  }
+
   DocumentSnapshot counterSnapshot = await counterRef.get();
 
   if (counterSnapshot.exists) {
-    int currentCounter = counterSnapshot['parkingid'];
+    int currentCounter =
+        counterSnapshot[isRecurring ? 'recurring_parkingid' : 'once_parkingid'];
     int newCounter = currentCounter + 1;
-    await counterRef.update({'parkingid': newCounter});
+    await counterRef.update(
+        {isRecurring ? 'recurring_parkingid' : 'once_parkingid': newCounter});
     return newCounter;
   } else {
-    await counterRef.set({'parkingid': 1});
-    return 1;
+    if (isRecurring) {
+      await counterRef.set({'recurring_parkingid': 100});
+      return 100;
+    } else {
+      await counterRef.set({'once_parkingid': 1});
+      return 1;
+    }
   }
 }
